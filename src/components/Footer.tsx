@@ -1,21 +1,9 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useAnimation } from '@/contexts/AnimationContext'
+import SocialIcon from '@/components/ui/SocialIcon'
 
 export default function Footer() {
-	const { settings } = useAnimation()
-
-	// Animation variants for social icons
-	const iconVariants = {
-		hover: settings.enabled
-			? {
-					y: -5,
-					scale: 1.1,
-					transition: { duration: 0.3 },
-			  }
-			: {},
-	}
 
 	// Social media links with icons
 	const socialLinks = [
@@ -82,17 +70,13 @@ export default function Footer() {
 						viewport={{ once: true }}
 						transition={{ duration: 0.5, delay: 0.2 }}
 						className='flex space-x-6'>
-						{socialLinks.map((social, index) => (
-							<motion.a
+						{socialLinks.map((social) => (
+							<SocialIcon
 								key={social.name}
-								href={social.url}
-								target='_blank'
-								rel='noopener noreferrer'
-								className='text-light-80 hover:text-[#74dde3] transition-colors duration-300'
-								whileHover={iconVariants.hover}
-								whileTap={{ scale: 0.9 }}>
-								{social.icon}
-							</motion.a>
+								name={social.name}
+								url={social.url}
+								icon={social.icon}
+							/>
 						))}
 					</motion.div>
 				</div>

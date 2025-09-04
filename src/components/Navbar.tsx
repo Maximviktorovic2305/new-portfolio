@@ -1,11 +1,12 @@
 'use client'
 
-import { useTheme } from '@/contexts/ThemeContext'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
+import DesktopMenu from '@/components/layout/DesktopMenu'
+import MobileMenu from '@/components/layout/MobileMenu'
+import MobileMenuContent from '@/components/layout/MobileMenuContent'
 
 export default function Navbar() {
-	const { theme, toggleTheme } = useTheme()
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
 
 	const navItems = [
@@ -33,72 +34,20 @@ export default function Navbar() {
 						</motion.div>
 					</div>
 
-					{/* Desktop menu */}
-					<div className='hidden md:flex items-center space-x-8'>
-						{navItems.map((item) => (
-							<motion.a
-								key={item.name}
-								href={item.href}
-								className='text-foreground hover:text-accent transition-colors duration-300'
-								whileHover={{ y: -2 }}
-								whileTap={{ scale: 0.95 }}>
-								{item.name}
-							</motion.a>
-						))}
-
-						<motion.button
-							onClick={toggleTheme}
-							className='p-2 rounded-full bg-gray-800 text-foreground hover:text-accent transition-colors duration-300'
-							whileHover={{ rotate: 5 }}
-							whileTap={{ scale: 0.9 }}
-							aria-label='Toggle theme'>
-							{theme === 'dark' ? '🌙' : '☀️'}
-						</motion.button>
-					</div>
-
-					{/* Mobile menu button */}
-					<div className='md:hidden flex items-center'>
-						<motion.button
-							onClick={toggleTheme}
-							className='p-2 mr-2 rounded-full bg-gray-800 text-foreground hover:text-accent transition-colors duration-300'
-							whileTap={{ scale: 0.9 }}
-							aria-label='Toggle theme'>
-							{theme === 'dark' ? '🌙' : '☀️'}
-						</motion.button>
-
-						<motion.button
-							onClick={() => setIsMenuOpen(!isMenuOpen)}
-							className='p-2 rounded-md text-foreground hover:text-accent focus:outline-none'
-							whileTap={{ scale: 0.9 }}>
-							{isMenuOpen ? '✕' : '☰'}
-						</motion.button>
-					</div>
+					<DesktopMenu navItems={navItems} />
+					<MobileMenu
+						navItems={navItems}
+						isMenuOpen={isMenuOpen}
+						setIsMenuOpen={setIsMenuOpen}
+					/>
 				</div>
 			</div>
 
-			{/* Mobile menu */}
-			{isMenuOpen && (
-				<motion.div
-					className='md:hidden bg-background/95 backdrop-blur-sm'
-					initial={{ opacity: 0, height: 0 }}
-					animate={{ opacity: 1, height: 'auto' }}
-					exit={{ opacity: 0, height: 0 }}
-					transition={{ duration: 0.3 }}>
-					<div className='px-2 pt-2 pb-3 space-y-1 sm:px-3'>
-						{navItems.map((item) => (
-							<motion.a
-								key={item.name}
-								href={item.href}
-								className='block px-3 py-2 rounded-md text-base font-medium text-foreground hover:text-accent hover:bg-gray-800'
-								onClick={() => setIsMenuOpen(false)}
-								whileHover={{ x: 5 }}
-								whileTap={{ scale: 0.95 }}>
-								{item.name}
-							</motion.a>
-						))}
-					</div>
-				</motion.div>
-			)}
+			<MobileMenuContent
+				navItems={navItems}
+				isMenuOpen={isMenuOpen}
+				setIsMenuOpen={setIsMenuOpen}
+			/>
 		</motion.nav>
 	)
 }

@@ -3,10 +3,8 @@
 import { useState, useEffect } from 'react'
 import ThreeScene from '@/components/ThreeScene'
 import { motion } from 'framer-motion'
-import { useAnimation } from '@/contexts/AnimationContext'
 
 export default function AnimationShowcase() {
-	const { settings } = useAnimation()
 	const [isVisible, setIsVisible] = useState(false)
 
 	useEffect(() => {

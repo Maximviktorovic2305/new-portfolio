@@ -40,22 +40,6 @@ export default function AboutSection() {
 									className='object-cover w-full h-full'
 								/>
 							</div>
-							<motion.div
-								className='absolute -bottom-4 -right-4 w-32 h-32 bg-accent rounded-full z-[-1]'
-								animate={
-									settings.enabled
-										? {
-												scale: [1, 1.05, 1],
-												rotate: [0, 5, 0],
-										  }
-										: {}
-								}
-								transition={{
-									duration: 5,
-									repeat: Infinity,
-									repeatType: 'reverse',
-								}}
-							/>
 						</div>
 					</motion.div>
 
