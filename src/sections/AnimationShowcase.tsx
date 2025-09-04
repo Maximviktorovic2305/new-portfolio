@@ -78,7 +78,7 @@ export default function AnimationShowcase() {
 						transition={{ duration: 1, delay: 1 }}>
 						<div className='inline-block bg-accent/10 px-6 py-3 rounded-full border border-accent/30'>
 							<p className='text-accent font-medium'>
-								Прокрутите вниз, чтобы увидеть больше проектов
+								Прокрутите вниз, чтобы узнать больше
 							</p>
 						</div>
 					</motion.div>
