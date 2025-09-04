@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { useAnimation } from '@/contexts/AnimationContext';
 
 export default function AboutSection() {
@@ -31,10 +32,15 @@ export default function AboutSection() {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <div className="relative">
-              <div className="bg-gray-800 rounded-2xl w-80 h-80 mx-auto overflow-hidden">
-                <div className="bg-gray-700 w-full h-full flex items-center justify-center">
-                  <span className="text-foreground">Фото профиля</span>
-                </div>
+              {/* Replaced placeholder with actual photo */}
+              <div className="rounded-2xl w-80 h-80 mx-auto overflow-hidden shadow-2xl">
+                <Image 
+                  src="/photo.jpg" 
+                  alt="Фото профиля" 
+                  width={320} 
+                  height={320}
+                  className="object-cover w-full h-full"
+                />
               </div>
               <motion.div 
                 className="absolute -bottom-4 -right-4 w-32 h-32 bg-accent rounded-full z-[-1]"
