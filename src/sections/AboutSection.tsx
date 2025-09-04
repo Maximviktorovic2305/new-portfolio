@@ -50,7 +50,7 @@ export default function AboutSection() {
 						viewport={{ once: true }}
 						transition={{ duration: 0.8, delay: 0.4 }}>
 						<h3 className='text-2xl font-bold mb-4'>
-							Fullstack разработчик из России
+							Fullstack разработчик
 						</h3>
 						<p className='text-foreground/80 mb-6'>
 							Я специализируюсь на создании современных веб-приложений с
