@@ -48,7 +48,7 @@ export default function ContactSection() {
 					viewport={{ once: true }}
 					transition={{ duration: 0.8 }}
 					className='text-center mb-16'>
-					<h2 className='text-3xl md:text-4xl font-bold text-foreground mb-4'>
+					<h2 className='text-3xl md:text-4xl font-bold text-light mb-4'>
 						Связаться <span className='text-accent'>со мной</span>
 					</h2>
 					<div className='w-20 h-1 bg-accent mx-auto'></div>
@@ -61,10 +61,10 @@ export default function ContactSection() {
 						whileInView={{ opacity: 1, x: 0 }}
 						viewport={{ once: true }}
 						transition={{ duration: 0.8, delay: 0.2 }}>
-						<h3 className='text-2xl font-bold text-foreground mb-6'>
+						<h3 className='text-2xl font-bold text-light mb-6'>
 							Давайте обсудим ваш проект
 						</h3>
-						<p className='text-foreground/80 mb-8'>
+						<p className='text-light-80 mb-8'>
 							Заинтересованы в сотрудничестве или хотите обсудить идею?
 							Заполните форму, и я свяжусь с вами в ближайшее время.
 						</p>
@@ -87,8 +87,8 @@ export default function ContactSection() {
 									</svg>
 								</div>
 								<div className='ml-4'>
-									<h4 className='text-lg font-medium text-foreground'>Email</h4>
-									<p className='text-foreground/80'>Maximviktorovic@mail.ru</p>
+									<h4 className='text-lg font-medium text-light'>Email</h4>
+									<p className='text-light-80'>Maximviktorovic@mail.ru</p>
 								</div>
 							</motion.div>
 
@@ -109,10 +109,8 @@ export default function ContactSection() {
 									</svg>
 								</div>
 								<div className='ml-4'>
-									<h4 className='text-lg font-medium text-foreground'>
-										Телефон
-									</h4>
-									<p className='text-foreground/80'>+7 (999) 123-45-67</p>
+									<h4 className='text-lg font-medium text-light'>Телефон</h4>
+									<p className='text-light-80'>+7 (999) 123-45-67</p>
 								</div>
 							</motion.div>
 
@@ -138,10 +136,10 @@ export default function ContactSection() {
 									</svg>
 								</div>
 								<div className='ml-4'>
-									<h4 className='text-lg font-medium text-foreground'>
+									<h4 className='text-lg font-medium text-light'>
 										Местоположение
 									</h4>
-									<p className='text-foreground/80'>Москва, Россия</p>
+									<p className='text-light-80'>Москва, Россия</p>
 								</div>
 							</motion.div>
 						</div>
@@ -155,7 +153,7 @@ export default function ContactSection() {
 						transition={{ duration: 0.8, delay: 0.4 }}>
 						<form onSubmit={handleSubmit} className='space-y-6'>
 							<div>
-								<label htmlFor='name' className='block text-foreground mb-2'>
+								<label htmlFor='name' className='block text-light mb-2'>
 									Имя
 								</label>
 								<motion.input
@@ -165,13 +163,13 @@ export default function ContactSection() {
 									value={formData.name}
 									onChange={handleChange}
 									required
-									className='w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent'
+									className='w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-light focus:outline-none focus:ring-2 focus:ring-accent'
 									whileFocus={settings.enabled ? { scale: 1.02 } : {}}
 								/>
 							</div>
 
 							<div>
-								<label htmlFor='email' className='block text-foreground mb-2'>
+								<label htmlFor='email' className='block text-light mb-2'>
 									Email
 								</label>
 								<motion.input
@@ -181,13 +179,13 @@ export default function ContactSection() {
 									value={formData.email}
 									onChange={handleChange}
 									required
-									className='w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent'
+									className='w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-light focus:outline-none focus:ring-2 focus:ring-accent'
 									whileFocus={settings.enabled ? { scale: 1.02 } : {}}
 								/>
 							</div>
 
 							<div>
-								<label htmlFor='subject' className='block text-foreground mb-2'>
+								<label htmlFor='subject' className='block text-light mb-2'>
 									Тема
 								</label>
 								<motion.input
@@ -197,13 +195,13 @@ export default function ContactSection() {
 									value={formData.subject}
 									onChange={handleChange}
 									required
-									className='w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent'
+									className='w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-light focus:outline-none focus:ring-2 focus:ring-accent'
 									whileFocus={settings.enabled ? { scale: 1.02 } : {}}
 								/>
 							</div>
 
 							<div>
-								<label htmlFor='message' className='block text-foreground mb-2'>
+								<label htmlFor='message' className='block text-light mb-2'>
 									Сообщение
 								</label>
 								<motion.textarea
@@ -213,7 +211,7 @@ export default function ContactSection() {
 									onChange={handleChange}
 									required
 									rows={5}
-									className='w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-accent'
+									className='w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-light focus:outline-none focus:ring-2 focus:ring-accent'
 									whileFocus={settings.enabled ? { scale: 1.02 } : {}}
 								/>
 							</div>

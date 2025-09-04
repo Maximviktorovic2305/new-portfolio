@@ -38,6 +38,19 @@ body {
   border-color: var(--accent);
 }
 
+/* Text colors that work on any background */
+.text-light {
+  color: #ffffff;
+}
+
+.text-light-90 {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.text-light-80 {
+  color: rgba(255, 255, 255, 0.8);
+}
+
 /* Animation utilities */
 .animate-subtle {
   animation-duration: 10s;
