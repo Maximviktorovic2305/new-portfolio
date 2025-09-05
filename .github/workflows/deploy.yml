@@ -1,0 +1,117 @@
+name: Deploy Portfolio to Server
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build project
+      run: npm run build
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: Production
+    timeout-minutes: 30
+    
+    steps:
+    - name: Deploy to server
+      uses: appleboy/ssh-action@master
+      env:
+        SMTP_HOST: ${{ secrets.SMTP_HOST }}
+        SMTP_PORT: ${{ secrets.SMTP_PORT }}
+        EMAIL_USER: ${{ secrets.EMAIL_USER }}
+        EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+        CONTACT_EMAIL: ${{ secrets.CONTACT_EMAIL }}
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          set -e
+
+          # Add GitHub to known hosts
+          echo "Adding GitHub.com to known_hosts..."
+          mkdir -p ~/.ssh
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+          # Set up PATH for Node.js and npm
+          export PATH="/home/max/.nvm/versions/node/v20.19.4/bin:$PATH"
+          
+          # Ensure PM2 is installed
+          echo "Ensuring PM2 is installed..."
+          npm install -g pm2
+          echo "Verifying pm2 command:"
+          which pm2 || echo "pm2 not found"
+
+          # Application directories
+          APP_DIR="/home/max/portfolio"
+          echo "Ensuring application directory exists: $APP_DIR"
+          mkdir -p $APP_DIR
+
+          # Clone or update repository
+          echo "Checking repository status..."
+          if [ -d "$APP_DIR/.git" ]; then
+            echo "Repository exists. Updating..."
+            cd $APP_DIR
+            git reset --hard HEAD
+            git clean -fdx
+            git pull origin master
+          else
+            echo "Cloning repository..."
+            rm -rf $APP_DIR/*
+            git clone https://github.com/Maximviktorovic2305/new-portfolio.git $APP_DIR
+          fi
+
+          cd $APP_DIR
+          echo "Current directory: $(pwd)"
+          ls -la
+
+          # Create .env file with secrets
+          echo "Creating .env file..."
+          cat > .env << EOF
+          SMTP_HOST=$SMTP_HOST
+          SMTP_PORT=$SMTP_PORT
+          EMAIL_USER=$EMAIL_USER
+          EMAIL_PASS=$EMAIL_PASS
+          CONTACT_EMAIL=$CONTACT_EMAIL
+          EOF
+
+          # Clean and install dependencies
+          echo "Cleaning node_modules..."
+          rm -rf node_modules
+          echo "Installing dependencies..."
+          npm cache clean --force || true
+          npm install --production
+
+          # Build the project
+          echo "Building project..."
+          npm run build
+
+          # Restart the application with PM2
+          echo "Stopping existing PM2 process..."
+          pm2 stop portfolio || true
+          pm2 delete portfolio || true
+          echo "Starting new PM2 process..."
+          pm2 start npm --name "portfolio" -- start
+          pm2 save
+
+          echo "Deployment complete."
