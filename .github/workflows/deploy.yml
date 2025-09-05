@@ -38,7 +38,6 @@ jobs:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        envs: SMTP_HOST,SMTP_PORT,EMAIL_USER,EMAIL_PASS,CONTACT_EMAIL
         script: |
           set -e
 
@@ -80,14 +79,14 @@ jobs:
           echo "Current directory: $(pwd)"
           ls -la
 
-          # Create .env file with secrets
-          echo "Creating .env file..."
-          cat > .env << EOF
-          SMTP_HOST=${SMTP_HOST}
-          SMTP_PORT=${SMTP_PORT}
-          EMAIL_USER=${EMAIL_USER}
-          EMAIL_PASS=${EMAIL_PASS}
-          CONTACT_EMAIL=${CONTACT_EMAIL}
+          # Copy .env file from local to server
+          echo "Copying .env file to server..."
+          cat > .env << 'EOF'
+          SMTP_HOST=smtp.mail.ru
+          SMTP_PORT=465
+          EMAIL_USER=maximviktorovic@mail.ru
+          EMAIL_PASS=XfLL5pixMAAG7K0yd3gV
+          CONTACT_EMAIL=maximviktorovic@mail.ru
           EOF
 
           # Clean and install dependencies
@@ -103,19 +102,15 @@ jobs:
 
           # Create PM2 ecosystem config file
           echo "Creating PM2 ecosystem config..."
-          cat > ecosystem.config.js << EOF
+          cat > ecosystem.config.js << 'EOF'
           module.exports = {
             apps: [{
               name: 'portfolio',
-              script: 'node',
-              args: 'node_modules/next/dist/bin/next start -p 3015',
+              script: 'node_modules/next/dist/bin/next',
+              args: 'start -p 3015',
               cwd: '.',
+              env_file: './.env',
               env: {
-                SMTP_HOST: '${SMTP_HOST}',
-                SMTP_PORT: '${SMTP_PORT}',
-                EMAIL_USER: '${EMAIL_USER}',
-                EMAIL_PASS: '${EMAIL_PASS}',
-                CONTACT_EMAIL: '${CONTACT_EMAIL}',
                 PORT: '3015'
               }
             }]
