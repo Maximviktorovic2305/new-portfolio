@@ -69,14 +69,14 @@ export default function AboutSection() {
 								className='bg-gray-800 p-4 rounded-lg'
 								whileHover={settings.enabled ? { y: -5 } : {}}>
 								<h4 className='text-accent font-bold text-lg mb-2'>Frontend</h4>
-								<p className='text-white/80'>React, Next.js, TypeScript</p>
+								<p className='text-white/80'>React, Next.js, Vue, Nuxt, TypeScript</p>
 							</motion.div>
 
 							<motion.div
 								className='bg-gray-800 p-4 rounded-lg'
 								whileHover={settings.enabled ? { y: -5 } : {}}>
 								<h4 className='text-accent font-bold text-lg mb-2'>Backend</h4>
-								<p className='text-white/80'>Node.js, Express, MongoDB</p>
+								<p className='text-white/80'>Node.js, Express, Nest, Golang</p>
 							</motion.div>
 
 							<motion.div
@@ -84,7 +84,7 @@ export default function AboutSection() {
 								whileHover={settings.enabled ? { y: -5 } : {}}>
 								<h4 className='text-accent font-bold text-lg mb-2'>Анимации</h4>
 								<p className='text-white/80'>
-									GSAP, Three.js, Framer Motion
+									CSS, GSAP, Three.js, Framer Motion
 								</p>
 							</motion.div>
 
@@ -92,7 +92,7 @@ export default function AboutSection() {
 								className='bg-gray-800 p-4 rounded-lg'
 								whileHover={settings.enabled ? { y: -5 } : {}}>
 								<h4 className='text-accent font-bold text-lg mb-2'>Деплой</h4>
-								<p className='text-white/80'>Vercel, Docker, CI/CD</p>
+								<p className='text-white/80'>Ubuntu, Docker, CI/CD, GitActions</p>
 							</motion.div>
 						</div>
 					</motion.div>

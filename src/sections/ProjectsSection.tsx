@@ -1,53 +1,10 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useAnimation } from '@/contexts/AnimationContext'
-
-interface Project {
-	id: number
-	title: string
-	description: string
-	technologies: string[]
-	category: string
-}
+import { projects } from '@/data'
+import ProjectCard from '@/components/ProjectCard'
 
 export default function ProjectsSection() {
-	const { settings } = useAnimation()
-
-	const projects: Project[] = [
-		{
-			id: 1,
-			title: 'E-commerce Platform',
-			description:
-				'Полнофункциональная платформа электронной коммерции с оптимизацией производительности и анимациями.',
-			technologies: ['React', 'Node.js', 'MongoDB', 'GSAP'],
-			category: 'Fullstack',
-		},
-		{
-			id: 2,
-			title: '3D Portfolio Website',
-			description:
-				'Интерактивное портфолио с 3D элементами и сложными анимациями на Three.js.',
-			technologies: ['Next.js', 'Three.js', 'Framer Motion'],
-			category: 'Frontend',
-		},
-		{
-			id: 3,
-			title: 'Task Management App',
-			description:
-				'Приложение для управления задачами с реальным временем и уведомлениями.',
-			technologies: ['React', 'Express', 'Socket.io', 'MongoDB'],
-			category: 'Fullstack',
-		},
-		{
-			id: 4,
-			title: 'Animation Library',
-			description:
-				'Библиотека компонентов с предопределенными анимациями для React приложений.',
-			technologies: ['TypeScript', 'Framer Motion', 'GSAP'],
-			category: 'Library',
-		},
-	]
 
 	return (
 		<section id='projects' className='py-20 bg-background'>
@@ -68,60 +25,45 @@ export default function ProjectsSection() {
 					{projects.map((project, index) => (
 						<motion.div
 							key={project.id}
-							className='bg-gray-800 rounded-xl overflow-hidden'
+							className='h-full'
 							initial={{ opacity: 0, y: 50 }}
 							whileInView={{ opacity: 1, y: 0 }}
 							viewport={{ once: true }}
-							transition={{ duration: 0.5, delay: index * 0.1 }}
-							whileHover={
-								settings.enabled
-									? {
-											y: -10,
-											boxShadow:
-												'0 20px 25px -5px rgba(116, 221, 227, 0.1), 0 10px 10px -5px rgba(116, 221, 227, 0.04)',
-									  }
-									: {}
-							}>
-							<div className='p-6'>
-								<div className='flex justify-between items-start mb-4'>
-									<h3 className='text-xl font-bold text-light'>
-										{project.title}
-									</h3>
-									<span className='text-xs px-2 py-1 bg-accent/20 text-accent rounded-full'>
-										{project.category}
-									</span>
-								</div>
-
-								<p className='text-light-80 mb-6'>{project.description}</p>
-
-								<div className='flex flex-wrap gap-2 mb-6'>
-									{project.technologies.map((tech, techIndex) => (
-										<span
-											key={techIndex}
-											className='text-xs px-2 py-1 bg-gray-700 text-light rounded'>
-											{tech}
-										</span>
-									))}
-								</div>
-
-								<div className='flex gap-4'>
-									<motion.button
-										className='px-4 py-2 bg-accent text-background rounded-lg hover:bg-accent/90 transition-colors duration-300'
-										whileHover={{ scale: 1.05 }}
-										whileTap={{ scale: 0.95 }}>
-										Детали
-									</motion.button>
-									<motion.button
-										className='px-4 py-2 border border-accent text-light rounded-lg hover:bg-accent/10 transition-colors duration-300'
-										whileHover={{ scale: 1.05 }}
-										whileTap={{ scale: 0.95 }}>
-										GitHub
-									</motion.button>
-								</div>
-							</div>
+							transition={{ duration: 0.5, delay: index * 0.1 }}>
+							<ProjectCard project={project} />
 						</motion.div>
 					))}
 				</div>
+
+				<motion.div
+					className='mt-16 text-center'
+					initial={{ opacity: 0 }}
+					whileInView={{ opacity: 1 }}
+					viewport={{ once: true }}
+					transition={{ duration: 0.8 }}>
+					<p className='text-foreground/80 mb-6'>
+						Здесь представлены лишь некоторые из моих проектов
+					</p>
+					<motion.a
+						href='https://github.com/Maximviktorovic2305'
+						target='_blank'
+						rel='noopener noreferrer'
+						className='inline-block'
+						whileHover={{ scale: 1.1 }}
+						whileTap={{ scale: 0.95 }}>
+						<div className='w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center hover:bg-accent transition-colors duration-300'>
+							<svg
+								className='w-8 h-8 text-foreground hover:text-background transition-colors duration-300'
+								fill='currentColor'
+								viewBox='0 0 24 24'>
+								<path d='M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z' />
+							</svg>
+						</div>
+					</motion.a>
+					<p className='text-foreground/60 mt-4 text-sm'>
+						Посмотреть все 40+ проектов на GitHub
+					</p>
+				</motion.div>
 			</div>
 		</section>
 	)

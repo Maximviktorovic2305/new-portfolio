@@ -27,8 +27,7 @@ export default function AnimationShowcase() {
 						initial={{ opacity: 0, y: 20 }}
 						animate={isVisible ? { opacity: 1, y: 0 } : {}}
 						transition={{ duration: 0.8, delay: 0.2 }}>
-						Современные <span className='text-accent'>анимации</span> и
-						3D-графика
+						Современный <span className='text-accent'>стэк технологий</span>
 					</motion.h2>
 
 					<motion.p
@@ -46,27 +45,28 @@ export default function AnimationShowcase() {
 						animate={isVisible ? { opacity: 1, y: 0 } : {}}
 						transition={{ duration: 0.8, delay: 0.6 }}>
 						<div className='bg-background/70 backdrop-blur-sm p-6 rounded-xl border border-gray-800 shadow-lg'>
-							<h3 className='text-xl font-semibold  mb-3'>
-								Three.js
-							</h3>
+							<h3 className='text-xl font-semibold  mb-3'>Современный UI/UX</h3>
 							<p className=''>
-								Создание интерактивной 3D-графики прямо в браузере
+								Создание объемных и интерактивных элементов для веб-приложений
 							</p>
 						</div>
 
 						<div className='bg-background/70 backdrop-blur-sm p-6 rounded-xl border border-gray-800 shadow-lg'>
-							<h3 className='text-xl font-semibold  mb-3'>GSAP</h3>
+							<h3 className='text-xl font-semibold  mb-3'>
+								Высокая производительность
+							</h3>
 							<p className=''>
-								Профессиональные анимации с высокой производительностью
+								Оптимизация и производительные решения для современных
+								приложений
 							</p>
 						</div>
 
 						<div className='bg-background/70 backdrop-blur-sm p-6 rounded-xl border border-gray-800 shadow-lg'>
 							<h3 className='text-xl font-semibold mb-3'>
-								Framer Motion
+								Современные фреймворки
 							</h3>
 							<p className=''>
-								Декларативные анимации для React-приложений
+								Разработка с использованием актуальных технологий и библиотек
 							</p>
 						</div>
 					</motion.div>
