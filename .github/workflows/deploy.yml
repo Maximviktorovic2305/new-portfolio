@@ -42,30 +42,15 @@ jobs:
         script: |
           set -e
 
-          # Update package list and install Node.js if not present
-          echo "Checking for Node.js installation..."
-          if ! command -v node &> /dev/null; then
-            echo "Node.js not found. Installing Node.js..."
-            curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-            sudo apt-get install -y nodejs
-          else
-            echo "Node.js already installed: $(node --version)"
-          fi
-
-          # Verify npm is available
-          if ! command -v npm &> /dev/null; then
-            echo "npm not found. Exiting."
-            exit 1
-          else
-            echo "npm version: $(npm --version)"
-          fi
-
           # Add GitHub to known hosts
           echo "Adding GitHub.com to known_hosts..."
           mkdir -p ~/.ssh
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
 
+          # Set up PATH for Node.js and npm
+          export PATH="/home/max/.nvm/versions/node/v20.19.4/bin:$PATH"
+          
           # Ensure PM2 is installed
           echo "Ensuring PM2 is installed..."
           npm install -g pm2
