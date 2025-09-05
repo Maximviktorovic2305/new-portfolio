@@ -34,16 +34,11 @@ jobs:
     steps:
     - name: Deploy to server
       uses: appleboy/ssh-action@master
-      env:
-        SMTP_HOST: ${{ secrets.SMTP_HOST }}
-        SMTP_PORT: ${{ secrets.SMTP_PORT }}
-        EMAIL_USER: ${{ secrets.EMAIL_USER }}
-        EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
-        CONTACT_EMAIL: ${{ secrets.CONTACT_EMAIL }}
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
+        envs: SMTP_HOST,SMTP_PORT,EMAIL_USER,EMAIL_PASS,CONTACT_EMAIL
         script: |
           set -e
 
@@ -88,11 +83,11 @@ jobs:
           # Create .env file with secrets
           echo "Creating .env file..."
           cat > .env << EOF
-          SMTP_HOST=$SMTP_HOST
-          SMTP_PORT=$SMTP_PORT
-          EMAIL_USER=$EMAIL_USER
-          EMAIL_PASS=$EMAIL_PASS
-          CONTACT_EMAIL=$CONTACT_EMAIL
+          SMTP_HOST=${SMTP_HOST}
+          SMTP_PORT=${SMTP_PORT}
+          EMAIL_USER=${EMAIL_USER}
+          EMAIL_PASS=${EMAIL_PASS}
+          CONTACT_EMAIL=${CONTACT_EMAIL}
           EOF
 
           # Clean and install dependencies
