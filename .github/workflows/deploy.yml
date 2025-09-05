@@ -42,20 +42,20 @@ jobs:
         script: |
           set -e
 
+          # Source nvm if it exists to ensure Node.js is in PATH
+          export NVM_DIR="$HOME/.nvm"
+          if [ -s "$NVM_DIR/nvm.sh" ]; then
+            \. "$NVM_DIR/nvm.sh"
+          fi
+
+          # Add common Node.js paths to PATH
+          export PATH="$NVM_DIR/versions/node/v20.19.4/bin:$HOME/.npm-global/bin:$PATH"
+          
           # Add GitHub to known hosts
           echo "Adding GitHub.com to known_hosts..."
           mkdir -p ~/.ssh
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
-
-          # Set up PATH for Node.js and npm
-          export PATH="/home/max/.nvm/versions/node/v20.19.4/bin:$PATH"
-          
-          # Ensure PM2 is installed
-          echo "Ensuring PM2 is installed..."
-          npm install -g pm2
-          echo "Verifying pm2 command:"
-          which pm2 || echo "pm2 not found"
 
           # Application directories
           APP_DIR="/home/max/portfolio"
