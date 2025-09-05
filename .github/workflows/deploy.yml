@@ -101,12 +101,34 @@ jobs:
           echo "Building project..."
           npm run build
 
+          # Create PM2 ecosystem config file
+          echo "Creating PM2 ecosystem config..."
+          cat > ecosystem.config.js << EOF
+          module.exports = {
+            apps: [{
+              name: 'portfolio',
+              script: 'node',
+              args: 'node_modules/next/dist/bin/next start -p 3015',
+              cwd: '.',
+              env: {
+                SMTP_HOST: '${SMTP_HOST}',
+                SMTP_PORT: '${SMTP_PORT}',
+                EMAIL_USER: '${EMAIL_USER}',
+                EMAIL_PASS: '${EMAIL_PASS}',
+                CONTACT_EMAIL: '${CONTACT_EMAIL}',
+                NODE_ENV: 'production',
+                PORT: '3015'
+              }
+            }]
+          };
+          EOF
+
           # Restart the application with PM2
           echo "Stopping existing PM2 process..."
           pm2 stop portfolio || true
           pm2 delete portfolio || true
           echo "Starting new PM2 process..."
-          pm2 start npm --name "portfolio" -- start
+          pm2 start ecosystem.config.js
           pm2 save
 
           echo "Deployment complete."
