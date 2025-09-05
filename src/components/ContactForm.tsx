@@ -23,22 +23,52 @@ export default function ContactForm({ initialData }: ContactFormProps) {
 			email: '',
 			subject: '',
 			message: '',
-		}
+		},
 	)
+	const [isSubmitting, setIsSubmitting] = useState(false)
+	const [submitMessage, setSubmitMessage] = useState('')
 
 	const handleChange = (
-		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
 	) => {
 		const { name, value } = e.target
 		setFormData((prev) => ({ ...prev, [name]: value }))
 	}
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
-		// Form submission logic would go here
-		console.log('Form submitted:', formData)
-		alert('Сообщение отправлено! Я свяжусь с вами в ближайшее время.')
-		setFormData({ name: '', email: '', subject: '', message: '' })
+		setIsSubmitting(true)
+		setSubmitMessage('')
+
+		try {
+			const response = await fetch('/api/contact', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(formData),
+			})
+
+			const result = await response.json()
+
+			if (response.ok) {
+				setSubmitMessage(
+					'Сообщение отправлено! Я свяжусь с вами в ближайшее время.',
+				)
+				setFormData({ name: '', email: '', subject: '', message: '' })
+			} else {
+				setSubmitMessage(
+					`Ошибка: ${result.error || 'Не удалось отправить сообщение'}`,
+				)
+			}
+		} catch (error) {
+			console.error('Error submitting form:', error)
+			setSubmitMessage(
+				'Ошибка: Не удалось отправить сообщение. Попробуйте позже.',
+			)
+		} finally {
+			setIsSubmitting(false)
+		}
 	}
 
 	return (
@@ -107,11 +137,25 @@ export default function ContactForm({ initialData }: ContactFormProps) {
 				/>
 			</div>
 
+			{submitMessage && (
+				<div
+					className={`p-3 rounded-lg ${
+						submitMessage.includes('Ошибка')
+							? 'bg-red-500/20 text-red-300'
+							: 'bg-green-500/20 text-green-300'
+					}`}>
+					{submitMessage}
+				</div>
+			)}
+
 			<motion.button
 				type='submit'
-				className='w-full px-6 py-3 bg-accent text-background font-medium rounded-lg hover:bg-accent/90 transition-colors duration-300'
+				disabled={isSubmitting}
+				className={`w-full px-6 py-3 bg-accent text-background font-medium rounded-lg hover:bg-accent/90 transition-colors duration-300 ${
+					isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+				}`}
 				whileHover={
-					settings.enabled
+					settings.enabled && !isSubmitting
 						? {
 								scale: 1.02,
 								boxShadow: '0 0 20px rgba(116, 221, 227, 0.5)',
@@ -119,7 +163,7 @@ export default function ContactForm({ initialData }: ContactFormProps) {
 						: {}
 				}
 				whileTap={{ scale: 0.98 }}>
-				Отправить сообщение
+				{isSubmitting ? 'Отправка...' : 'Отправить сообщение'}
 			</motion.button>
 		</form>
 	)

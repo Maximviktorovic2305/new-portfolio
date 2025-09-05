@@ -39,6 +39,33 @@ npm run dev
 
 Откройте [http://localhost:3001](http://localhost:3001) в вашем браузере для просмотра сайта.
 
+## Настройка email
+
+Для работы формы контактов необходимо настроить email:
+
+1. Скопируйте `.env.example` в `.env.local`:
+   ```bash
+   cp .env.example .env.local
+   ```
+
+2. Отредактируйте `.env.local` и добавьте ваши данные:
+   ```
+   # Для Yandex Mail
+   SMTP_HOST=smtp.yandex.ru
+   SMTP_PORT=465
+   EMAIL_USER=ваш-email@yandex.ru
+   EMAIL_PASS=ваш-пароль-приложения
+   CONTACT_EMAIL=Maximviktorovic@mail.ru
+
+   # Для Gmail
+   # SMTP_HOST=smtp.gmail.com
+   # SMTP_PORT=465
+   # EMAIL_USER=ваш-email@gmail.com
+   # EMAIL_PASS=ваш-пароль-приложения
+   ```
+
+3. Для Gmail и Yandex рекомендуется использовать "пароли приложений" вместо основного пароля.
+
 ## Структура проекта
 
 ```
