@@ -7,7 +7,7 @@ export const projects: Project[] = [
 		description:
 			'Мой дествующиий сайт, где каждый может выложить свой уникальный трек, слушать треки других, обсуждать композиции и тд. На сайте указана моя музыка',
 		technologies: [
-			'Next.js',
+			'Next 15',
 			'Tanstack',
 			'Redux',
 			'Nest.js',
@@ -23,7 +23,7 @@ export const projects: Project[] = [
 		title: 'Ai Chat',
 		description:
 			'Мой дествующиий сайт, с нейросетью Mistral AI без VPN на русском языке',
-		technologies: ['Next.js', 'Nest.js', 'CI/CD'],
+		technologies: ['Next 15', 'Nest.js', 'CI/CD'],
 		category: 'Fullstack',
 		site: 'https://aicontact.tech',
 		github: 'https://github.com/Maximviktorovic2305/chat-gpt-app',
@@ -41,7 +41,7 @@ export const projects: Project[] = [
 		id: 4,
 		title: 'Telegram Game Axiora Clicker',
 		description: 'Телеграм мини апп игра Axiora Clicker',
-		technologies: ['TypeScript', 'Framer Motion', 'GSAP'],
+		technologies: ['React 19', 'Zustand', 'GSAP'],
 		category: 'Frontend',
 		site: 'https://t.me/david_lee_bot',
 		github: '',
