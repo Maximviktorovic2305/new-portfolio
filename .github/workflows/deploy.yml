@@ -116,7 +116,6 @@ jobs:
                 EMAIL_USER: '${EMAIL_USER}',
                 EMAIL_PASS: '${EMAIL_PASS}',
                 CONTACT_EMAIL: '${CONTACT_EMAIL}',
-                NODE_ENV: 'production',
                 PORT: '3015'
               }
             }]
