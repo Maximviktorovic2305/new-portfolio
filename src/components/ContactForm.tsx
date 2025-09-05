@@ -41,7 +41,12 @@ export default function ContactForm({ initialData }: ContactFormProps) {
 		setSubmitMessage('')
 
 		try {
-			const response = await fetch('/api/contact', {
+			// Use the host from environment variables, with a fallback to relative path
+			const apiUrl = process.env.NEXT_PUBLIC_HOST
+				? `${process.env.NEXT_PUBLIC_HOST}/api/contact`
+				: '/api/contact'
+
+			const response = await fetch(apiUrl, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

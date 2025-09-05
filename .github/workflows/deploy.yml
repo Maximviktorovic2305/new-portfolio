@@ -87,6 +87,7 @@ jobs:
           EMAIL_USER=maximviktorovic@mail.ru
           EMAIL_PASS=XfLL5pixMAAG7K0yd3gV
           CONTACT_EMAIL=maximviktorovic@mail.ru
+          NEXT_PUBLIC_HOST=http://212.193.56.213:3015
           EOF
 
           # Clean and install dependencies
@@ -111,6 +112,7 @@ jobs:
               cwd: '.',
               env_file: './.env',
               env: {
+                NODE_ENV: 'production',
                 PORT: '3015'
               }
             }]
@@ -125,4 +127,9 @@ jobs:
           pm2 start ecosystem.config.js
           pm2 save
 
-          echo "Deployment complete."
+          # Check if the application is running
+          echo "Checking application status..."
+          sleep 5
+          pm2 list
+
+          echo "Deployment complete. The contact API endpoint will be available at http://212.193.56.213:3015/api/contact"
