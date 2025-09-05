@@ -1,7 +1,7 @@
 'use client'
 
-import { useTheme } from '@/contexts/ThemeContext'
 import { motion } from 'framer-motion'
+import ThemeToggle from '@/components/ui/ThemeToggle'
 
 interface NavItem {
 	name: string
@@ -9,8 +9,6 @@ interface NavItem {
 }
 
 export default function DesktopMenu({ navItems }: { navItems: NavItem[] }) {
-	const { theme, toggleTheme } = useTheme()
-
 	return (
 		<div className='hidden md:flex items-center space-x-8'>
 			{navItems.map((item) => (
@@ -24,14 +22,7 @@ export default function DesktopMenu({ navItems }: { navItems: NavItem[] }) {
 				</motion.a>
 			))}
 
-			<motion.button
-				onClick={toggleTheme}
-				className='p-2 rounded-full bg-gray-800 text-foreground hover:text-accent transition-colors duration-300'
-				whileHover={{ rotate: 5 }}
-				whileTap={{ scale: 0.9 }}
-				aria-label='Toggle theme'>
-				{theme === 'dark' ? '🌙' : '☀️'}
-			</motion.button>
+			<ThemeToggle />
 		</div>
 	)
 }

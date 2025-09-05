@@ -7,3 +7,10 @@ export interface Project {
 	site: string
 	github: string
 }
+
+export interface Skill {
+	name: string
+	description: string
+	category: 'Frontend' | 'Backend'
+	url: string
+}

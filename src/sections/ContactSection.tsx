@@ -1,44 +1,10 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useState } from 'react'
-import { useAnimation } from '@/contexts/AnimationContext'
+import ContactInfoItem from '../components/ContactInfoItem'
+import ContactForm from '../components/ContactForm'
 
 export default function ContactSection() {
-	const { settings } = useAnimation()
-	const [formData, setFormData] = useState({
-		name: '',
-		email: '',
-		subject: '',
-		message: '',
-	})
-
-	const handleChange = (
-		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-	) => {
-		const { name, value } = e.target
-		setFormData((prev) => ({ ...prev, [name]: value }))
-	}
-
-	const handleSubmit = (e: React.FormEvent) => {
-		e.preventDefault()
-		// Form submission logic would go here
-		console.log('Form submitted:', formData)
-		alert('Сообщение отправлено! Я свяжусь с вами в ближайшее время.')
-		setFormData({ name: '', email: '', subject: '', message: '' })
-	}
-
-	// Animation variants for contact icons
-	const iconVariants = {
-		hover: settings.enabled
-			? {
-					y: -2,
-					scale: 1.05,
-					transition: { duration: 0.3 },
-			  }
-			: {},
-	}
-
 	return (
 		<section id='contact' className='py-20 bg-gray-900'>
 			<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
@@ -70,10 +36,8 @@ export default function ContactSection() {
 						</p>
 
 						<div className='space-y-6'>
-							<motion.div
-								className='flex items-start'
-								whileHover={iconVariants.hover}>
-								<div className='flex-shrink-0 bg-accent/10 p-3 rounded-lg'>
+							<ContactInfoItem
+								icon={
 									<svg
 										className='w-6 h-6 text-accent'
 										fill='none'
@@ -85,54 +49,44 @@ export default function ContactSection() {
 											strokeWidth='2'
 											d='M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'></path>
 									</svg>
-								</div>
-								<div className='ml-4'>
-									<h4 className='text-lg font-medium text-light'>Email</h4>
-									<p className='text-light-80'>Maximviktorovic@mail.ru</p>
-								</div>
-							</motion.div>
+								}
+								title='Email'
+								content='Maximviktorovic@mail.ru'
+							/>
 
-							<motion.div
-								className='flex items-start'
-								whileHover={iconVariants.hover}>
-								<div className='flex-shrink-0 bg-accent/10 p-3 rounded-lg'>
+							<ContactInfoItem
+								icon={
 									<svg
 										className='w-6 h-6 text-accent'
 										fill='currentColor'
 										viewBox='0 0 24 24'>
 										<path d='M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z' />
 									</svg>
-								</div>
-								<div className='ml-4'>
-									<h4 className='text-lg font-medium text-light'>Telegram</h4>
-									<p className='text-light-80'>@Maximviktorovic2305</p>
-								</div>
-							</motion.div>
+								}
+								title='Telegram'
+								content='@Maximviktorovic2305'
+							/>
 
-							<motion.div
-								className='flex items-start'
-								whileHover={iconVariants.hover}>
-								<div className='flex-shrink-0 bg-accent/10 p-3 rounded-lg'>
+							<ContactInfoItem
+								icon={
 									<svg
 										className='w-6 h-6 text-accent'
 										fill='currentColor'
 										viewBox='0 0 24 24'>
 										<path d='M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z' />
 									</svg>
-								</div>
-								<div className='ml-4'>
-									<h4 className='text-lg font-medium text-light'>GitHub</h4>
-									<p className='text-light-80'>
-										<a
-											href='https://github.com/Maximviktorovic2305'
-											target='_blank'
-											rel='noopener noreferrer'
-											className='hover:text-accent transition-colors duration-300'>
-											Maximviktorovic2305
-										</a>
-									</p>
-								</div>
-							</motion.div>
+								}
+								title='GitHub'
+								content={
+									<a
+										href='https://github.com/Maximviktorovic2305'
+										target='_blank'
+										rel='noopener noreferrer'
+										className='hover:text-accent transition-colors duration-300'>
+										Maximviktorovic2305
+									</a>
+								}
+							/>
 						</div>
 					</motion.div>
 
@@ -142,86 +96,7 @@ export default function ContactSection() {
 						whileInView={{ opacity: 1, x: 0 }}
 						viewport={{ once: true }}
 						transition={{ duration: 0.8, delay: 0.4 }}>
-						<form onSubmit={handleSubmit} className='space-y-6'>
-							<div>
-								<label htmlFor='name' className='block text-light mb-2'>
-									Имя
-								</label>
-								<motion.input
-									type='text'
-									id='name'
-									name='name'
-									value={formData.name}
-									onChange={handleChange}
-									required
-									className='w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-light focus:outline-none focus:ring-2 focus:ring-accent'
-									whileFocus={settings.enabled ? { scale: 1.02 } : {}}
-								/>
-							</div>
-
-							<div>
-								<label htmlFor='email' className='block text-light mb-2'>
-									Email
-								</label>
-								<motion.input
-									type='email'
-									id='email'
-									name='email'
-									value={formData.email}
-									onChange={handleChange}
-									required
-									className='w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-light focus:outline-none focus:ring-2 focus:ring-accent'
-									whileFocus={settings.enabled ? { scale: 1.02 } : {}}
-								/>
-							</div>
-
-							<div>
-								<label htmlFor='subject' className='block text-light mb-2'>
-									Тема
-								</label>
-								<motion.input
-									type='text'
-									id='subject'
-									name='subject'
-									value={formData.subject}
-									onChange={handleChange}
-									required
-									className='w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-light focus:outline-none focus:ring-2 focus:ring-accent'
-									whileFocus={settings.enabled ? { scale: 1.02 } : {}}
-								/>
-							</div>
-
-							<div>
-								<label htmlFor='message' className='block text-light mb-2'>
-									Сообщение
-								</label>
-								<motion.textarea
-									id='message'
-									name='message'
-									value={formData.message}
-									onChange={handleChange}
-									required
-									rows={5}
-									className='w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-light focus:outline-none focus:ring-2 focus:ring-accent'
-									whileFocus={settings.enabled ? { scale: 1.02 } : {}}
-								/>
-							</div>
-
-							<motion.button
-								type='submit'
-								className='w-full px-6 py-3 bg-accent text-background font-medium rounded-lg hover:bg-accent/90 transition-colors duration-300'
-								whileHover={
-									settings.enabled
-										? {
-												scale: 1.02,
-												boxShadow: '0 0 20px rgba(116, 221, 227, 0.5)',
-										  }
-										: {}
-								}
-								whileTap={{ scale: 0.98 }}>
-								Отправить сообщение
-							</motion.button>
-						</form>
+						<ContactForm />
 					</motion.div>
 				</div>
 			</div>

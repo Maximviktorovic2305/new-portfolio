@@ -30,7 +30,6 @@ export default function AboutSection() {
 						viewport={{ once: true }}
 						transition={{ duration: 0.8, delay: 0.2 }}>
 						<div className='relative'>
-							{/* Replaced placeholder with actual photo */}
 							<div className='rounded-2xl w-80 h-80 mx-auto overflow-hidden shadow-2xl'>
 								<Image
 									src='/photo.jpg'
@@ -49,19 +48,17 @@ export default function AboutSection() {
 						whileInView={{ opacity: 1, x: 0 }}
 						viewport={{ once: true }}
 						transition={{ duration: 0.8, delay: 0.4 }}>
-						<h3 className='text-2xl font-bold mb-4'>
-							Fullstack разработчик
-						</h3>
+						<h3 className='text-2xl font-bold mb-4'>Fullstack разработчик</h3>
 						<p className='text-foreground/80 mb-6'>
 							Я специализируюсь на создании современных веб-приложений с
 							использованием передовых технологий. Мой подход сочетает в себе
 							техническое мастерство и творческий подход к решению задач.
 						</p>
 						<p className='text-foreground/80 mb-6'>
-							Я работал над проектами различной
-							сложности - от стартапов до корпоративных решений. Мое внимание к
-							деталям и страсть к разработке помогают создавать уникальные
-							пользовательские experiences.
+							Я работал над проектами различной сложности - от стартапов до
+							корпоративных решений. Мое внимание к деталям и страсть к
+							разработке помогают создавать уникальные пользовательские
+							experiences.
 						</p>
 
 						<div className='grid grid-cols-2 gap-4 mt-8'>
@@ -69,7 +66,9 @@ export default function AboutSection() {
 								className='bg-gray-800 p-4 rounded-lg'
 								whileHover={settings.enabled ? { y: -5 } : {}}>
 								<h4 className='text-accent font-bold text-lg mb-2'>Frontend</h4>
-								<p className='text-white/80'>React, Next.js, Vue, Nuxt, TypeScript</p>
+								<p className='text-white/80'>
+									React, Next.js, Vue, Nuxt, TypeScript
+								</p>
 							</motion.div>
 
 							<motion.div
@@ -92,7 +91,9 @@ export default function AboutSection() {
 								className='bg-gray-800 p-4 rounded-lg'
 								whileHover={settings.enabled ? { y: -5 } : {}}>
 								<h4 className='text-accent font-bold text-lg mb-2'>Деплой</h4>
-								<p className='text-white/80'>Ubuntu, Docker, CI/CD, GitActions</p>
+								<p className='text-white/80'>
+									Ubuntu, Docker, CI/CD, GitActions
+								</p>
 							</motion.div>
 						</div>
 					</motion.div>
