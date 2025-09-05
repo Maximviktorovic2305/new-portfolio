@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Портфолио Fullstack разработчика",
-  description: "Современное портфолио с анимациями на GSAP, Three.js и Framer Motion",
+  description: "Современное портфолио fullstack разработчика с анимациями на GSAP, Three.js и Framer Motion",
 };
 
 export default function RootLayout({
