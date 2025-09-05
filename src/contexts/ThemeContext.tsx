@@ -15,21 +15,16 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>('dark');
 
   useEffect(() => {
-    // Check for saved theme or system preference
     const savedTheme = localStorage.getItem('theme') as Theme | null;
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     
     if (savedTheme) {
       setTheme(savedTheme);
-    } else if (systemPrefersDark) {
-      setTheme('dark');
     } else {
-      setTheme('light');
+      setTheme('dark');
     }
   }, []);
 
   useEffect(() => {
-    // Apply theme to document
     document.documentElement.setAttribute('data-theme', theme);
     document.documentElement.classList.toggle('dark', theme === 'dark');
     localStorage.setItem('theme', theme);
