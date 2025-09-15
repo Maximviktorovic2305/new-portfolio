@@ -43,7 +43,7 @@ export const projects: Project[] = [
 		description: 'Телеграм мини апп игра Axiora Clicker',
 		technologies: ['React 19', 'Zustand', 'GSAP'],
 		category: 'Frontend',
-		site: 'https://t.me/david_lee_bot',
+		site: 'https://t.me/axiora_clicker_bot',
 		github: '',
 	},
 ]
