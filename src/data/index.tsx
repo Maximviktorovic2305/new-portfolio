@@ -33,7 +33,7 @@ export const projects: Project[] = [
 		title: 'Macrosmatic',
 		description: 'Современная финтех платформа для инвестиций',
 		technologies: ['Nuxt', 'Tanstack', 'Pinia'],
-		category: 'Frontend',
+		category: 'Fullstack',
 		site: 'https://macrosmatic.pro',
 		github: '',
 	},
