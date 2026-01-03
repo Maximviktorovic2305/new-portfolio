@@ -15,7 +15,7 @@ export default function DesktopMenu({ navItems }: { navItems: NavItem[] }) {
 				<motion.a
 					key={item.name}
 					href={item.href}
-					className='text-foreground hover:text-accent transition-colors duration-300'
+					className='text-foreground hover:text-accent transition-colors duration-300 cursor-pointer'
 					whileHover={{ y: -2 }}
 					whileTap={{ scale: 0.95 }}>
 					{item.name}

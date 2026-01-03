@@ -63,37 +63,75 @@ export default function AboutSection() {
 
 						<div className='grid grid-cols-2 gap-4 mt-8'>
 							<motion.div
-								className='bg-gray-800 p-4 rounded-lg'
-								whileHover={settings.enabled ? { y: -5 } : {}}>
-								<h4 className='text-accent font-bold text-lg mb-2'>Frontend</h4>
-								<p className='text-white/80'>
-									React, Next.js, Vue, Nuxt, TypeScript
-								</p>
+								className='card-surface card-surface--soft rounded-lg p-4'
+								data-anim={settings.enabled}
+								whileHover={
+									settings.enabled ? { y: -6, rotateX: 3, rotateY: -3 } : {}
+								}
+								transition={{ type: 'spring', stiffness: 220, damping: 18 }}
+								style={{ transformStyle: 'preserve-3d' }}>
+								<div className='card-grid' aria-hidden='true' />
+								<div className='card-shine' aria-hidden='true' />
+								<div className='card-content'>
+									<h4 className='text-accent font-bold text-lg mb-2'>Frontend</h4>
+									<p className='text-white/80'>
+										React, Next.js, Vue, Nuxt, TypeScript
+									</p>
+								</div>
 							</motion.div>
 
 							<motion.div
-								className='bg-gray-800 p-4 rounded-lg'
-								whileHover={settings.enabled ? { y: -5 } : {}}>
-								<h4 className='text-accent font-bold text-lg mb-2'>Backend</h4>
-								<p className='text-white/80'>Node.js, Express, Nest, Golang</p>
+								className='card-surface card-surface--soft rounded-lg p-4'
+								data-anim={settings.enabled}
+								whileHover={
+									settings.enabled ? { y: -6, rotateX: 3, rotateY: -3 } : {}
+								}
+								transition={{ type: 'spring', stiffness: 220, damping: 18 }}
+								style={{ transformStyle: 'preserve-3d' }}>
+								<div className='card-grid' aria-hidden='true' />
+								<div className='card-shine' aria-hidden='true' />
+								<div className='card-content'>
+									<h4 className='text-accent font-bold text-lg mb-2'>Backend</h4>
+									<p className='text-white/80'>
+										Node.js, Express, Nest, Golang
+									</p>
+								</div>
 							</motion.div>
 
 							<motion.div
-								className='bg-gray-800 p-4 rounded-lg'
-								whileHover={settings.enabled ? { y: -5 } : {}}>
-								<h4 className='text-accent font-bold text-lg mb-2'>Анимации</h4>
-								<p className='text-white/80'>
-									CSS, GSAP, Three.js, Framer Motion
-								</p>
+								className='card-surface card-surface--soft rounded-lg p-4'
+								data-anim={settings.enabled}
+								whileHover={
+									settings.enabled ? { y: -6, rotateX: 3, rotateY: -3 } : {}
+								}
+								transition={{ type: 'spring', stiffness: 220, damping: 18 }}
+								style={{ transformStyle: 'preserve-3d' }}>
+								<div className='card-grid' aria-hidden='true' />
+								<div className='card-shine' aria-hidden='true' />
+								<div className='card-content'>
+									<h4 className='text-accent font-bold text-lg mb-2'>Анимации</h4>
+									<p className='text-white/80'>
+										CSS, GSAP, Three.js, Framer Motion
+									</p>
+								</div>
 							</motion.div>
 
 							<motion.div
-								className='bg-gray-800 p-4 rounded-lg'
-								whileHover={settings.enabled ? { y: -5 } : {}}>
-								<h4 className='text-accent font-bold text-lg mb-2'>Деплой</h4>
-								<p className='text-white/80'>
-									Ubuntu, Docker, CI/CD, GitActions
-								</p>
+								className='card-surface card-surface--soft rounded-lg p-4'
+								data-anim={settings.enabled}
+								whileHover={
+									settings.enabled ? { y: -6, rotateX: 3, rotateY: -3 } : {}
+								}
+								transition={{ type: 'spring', stiffness: 220, damping: 18 }}
+								style={{ transformStyle: 'preserve-3d' }}>
+								<div className='card-grid' aria-hidden='true' />
+								<div className='card-shine' aria-hidden='true' />
+								<div className='card-content'>
+									<h4 className='text-accent font-bold text-lg mb-2'>Деплой</h4>
+									<p className='text-white/80'>
+										Ubuntu, Docker, CI/CD, GitActions
+									</p>
+								</div>
 							</motion.div>
 						</div>
 					</motion.div>

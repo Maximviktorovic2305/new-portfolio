@@ -17,7 +17,7 @@ export default function AnimationPanel() {
 						<h3 className='font-medium'>Настройки анимации</h3>
 						<button
 							onClick={() => setIsOpen(false)}
-							className='text-white/60 hover:text-white transition-colors'
+							className='text-white/60 hover:text-white transition-colors cursor-pointer'
 							aria-label='Закрыть панель настроек'>
 							<svg
 								className='w-5 h-5'
@@ -43,7 +43,7 @@ export default function AnimationPanel() {
 			) : (
 				<button
 					onClick={() => setIsOpen(true)}
-					className='bg-gray-800/90 backdrop-blur-sm p-3 rounded-lg border border-gray-700 text-white/80 hover:text-white transition-colors'
+					className='bg-gray-800/90 backdrop-blur-sm p-3 rounded-lg border border-gray-700 text-white/80 hover:text-white transition-colors cursor-pointer'
 					aria-label='Открыть панель настроек анимации'>
 					<svg
 						className='w-6 h-6'

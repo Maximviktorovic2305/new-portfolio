@@ -17,7 +17,7 @@ export default function IntensitySelector() {
 					<button
 						key={intensity}
 						onClick={() => updateSettings({ intensity })}
-						className={`px-3 py-1 text-xs rounded-full transition-colors ${
+						className={`px-3 py-1 text-xs rounded-full transition-colors cursor-pointer ${
 							settings.intensity === intensity
 								? 'bg-accent text-background'
 								: 'bg-gray-700 text-foreground hover:bg-gray-600'

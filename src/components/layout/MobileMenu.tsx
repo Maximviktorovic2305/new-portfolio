@@ -22,9 +22,15 @@ export default function MobileMenu({
 
 			<motion.button
 				onClick={() => setIsMenuOpen(!isMenuOpen)}
-				className='p-2 rounded-md text-foreground hover:text-accent focus:outline-none'
+				className='menu-toggle p-2 rounded-md text-foreground hover:text-accent focus:outline-none cursor-pointer'
+				whileHover={{ scale: 1.08, rotate: -2 }}
 				whileTap={{ scale: 0.9 }}>
-				{isMenuOpen ? '✕' : '☰'}
+				<span className='sr-only'>Toggle menu</span>
+				<span className={`menu-icon ${isMenuOpen ? 'open' : ''}`}>
+					<span className='menu-line' />
+					<span className='menu-line' />
+					<span className='menu-line' />
+				</span>
 			</motion.button>
 		</div>
 	)

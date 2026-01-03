@@ -89,7 +89,7 @@ export default function ContactForm({ initialData }: ContactFormProps) {
 					value={formData.name}
 					onChange={handleChange}
 					required
-					className='w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-light focus:outline-none focus:ring-2 focus:ring-accent'
+					className='input-glow w-full px-4 py-3 rounded-lg text-light focus:outline-none focus:ring-2 focus:ring-accent'
 					whileFocus={settings.enabled ? { scale: 1.02 } : {}}
 				/>
 			</div>
@@ -105,7 +105,7 @@ export default function ContactForm({ initialData }: ContactFormProps) {
 					value={formData.email}
 					onChange={handleChange}
 					required
-					className='w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-light focus:outline-none focus:ring-2 focus:ring-accent'
+					className='input-glow w-full px-4 py-3 rounded-lg text-light focus:outline-none focus:ring-2 focus:ring-accent'
 					whileFocus={settings.enabled ? { scale: 1.02 } : {}}
 				/>
 			</div>
@@ -121,7 +121,7 @@ export default function ContactForm({ initialData }: ContactFormProps) {
 					value={formData.subject}
 					onChange={handleChange}
 					required
-					className='w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-light focus:outline-none focus:ring-2 focus:ring-accent'
+					className='input-glow w-full px-4 py-3 rounded-lg text-light focus:outline-none focus:ring-2 focus:ring-accent'
 					whileFocus={settings.enabled ? { scale: 1.02 } : {}}
 				/>
 			</div>
@@ -137,7 +137,7 @@ export default function ContactForm({ initialData }: ContactFormProps) {
 					onChange={handleChange}
 					required
 					rows={5}
-					className='w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-light focus:outline-none focus:ring-2 focus:ring-accent'
+					className='input-glow w-full px-4 py-3 rounded-lg text-light focus:outline-none focus:ring-2 focus:ring-accent'
 					whileFocus={settings.enabled ? { scale: 1.02 } : {}}
 				/>
 			</div>
@@ -156,19 +156,21 @@ export default function ContactForm({ initialData }: ContactFormProps) {
 			<motion.button
 				type='submit'
 				disabled={isSubmitting}
-				className={`w-full px-6 py-3 bg-accent text-background font-medium rounded-lg hover:bg-accent/90 transition-colors duration-300 ${
+				data-anim={settings.enabled}
+				className={`button-glow w-full px-6 py-3 bg-accent text-background font-medium rounded-lg hover:bg-accent/90 transition-colors duration-300 cursor-pointer ${
 					isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
 				}`}
 				whileHover={
 					settings.enabled && !isSubmitting
 						? {
 								scale: 1.02,
+								y: -2,
 								boxShadow: '0 0 20px rgba(116, 221, 227, 0.5)',
 						  }
 						: {}
 				}
 				whileTap={{ scale: 0.98 }}>
-				{isSubmitting ? 'Отправка...' : 'Отправить сообщение'}
+				<span>{isSubmitting ? 'Отправка...' : 'Отправить сообщение'}</span>
 			</motion.button>
 		</form>
 	)

@@ -14,7 +14,7 @@ export default function SocialIcon({
 	name,
 	url,
 	icon,
-	className = 'text-light-80 hover:text-[#74dde3] transition-colors duration-300',
+	className = 'text-light-80 hover:text-[#74dde3] transition-colors duration-300 cursor-pointer',
 }: SocialIconProps) {
 	const { settings } = useAnimation()
 

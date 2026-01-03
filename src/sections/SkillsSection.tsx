@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useRef, useEffect } from 'react'
 import { Skill } from '@/types'
 import SkillCard from '@/components/SkillCard'
@@ -14,6 +14,9 @@ export default function SkillsSection() {
 		skill: Skill
 		x: number
 		y: number
+		placement: 'top' | 'bottom'
+		width: number
+		height: number
 	} | null>(null)
 	const popupRef = useRef<HTMLDivElement>(null)
 	const sectionRef = useRef<HTMLElement>(null)
@@ -39,10 +42,54 @@ export default function SkillsSection() {
 
 	const handleSkillHover = (skill: Skill, event: React.MouseEvent) => {
 		const rect = event.currentTarget.getBoundingClientRect()
+		const viewportPadding = 12
+		const popupWidth = 256
+		const popupHeight = 160
+		const effectiveWidth = Math.max(
+			180,
+			Math.min(popupWidth, window.innerWidth - viewportPadding * 2),
+		)
+		const effectiveHeight = Math.max(
+			120,
+			Math.min(popupHeight, window.innerHeight - viewportPadding * 2),
+		)
+		const left = Math.min(
+			Math.max(rect.left + rect.width / 2 - effectiveWidth / 2, viewportPadding),
+			window.innerWidth - viewportPadding - effectiveWidth,
+		)
+		const spaceAbove = rect.top - viewportPadding
+		const spaceBelow = window.innerHeight - rect.bottom - viewportPadding
+		const gap = 12
+		let placement: 'top' | 'bottom' = 'top'
+
+		if (spaceAbove >= effectiveHeight + gap) {
+			placement = 'top'
+		} else if (spaceBelow >= effectiveHeight + gap) {
+			placement = 'bottom'
+		} else {
+			placement = spaceAbove > spaceBelow ? 'top' : 'bottom'
+		}
+
+		let top = placement === 'top'
+			? rect.top - gap - effectiveHeight
+			: rect.bottom + gap
+
+		if (placement === 'top') {
+			top = Math.max(top, viewportPadding)
+		} else {
+			top = Math.min(
+				top,
+				window.innerHeight - viewportPadding - effectiveHeight,
+			)
+		}
+
 		setPopup({
 			skill,
-			x: rect.left + rect.width / 2,
-			y: rect.top - 10,
+			x: left,
+			y: top,
+			placement,
+			width: effectiveWidth,
+			height: effectiveHeight,
 		})
 	}
 
@@ -92,7 +139,9 @@ export default function SkillsSection() {
 				</div>
 
 				{/* Popup */}
-				<SkillPopup popup={popup} popupRef={popupRef} />
+				<AnimatePresence>
+					<SkillPopup popup={popup} popupRef={popupRef} />
+				</AnimatePresence>
 			</div>
 		</section>
 	)

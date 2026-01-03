@@ -43,20 +43,19 @@ export default function HeroSection() {
 						transition={{ duration: 0.8, delay: 0.8 }}>
 						<motion.a
 							href='#projects'
-							className='px-8 py-3 bg-accent text-background font-medium rounded-full hover:bg-accent/90 transition-colors duration-300'
+							className='px-8 py-3 bg-accent text-background font-medium rounded-full hover:bg-accent/90 transition-colors duration-300 cursor-pointer'
 							whileHover={{
 								scale: 1.05,
-								boxShadow: settings.enabled
-									? '0 0 20px rgba(116, 221, 227, 0.5)'
-									: 'none',
+								boxShadow: '0 0 22px rgba(116, 221, 227, 0.45)',
 							}}
 							whileTap={{ scale: 0.95 }}>
-							Мои работы
+							<span>Мои работы</span>
 						</motion.a>
 
 						<motion.a
 							href='#contact'
-							className='px-8 py-3 bg-transparent border-2 border-accent font-medium rounded-full hover:bg-accent/10 transition-colors duration-300'
+							data-anim={settings.enabled}
+							className='button-ghost px-8 py-3 bg-transparent border-2 border-accent font-medium rounded-full hover:bg-accent/10 transition-colors duration-300 cursor-pointer'
 							whileHover={{
 								scale: 1.05,
 								boxShadow: settings.enabled
@@ -64,7 +63,7 @@ export default function HeroSection() {
 									: 'none',
 							}}
 							whileTap={{ scale: 0.95 }}>
-							Связаться
+							<span>Связаться</span>
 						</motion.a>
 					</motion.div>
 				</motion.div>

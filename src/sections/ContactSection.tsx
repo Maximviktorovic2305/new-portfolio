@@ -82,7 +82,7 @@ export default function ContactSection() {
 										href='https://github.com/Maximviktorovic2305'
 										target='_blank'
 										rel='noopener noreferrer'
-										className='hover:text-accent transition-colors duration-300'>
+										className='hover:text-accent transition-colors duration-300 cursor-pointer'>
 										Maximviktorovic2305
 									</a>
 								}

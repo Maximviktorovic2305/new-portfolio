@@ -2,6 +2,8 @@
 
 import { motion } from 'framer-motion'
 import { Skill } from '@/types'
+import { useAnimation } from '@/contexts/AnimationContext'
+import { useCardTilt } from '@/hooks'
 
 interface SkillCardProps {
 	skill: Skill
@@ -16,6 +18,18 @@ export default function SkillCard({
 	onHover,
 	onClick,
 }: SkillCardProps) {
+	const { settings } = useAnimation()
+	const maxTilt =
+		settings.intensity === 'subtle'
+			? 5
+			: settings.intensity === 'moderate'
+			? 8
+			: 11
+	const { tilt, cardRef, handleMouseMove, handleMouseLeave } = useCardTilt({
+		maxTilt,
+	})
+	const hoverMotion = settings.enabled ? { y: -6, scale: 1.03 } : {}
+
 	return (
 		<motion.div
 			key={skill.name}
@@ -23,11 +37,28 @@ export default function SkillCard({
 			whileInView={{ opacity: 1, y: 0 }}
 			viewport={{ once: true }}
 			transition={{ duration: 0.5, delay: index * 0.05 }}
+			whileHover={hoverMotion}
 			className='relative'
 			onMouseEnter={(e) => onHover(skill, e)}
 			onClick={(e) => onClick(skill, e)}>
-			<div className='bg-gray-800 hover:bg-gray-750 rounded-lg p-4 text-center cursor-pointer transition-all duration-300 border border-gray-700 hover:border-accent'>
-				<span className='text-light text-sm font-medium'>{skill.name}</span>
+			<div
+				ref={cardRef}
+				data-anim={settings.enabled}
+				className='card-surface card-surface--compact skill-card rounded-lg p-4 text-center cursor-pointer transition-all duration-300'
+				onMouseMove={settings.enabled ? handleMouseMove : undefined}
+				onMouseLeave={settings.enabled ? handleMouseLeave : undefined}
+				style={{
+					transform: settings.enabled
+						? `perspective(900px) rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg)`
+						: 'none',
+					transition: settings.enabled ? 'transform 0.12s ease-out' : 'none',
+					transformStyle: 'preserve-3d',
+				}}>
+				<div className='card-grid' aria-hidden='true' />
+				<div className='card-shine' aria-hidden='true' />
+				<span className='relative z-10 text-light text-sm font-medium'>
+					{skill.name}
+				</span>
 			</div>
 		</motion.div>
 	)

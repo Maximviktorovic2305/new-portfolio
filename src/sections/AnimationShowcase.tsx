@@ -3,9 +3,11 @@
 import { useState, useEffect } from 'react'
 import ThreeScene from '@/components/ThreeScene'
 import { motion } from 'framer-motion'
+import { useAnimation } from '@/contexts/AnimationContext'
 
 export default function AnimationShowcase() {
 	const [isVisible, setIsVisible] = useState(false)
+	const { settings } = useAnimation()
 
 	useEffect(() => {
 		setIsVisible(true)
@@ -20,7 +22,7 @@ export default function AnimationShowcase() {
 			</div>
 
 			{/* Content */}
-			<div className='relative z-10 container mx-auto px-4 py-20'>
+			<div className='relative z-10 container mx-auto px-4 py-20 text-white'>
 				<div className='max-w-4xl mx-auto text-center'>
 					<motion.h2
 						className='text-4xl md:text-5xl font-bold  mb-6'
@@ -44,31 +46,64 @@ export default function AnimationShowcase() {
 						initial={{ opacity: 0, y: 30 }}
 						animate={isVisible ? { opacity: 1, y: 0 } : {}}
 						transition={{ duration: 0.8, delay: 0.6 }}>
-						<div className='bg-background/70 backdrop-blur-sm p-6 rounded-xl border border-gray-800 shadow-lg'>
-							<h3 className='text-xl font-semibold  mb-3'>Современный UI/UX</h3>
-							<p className=''>
-								Создание объемных и интерактивных элементов для веб-приложений
-							</p>
-						</div>
+						<motion.div
+							data-anim={settings.enabled}
+							className='card-surface card-surface--soft p-6 rounded-xl'
+							whileHover={
+								settings.enabled ? { y: -8, rotateX: 3, rotateY: -3 } : {}
+							}
+							transition={{ type: 'spring', stiffness: 220, damping: 18 }}
+							style={{ transformStyle: 'preserve-3d' }}>
+							<div className='card-grid' aria-hidden='true' />
+							<div className='card-shine' aria-hidden='true' />
+							<div className='card-content'>
+								<h3 className='text-xl font-semibold mb-3'>Современный UI/UX</h3>
+								<p>
+									Создание объемных и интерактивных элементов для веб-приложений
+								</p>
+							</div>
+						</motion.div>
 
-						<div className='bg-background/70 backdrop-blur-sm p-6 rounded-xl border border-gray-800 shadow-lg'>
-							<h3 className='text-xl font-semibold  mb-3'>
-								Высокая производительность
-							</h3>
-							<p className=''>
-								Оптимизация и производительные решения для современных
-								приложений
-							</p>
-						</div>
+						<motion.div
+							data-anim={settings.enabled}
+							className='card-surface card-surface--soft p-6 rounded-xl'
+							whileHover={
+								settings.enabled ? { y: -8, rotateX: 3, rotateY: -3 } : {}
+							}
+							transition={{ type: 'spring', stiffness: 220, damping: 18 }}
+							style={{ transformStyle: 'preserve-3d' }}>
+							<div className='card-grid' aria-hidden='true' />
+							<div className='card-shine' aria-hidden='true' />
+							<div className='card-content'>
+								<h3 className='text-xl font-semibold mb-3'>
+									Высокая производительность
+								</h3>
+								<p>
+									Оптимизация и производительные решения для современных
+									приложений
+								</p>
+							</div>
+						</motion.div>
 
-						<div className='bg-background/70 backdrop-blur-sm p-6 rounded-xl border border-gray-800 shadow-lg'>
-							<h3 className='text-xl font-semibold mb-3'>
-								Современные фреймворки
-							</h3>
-							<p className=''>
-								Разработка с использованием актуальных технологий и библиотек
-							</p>
-						</div>
+						<motion.div
+							data-anim={settings.enabled}
+							className='card-surface card-surface--soft p-6 rounded-xl'
+							whileHover={
+								settings.enabled ? { y: -8, rotateX: 3, rotateY: -3 } : {}
+							}
+							transition={{ type: 'spring', stiffness: 220, damping: 18 }}
+							style={{ transformStyle: 'preserve-3d' }}>
+							<div className='card-grid' aria-hidden='true' />
+							<div className='card-shine' aria-hidden='true' />
+							<div className='card-content'>
+								<h3 className='text-xl font-semibold mb-3'>
+									Современные фреймворки
+								</h3>
+								<p>
+									Разработка с использованием актуальных технологий и библиотек
+								</p>
+							</div>
+						</motion.div>
 					</motion.div>
 
 					<motion.div

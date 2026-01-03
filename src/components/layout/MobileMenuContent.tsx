@@ -30,7 +30,7 @@ export default function MobileMenuContent({
 							<motion.a
 								key={item.name}
 								href={item.href}
-								className='block px-3 py-2 rounded-md text-base font-medium text-foreground hover:text-accent hover:bg-gray-800'
+								className='block px-3 py-2 rounded-md text-base font-medium text-foreground hover:text-accent hover:bg-gray-800 cursor-pointer'
 								onClick={() => setIsMenuOpen(false)}
 								whileHover={{ x: 5 }}
 								whileTap={{ scale: 0.95 }}>

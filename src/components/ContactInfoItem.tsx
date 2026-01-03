@@ -11,23 +11,20 @@ interface ContactInfoItemProps {
 
 export default function ContactInfoItem({ icon, title, content }: ContactInfoItemProps) {
 	const { settings } = useAnimation()
-	
-	// Animation variants for contact icons
-	const iconVariants = {
-		hover: settings.enabled
-			? {
-					y: -2,
-					scale: 1.05,
-					transition: { duration: 0.3 },
-			  }
-			: {},
-	}
+	const hoverMotion = settings.enabled
+		? {
+				y: -4,
+				scale: 1.02,
+				boxShadow: '0 18px 40px rgba(0, 0, 0, 0.35)',
+		  }
+		: {}
 
 	return (
 		<motion.div
-			className='flex items-start'
-			whileHover={iconVariants.hover}>
-			<div className='flex-shrink-0 bg-accent/10 p-3 rounded-lg'>
+			data-anim={settings.enabled}
+			className='contact-item flex items-start cursor-pointer'
+			whileHover={hoverMotion}>
+			<div className='contact-icon flex-shrink-0 p-3 rounded-lg'>
 				{icon}
 			</div>
 			<div className='ml-4'>
