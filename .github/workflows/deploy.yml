@@ -7,129 +7,109 @@ on:
       - master
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-
-    - name: Install dependencies
-      run: npm ci
-
-    - name: Build project
-      run: npm run build
-
   deploy:
-    needs: build
     runs-on: ubuntu-latest
     environment: Production
     timeout-minutes: 30
-    
+
     steps:
-    - name: Deploy to server
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: |
-          set -e
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
 
-          # Source nvm if it exists to ensure Node.js is in PATH
-          export NVM_DIR="$HOME/.nvm"
-          if [ -s "$NVM_DIR/nvm.sh" ]; then
-            \. "$NVM_DIR/nvm.sh"
-          fi
+            # Load nvm (if installed)
+            export NVM_DIR="$HOME/.nvm"
+            if [ -s "$NVM_DIR/nvm.sh" ]; then
+              . "$NVM_DIR/nvm.sh"
+            fi
 
-          # Add common Node.js paths to PATH
-          export PATH="$NVM_DIR/versions/node/v20.19.4/bin:$HOME/.npm-global/bin:$PATH"
-          
-          # Add GitHub to known hosts
-          echo "Adding GitHub.com to known_hosts..."
-          mkdir -p ~/.ssh
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-          chmod 600 ~/.ssh/known_hosts
+            # Ensure Node is in PATH (adjust if needed)
+            export PATH="$NVM_DIR/versions/node/v20.19.4/bin:$HOME/.npm-global/bin:$PATH"
 
-          # Application directories
-          APP_DIR="/home/max/portfolio"
-          echo "Ensuring application directory exists: $APP_DIR"
-          mkdir -p $APP_DIR
+            # SSH config for GitHub private repo using deploy key (REPO_DEPLOY_KEY)
+            mkdir -p ~/.ssh
+            chmod 700 ~/.ssh
+            ssh-keyscan github.com >> ~/.ssh/known_hosts
+            chmod 600 ~/.ssh/known_hosts
 
-          # Clone or update repository
-          echo "Checking repository status..."
-          if [ -d "$APP_DIR/.git" ]; then
-            echo "Repository exists. Updating..."
-            cd $APP_DIR
-            git reset --hard HEAD
-            git clean -fdx
-            git pull origin master
-          else
-            echo "Cloning repository..."
-            rm -rf $APP_DIR/*
-            git clone https://github.com/Maximviktorovic2305/new-portfolio.git $APP_DIR
-          fi
+            cat > ~/.ssh/portfolio_repo << 'EOF'
+            ${{ secrets.REPO_DEPLOY_KEY }}
+            EOF
+            chmod 600 ~/.ssh/portfolio_repo
 
-          cd $APP_DIR
-          echo "Current directory: $(pwd)"
-          ls -la
+            cat > ~/.ssh/config << 'EOF'
+            Host github.com
+              HostName github.com
+              User git
+              IdentityFile ~/.ssh/portfolio_repo
+              IdentitiesOnly yes
+            EOF
+            chmod 600 ~/.ssh/config
 
-          # Copy .env file from local to server
-          echo "Copying .env file to server..."
-          cat > .env << 'EOF'
-          SMTP_HOST=smtp.mail.ru
-          SMTP_PORT=465
-          EMAIL_USER=maximviktorovic@mail.ru
-          EMAIL_PASS=XfLL5pixMAAG7K0yd3gV
-          CONTACT_EMAIL=maximviktorovic@mail.ru
-          NEXT_PUBLIC_HOST=http://212.193.56.213:3015
-          EOF
+            # App config
+            APP_DIR="/home/max/portfolio"
+            REPO_SSH="git@github.com:Maximviktorovic2305/new-portfolio.git"
+            PORT="3015"
 
-          # Clean and install dependencies
-          echo "Cleaning node_modules..."
-          rm -rf node_modules
-          echo "Installing dependencies..."
-          npm cache clean --force || true
-          npm install --production
+            # Detect branch from GitHub push
+            BRANCH="${GITHUB_REF_NAME:-master}"
 
-          # Build the project
-          echo "Building project..."
-          npm run build
+            mkdir -p "$APP_DIR"
 
-          # Create PM2 ecosystem config file
-          echo "Creating PM2 ecosystem config..."
-          cat > ecosystem.config.js << 'EOF'
-          module.exports = {
-            apps: [{
-              name: 'portfolio',
-              script: 'node_modules/next/dist/bin/next',
-              args: 'start -p 3015',
-              cwd: '.',
-              env_file: './.env',
-              env: {
-                NODE_ENV: 'production',
-                PORT: '3015'
-              }
-            }]
-          };
-          EOF
+            # Clone / Update
+            if [ -d "$APP_DIR/.git" ]; then
+              cd "$APP_DIR"
+              git fetch origin
+              git reset --hard "origin/$BRANCH"
+              git clean -fdx
+            else
+              rm -rf "$APP_DIR"
+              git clone -b "$BRANCH" "$REPO_SSH" "$APP_DIR"
+              cd "$APP_DIR"
+            fi
 
-          # Restart the application with PM2
-          echo "Stopping existing PM2 process..."
-          pm2 stop portfolio || true
-          pm2 delete portfolio || true
-          echo "Starting new PM2 process..."
-          pm2 start ecosystem.config.js
-          pm2 save
+            # Create .env from GitHub Secrets (НЕ хардкодим пароли)
+            cat > .env << EOF
+            SMTP_HOST=${{ secrets.SMTP_HOST }}
+            SMTP_PORT=${{ secrets.SMTP_PORT }}
+            EMAIL_USER=${{ secrets.EMAIL_USER }}
+            EMAIL_PASS=${{ secrets.EMAIL_PASS }}
+            CONTACT_EMAIL=${{ secrets.CONTACT_EMAIL }}
+            NEXT_PUBLIC_HOST=${{ secrets.NEXT_PUBLIC_HOST }}
+            EOF
 
-          # Check if the application is running
-          echo "Checking application status..."
-          sleep 5
-          pm2 list
+            # Install & build
+            rm -rf node_modules
+            npm ci
+            npm run build
 
-          echo "Deployment complete. The contact API endpoint will be available at http://212.193.56.213:3015/api/contact"
+            # PM2 config
+            cat > ecosystem.config.js << EOF
+            module.exports = {
+              apps: [{
+                name: 'portfolio',
+                script: 'node_modules/next/dist/bin/next',
+                args: 'start -p ${PORT}',
+                cwd: '${APP_DIR}',
+                env_file: '${APP_DIR}/.env',
+                env: {
+                  NODE_ENV: 'production',
+                  PORT: '${PORT}'
+                }
+              }]
+            }
+            EOF
+
+            # Restart
+            pm2 stop portfolio || true
+            pm2 delete portfolio || true
+            pm2 start ecosystem.config.js
+            pm2 save
+            pm2 list
+
+            echo "Deployment complete: http://$(hostname -I | awk '{print $1}'):${PORT}"
