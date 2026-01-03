@@ -46,7 +46,7 @@ export default function HeroSection() {
 							className='px-8 py-3 bg-accent text-background font-medium rounded-full hover:bg-accent/90 transition-colors duration-300 cursor-pointer'
 							whileHover={{
 								scale: 1.05,
-								boxShadow: '0 0 22px rgba(116, 221, 227, 0.45)',
+								boxShadow: '0 0 22px rgba(var(--accent-rgb), 0.45)',
 							}}
 							whileTap={{ scale: 0.95 }}>
 							<span>Мои работы</span>
@@ -59,7 +59,7 @@ export default function HeroSection() {
 							whileHover={{
 								scale: 1.05,
 								boxShadow: settings.enabled
-									? '0 0 20px rgba(116, 221, 227, 0.3)'
+									? '0 0 20px rgba(var(--accent-rgb), 0.3)'
 									: 'none',
 							}}
 							whileTap={{ scale: 0.95 }}>

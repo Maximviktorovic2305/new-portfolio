@@ -45,7 +45,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 				<div
 					ref={cardRef}
 					data-anim={settings.enabled}
-					className='card-surface rounded-2xl overflow-hidden h-full flex flex-col'
+					className='card-surface card-surface--static rounded-2xl overflow-hidden h-full flex flex-col'
 					onMouseMove={settings.enabled ? handleMouseMove : undefined}
 					onMouseLeave={settings.enabled ? handleMouseLeave : undefined}
 					style={{

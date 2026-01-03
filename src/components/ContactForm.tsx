@@ -165,7 +165,7 @@ export default function ContactForm({ initialData }: ContactFormProps) {
 						? {
 								scale: 1.02,
 								y: -2,
-								boxShadow: '0 0 20px rgba(116, 221, 227, 0.5)',
+								boxShadow: '0 0 20px rgba(var(--accent-rgb), 0.5)',
 						  }
 						: {}
 				}

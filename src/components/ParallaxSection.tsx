@@ -55,7 +55,7 @@ export default function ParallaxSection() {
 				className='absolute inset-0 flex items-center justify-center'
 				style={{
 					backgroundImage:
-						'radial-gradient(circle at center, #74dde3 1px, transparent 1px), linear-gradient(45deg, #0a0a0a 25%, #1a1a1a 25%, #1a1a1a 50%, #0a0a0a 50%, #0a0a0a 75%, #1a1a1a 75%)',
+						'radial-gradient(circle at center, var(--accent) 1px, transparent 1px), linear-gradient(45deg, #0a0a0a 25%, #1a1a1a 25%, #1a1a1a 50%, #0a0a0a 50%, #0a0a0a 75%, #1a1a1a 75%)',
 					backgroundSize: '20px 20px, 40px 40px',
 				}}>
 				<div className='text-center p-8 bg-background/80 backdrop-blur-sm rounded-xl border border-gray-800 shadow-2xl max-w-2xl mx-4'>

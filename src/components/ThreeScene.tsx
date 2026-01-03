@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import ParticleSystem from '@/components/animation/ParticleSystem'
 
 export default function ThreeScene() {
-	const [color, setColor] = useState('#74dde3')
+	const [color, setColor] = useState('#6bb2b8')
 
 	useEffect(() => {
 		// Listen for theme changes to update particle color
@@ -16,7 +16,7 @@ export default function ThreeScene() {
 					mutation.attributeName === 'data-theme'
 				) {
 					const theme = document.documentElement.getAttribute('data-theme')
-					setColor(theme === 'dark' ? '#74dde3' : '#74dde3') // Same color for both themes as requested
+					setColor(theme === 'dark' ? '#6bb2b8' : '#6bb2b8')
 				}
 			})
 		})
