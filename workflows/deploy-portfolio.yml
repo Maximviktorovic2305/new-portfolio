@@ -1,0 +1,114 @@
+name: Deploy Portfolio to Server
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: Production
+    timeout-minutes: 30
+
+    steps:
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+
+            # Load nvm (if installed)
+            export NVM_DIR="$HOME/.nvm"
+            if [ -s "$NVM_DIR/nvm.sh" ]; then
+              . "$NVM_DIR/nvm.sh"
+            fi
+
+            # Ensure Node is in PATH (adjust if needed)
+            export PATH="$NVM_DIR/versions/node/v20.19.4/bin:$HOME/.npm-global/bin:$PATH"
+
+            # SSH config for GitHub private repo using deploy key (REPO_DEPLOY_KEY)
+            mkdir -p ~/.ssh
+            chmod 700 ~/.ssh
+            ssh-keyscan github.com >> ~/.ssh/known_hosts
+            chmod 600 ~/.ssh/known_hosts
+
+            cat > ~/.ssh/portfolio_repo << 'EOF'
+            ${{ secrets.REPO_DEPLOY_KEY }}
+            EOF
+            chmod 600 ~/.ssh/portfolio_repo
+
+            cat > ~/.ssh/config << 'EOF'
+            Host github.com
+              HostName github.com
+              User git
+              IdentityFile ~/.ssh/portfolio_repo
+              IdentitiesOnly yes
+            EOF
+            chmod 600 ~/.ssh/config
+
+            # App config
+            APP_DIR="/home/max/portfolio"
+            REPO_SSH="git@github.com:Maximviktorovic2305/new-portfolio.git"
+            PORT="3015"
+
+            # Detect branch from GitHub push
+            BRANCH="${GITHUB_REF_NAME:-master}"
+
+            mkdir -p "$APP_DIR"
+
+            # Clone / Update
+            if [ -d "$APP_DIR/.git" ]; then
+              cd "$APP_DIR"
+              git fetch origin
+              git reset --hard "origin/$BRANCH"
+              git clean -fdx
+            else
+              rm -rf "$APP_DIR"
+              git clone -b "$BRANCH" "$REPO_SSH" "$APP_DIR"
+              cd "$APP_DIR"
+            fi
+
+            # Create .env from GitHub Secrets
+            cat > .env << EOF
+            VITE_EMAILJS_SERVICE_ID=${{ secrets.VITE_EMAILJS_SERVICE_ID }}
+            VITE_EMAILJS_TEMPLATE_ID=${{ secrets.VITE_EMAILJS_TEMPLATE_ID }}
+            VITE_EMAILJS_PUBLIC_KEY=${{ secrets.VITE_EMAILJS_PUBLIC_KEY }}
+            EOF
+
+            # Install & build (React + Vite, NOT Next.js)
+            rm -rf node_modules
+            npm ci
+            npm run build
+
+            # Install serve globally if not present (serves static files)
+            npm list -g serve || npm install -g serve
+
+            # PM2 config — serve static dist/ folder (Vite build output)
+            cat > ecosystem.config.cjs << EOF
+            module.exports = {
+              apps: [{
+                name: 'portfolio',
+                script: 'serve',
+                args: '-s dist -l ${PORT}',
+                cwd: '${APP_DIR}',
+                env: {
+                  NODE_ENV: 'production',
+                  PM2_SERVE_SPA: 'true'
+                }
+              }]
+            }
+            EOF
+
+            # Restart
+            pm2 stop portfolio || true
+            pm2 delete portfolio || true
+            pm2 start ecosystem.config.cjs
+            pm2 save
+            pm2 list
+
+            echo "Deployment complete: http://$(hostname -I | awk '{print $1}'):${PORT}"
