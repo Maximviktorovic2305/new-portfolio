@@ -83,7 +83,11 @@ jobs:
 
             # Install & build (React + Vite, NOT Next.js)
             rm -rf node_modules
-            npm ci
+            if [ -f package-lock.json ]; then
+              npm ci
+            else
+              npm install --no-audit --no-fund
+            fi
             npm run build
 
             # Install serve globally if not present (serves static files)
