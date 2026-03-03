@@ -81,8 +81,7 @@ jobs:
             VITE_EMAILJS_PUBLIC_KEY=${{ secrets.VITE_EMAILJS_PUBLIC_KEY }}
             EOF
 
-            # Install & build (React + Vite, NOT Next.js)
-            rm -rf node_modules
+            # Install & build (React + Vite)
             if [ -f package-lock.json ]; then
               npm ci
             else
@@ -90,29 +89,14 @@ jobs:
             fi
             npm run build
 
-            # Install serve globally if not present (serves static files)
-            npm list -g serve || npm install -g serve
-
-            # PM2 config — serve static dist/ folder (Vite build output)
-            cat > ecosystem.config.cjs << EOF
-            module.exports = {
-              apps: [{
-                name: 'portfolio',
-                script: 'serve',
-                args: '-s dist -l ${PORT}',
-                cwd: '${APP_DIR}',
-                env: {
-                  NODE_ENV: 'production',
-                  PM2_SERVE_SPA: 'true'
-                }
-              }]
-            }
-            EOF
-
-            # Restart
-            pm2 stop portfolio || true
-            pm2 delete portfolio || true
-            pm2 start ecosystem.config.cjs
+            # Start in production mode and restart PM2 process
+            export NODE_ENV=production
+            export PORT="$PORT"
+            if pm2 describe portfolio >/dev/null 2>&1; then
+              pm2 restart portfolio --update-env
+            else
+              pm2 start npm --name portfolio -- start
+            fi
             pm2 save
             pm2 list
 

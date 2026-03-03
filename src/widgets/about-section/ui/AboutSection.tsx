@@ -3,7 +3,7 @@ import { useRef } from "react";
 import { SectionDivider } from "@/shared/ui";
 import { colors } from "@/shared/config";
 import { stats, highlights, hobbies } from "../model/data";
-import avatarImg from "figma:asset/6293143439d16f15fc3aaacb14f69fad1ed0a5b3.png";
+import avatarImg from "@/assets/6293143439d16f15fc3aaacb14f69fad1ed0a5b3.png";
 
 export function AboutSection() {
   const ref = useRef(null);
