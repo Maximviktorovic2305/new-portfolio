@@ -33,7 +33,7 @@ export function ContactSection() {
           )}
           <motion.p initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ delay: 0.5 }}
             className="text-[1.05rem] text-muted-foreground mt-4 max-w-lg mx-auto" style={{ fontFamily: "var(--t-font-body)" }}>
-            Ищу удалённую работу с полным рабочим днём, любой часовой пояс. Зарплатные ожидания от 100 000 ₽{!isClassic && " 🤝"}
+            Ищу удалённую работу с полным рабочим днём, любой часовой пояс.{!isClassic && " 🤝"}
           </motion.p>
         </motion.div>
 
