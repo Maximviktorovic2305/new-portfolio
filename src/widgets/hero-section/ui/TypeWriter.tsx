@@ -1,8 +1,8 @@
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
-import { colors } from "@/shared/config";
+import { colors, useTheme } from "@/shared/config";
 
-const typeColors = [colors.pink, colors.teal, colors.orange, colors.lavender, colors.lime];
+const typeColors = [colors.pink, colors.teal, colors.orange, colors.lavender, colors.lime, colors.sky];
 
 interface Props {
   texts: string[];
@@ -12,6 +12,7 @@ export function TypeWriter({ texts }: Props) {
   const [textIdx, setTextIdx] = useState(0);
   const [charIdx, setCharIdx] = useState(0);
   const [deleting, setDeleting] = useState(false);
+  const { isCrayon } = useTheme();
 
   useEffect(() => {
     const current = texts[textIdx];
@@ -37,9 +38,9 @@ export function TypeWriter({ texts }: Props) {
       <motion.span
         animate={{ opacity: [1, 0] }}
         transition={{ duration: 0.4, repeat: Infinity, repeatType: "reverse" }}
-        className="text-brand-lavender"
+        style={{ color: colors.orange }}
       >
-        |
+        {isCrayon ? "✏️" : "|"}
       </motion.span>
     </span>
   );

@@ -1,9 +1,120 @@
 @custom-variant dark (&:is(.dark *));
 
+/* ═══════════════════════════════════════════
+   Theme system — each .theme-* class overrides
+   ═══════════════════════════════════════════ */
+
 :root {
   --font-size: 16px;
 
-  /* ── surfaces ── */
+  /* ── theme structural tokens ── */
+  --t-font-heading: 'Caveat', cursive;
+  --t-font-body: 'Patrick Hand', cursive;
+  --t-font-mono: 'Patrick Hand', cursive;
+  --t-border-style: dashed;
+  --t-border-w: 3px;
+  --t-filter: url(#sketchy);
+
+  /* ── surfaces — crayon default ── */
+  --background: #fdf6e3;
+  --foreground: #2d2a24;
+  --card: #fff9ed;
+  --card-foreground: #2d2a24;
+  --popover: #fff9ed;
+  --popover-foreground: #2d2a24;
+  --secondary: #f5edd6;
+  --secondary-foreground: #2d2a24;
+  --muted: #f0e8d0;
+  --input: transparent;
+  --input-background: #fff9ed;
+  --switch-background: #e8dfc8;
+
+  /* ── brand palette ── */
+  --brand-pink: #e8366d;
+  --brand-teal: #00a58c;
+  --brand-teal-hover: #008f79;
+  --brand-orange: #f5820b;
+  --brand-lavender: #8b5cf6;
+  --brand-lime: #65a30d;
+  --brand-sky: #2fa4d8;
+  --brand-red: #e53e3e;
+  --brand-yellow: #eab308;
+
+  /* ── semantic ── */
+  --primary: var(--brand-pink);
+  --primary-foreground: #ffffff;
+  --accent: var(--brand-teal);
+  --accent-foreground: #ffffff;
+  --ring: var(--brand-lavender);
+  --border: #d4c9a8;
+  --destructive: #e53e3e;
+  --destructive-foreground: #ffffff;
+
+  /* ── text ── */
+  --text-primary: #2d2a24;
+  --text-secondary: #5c564a;
+  --muted-foreground: #8a8070;
+  --text-dim: #b0a590;
+
+  --font-weight-medium: 600;
+  --font-weight-normal: 500;
+
+  --chart-1: var(--brand-pink);
+  --chart-2: var(--brand-teal);
+  --chart-3: var(--brand-orange);
+  --chart-4: var(--brand-lime);
+  --chart-5: var(--brand-lavender);
+
+  --radius: 1rem;
+
+  --sidebar: #fdf6e3;
+  --sidebar-foreground: #2d2a24;
+  --sidebar-primary: var(--brand-pink);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f0e8d0;
+  --sidebar-accent-foreground: #2d2a24;
+  --sidebar-border: #d4c9a8;
+  --sidebar-ring: var(--brand-lavender);
+}
+
+/* ═══ 1. CRAYON — kid-drawn (default) ═══ */
+.theme-crayon {
+  --t-font-heading: 'Caveat', cursive;
+  --t-font-body: 'Patrick Hand', cursive;
+  --t-font-mono: 'Patrick Hand', cursive;
+  --t-border-style: dashed;
+  --t-border-w: 3px;
+  --t-filter: url(#sketchy);
+  --background: #fdf6e3;
+  --foreground: #2d2a24;
+  --card: #fff9ed;
+  --card-foreground: #2d2a24;
+  --secondary: #f5edd6;
+  --muted: #f0e8d0;
+  --input-background: #fff9ed;
+  --brand-teal: #00a58c;
+  --brand-teal-hover: #008f79;
+  --brand-orange: #f5820b;
+  --brand-lavender: #8b5cf6;
+  --brand-lime: #65a30d;
+  --brand-sky: #2fa4d8;
+  --border: #d4c9a8;
+  --text-primary: #2d2a24;
+  --text-secondary: #5c564a;
+  --muted-foreground: #8a8070;
+  --text-dim: #b0a590;
+  --sidebar: #fdf6e3;
+  --sidebar-foreground: #2d2a24;
+}
+
+/* ═══ 2. ORIGINAL — cosmic dark (with fancy animations) ═══ */
+.theme-original {
+  --t-font-heading: 'Baloo 2', cursive;
+  --t-font-body: 'Nunito', sans-serif;
+  --t-font-mono: 'JetBrains Mono', monospace;
+  --t-border-style: solid;
+  --t-border-w: 2px;
+  --t-filter: none;
   --background: #0f0e1a;
   --foreground: #e8e0f0;
   --card: #1a1730;
@@ -13,11 +124,8 @@
   --secondary: #1e1b3a;
   --secondary-foreground: #e8e0f0;
   --muted: #1e1b3a;
-  --input: transparent;
   --input-background: #1e1b3a;
   --switch-background: #2a2650;
-
-  /* ── brand palette ── */
   --brand-pink: #e8366d;
   --brand-teal: #14b8a6;
   --brand-teal-hover: #0d9488;
@@ -25,83 +133,81 @@
   --brand-lavender: #a78bfa;
   --brand-lime: #84cc16;
   --brand-sky: #6dd5ed;
-
-  /* ── semantic aliases ── */
-  --primary: var(--brand-pink);
-  --primary-foreground: #ffffff;
-  --accent: var(--brand-teal);
-  --accent-foreground: #ffffff;
-  --ring: var(--brand-lavender);
+  --brand-red: #ef4444;
+  --brand-yellow: #eab308;
   --border: rgba(168, 139, 250, 0.15);
-  --destructive: #ef4444;
-  --destructive-foreground: #ffffff;
-
-  /* ── text palette ── */
   --text-primary: #e8e0f0;
   --text-secondary: #c4b8e0;
   --muted-foreground: #9b8fbf;
   --text-dim: #5a4f7a;
-
-  /* ── typography ── */
-  --font-weight-medium: 600;
-  --font-weight-normal: 500;
-
-  /* ── charts (reuse brand tokens) ── */
-  --chart-1: var(--brand-pink);
-  --chart-2: var(--brand-teal);
-  --chart-3: var(--brand-orange);
-  --chart-4: var(--brand-lime);
-  --chart-5: var(--brand-lavender);
-
-  /* ── radius ── */
-  --radius: 1rem;
-
-  /* ── sidebar ── */
   --sidebar: #0f0e1a;
   --sidebar-foreground: #e8e0f0;
-  --sidebar-primary: var(--brand-pink);
-  --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #1e1b3a;
   --sidebar-accent-foreground: #e8e0f0;
   --sidebar-border: rgba(168, 139, 250, 0.15);
-  --sidebar-ring: var(--brand-lavender);
 }
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --font-weight-medium: 500;
-  --font-weight-normal: 400;
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+/* ═══ 3. CLASSIC — clean dark, minimal animations ═══ */
+.theme-classic {
+  --t-font-heading: 'Inter', sans-serif;
+  --t-font-body: 'Inter', sans-serif;
+  --t-font-mono: 'JetBrains Mono', monospace;
+  --t-border-style: solid;
+  --t-border-w: 1px;
+  --t-filter: none;
+  --background: #111111;
+  --foreground: #e5e5e5;
+  --card: #1a1a1a;
+  --card-foreground: #e5e5e5;
+  --popover: #1a1a1a;
+  --popover-foreground: #e5e5e5;
+  --secondary: #222222;
+  --secondary-foreground: #e5e5e5;
+  --muted: #222222;
+  --input-background: #1a1a1a;
+  --switch-background: #333333;
+  --brand-pink: #f43f5e;
+  --brand-teal: #2dd4bf;
+  --brand-teal-hover: #14b8a6;
+  --brand-orange: #fb923c;
+  --brand-lavender: #a78bfa;
+  --brand-lime: #a3e635;
+  --brand-sky: #38bdf8;
+  --brand-red: #ef4444;
+  --brand-yellow: #facc15;
+  --border: #2a2a2a;
+  --text-primary: #e5e5e5;
+  --text-secondary: #a3a3a3;
+  --muted-foreground: #737373;
+  --text-dim: #525252;
+  --sidebar: #111111;
+  --sidebar-foreground: #e5e5e5;
+  --sidebar-accent: #222222;
+  --sidebar-accent-foreground: #e5e5e5;
+  --sidebar-border: #2a2a2a;
+}
+
+/* Classic — force default cursor everywhere */
+.theme-classic,
+.theme-classic *,
+.theme-classic a,
+.theme-classic button,
+.theme-classic [role="button"] {
+  cursor: default !important;
+}
+
+/* ═══ Crossfade transition ═══ */
+html {
+  transition:
+    background-color 0.5s ease,
+    color 0.5s ease;
+}
+html *:not([class*="motion"]):not(canvas) {
+  transition:
+    background-color 0.5s ease,
+    color 0.5s ease,
+    border-color 0.5s ease,
+    box-shadow 0.4s ease;
 }
 
 @theme inline {
@@ -132,7 +238,6 @@
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
 
-  /* ── brand palette for Tailwind utilities ── */
   --color-brand-pink: var(--brand-pink);
   --color-brand-teal: var(--brand-teal);
   --color-brand-teal-hover: var(--brand-teal-hover);
@@ -140,19 +245,18 @@
   --color-brand-lavender: var(--brand-lavender);
   --color-brand-lime: var(--brand-lime);
   --color-brand-sky: var(--brand-sky);
+  --color-brand-red: var(--brand-red);
+  --color-brand-yellow: var(--brand-yellow);
 
-  /* ── text palette for Tailwind ── */
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-dim: var(--text-dim);
 
-  /* ── radii ── */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  /* ── sidebar ── */
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -172,55 +276,16 @@
     @apply bg-background text-foreground;
   }
 
-  /**
-  * Default typography styles for HTML elements (h1-h4, p, label, button, input).
-  * These are in @layer base, so Tailwind utility classes automatically override them.
-  */
-
   html {
     font-size: var(--font-size);
-    font-family: 'Nunito', 'Space Grotesk', sans-serif;
+    font-family: var(--t-font-body);
   }
 
-  h1 {
-    font-size: var(--text-2xl);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  h2 {
-    font-size: var(--text-xl);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  h3 {
-    font-size: var(--text-lg);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  h4 {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  label {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  button {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  input {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-normal);
-    line-height: 1.5;
-  }
+  h1 { font-size: var(--text-2xl); font-weight: var(--font-weight-medium); line-height: 1.5; }
+  h2 { font-size: var(--text-xl); font-weight: var(--font-weight-medium); line-height: 1.5; }
+  h3 { font-size: var(--text-lg); font-weight: var(--font-weight-medium); line-height: 1.5; }
+  h4 { font-size: var(--text-base); font-weight: var(--font-weight-medium); line-height: 1.5; }
+  label { font-size: var(--text-base); font-weight: var(--font-weight-medium); line-height: 1.5; }
+  button { font-size: var(--text-base); font-weight: var(--font-weight-medium); line-height: 1.5; }
+  input { font-size: var(--text-base); font-weight: var(--font-weight-normal); line-height: 1.5; }
 }

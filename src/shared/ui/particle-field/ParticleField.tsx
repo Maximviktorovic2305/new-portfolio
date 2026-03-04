@@ -1,7 +1,9 @@
 import { useEffect, useRef } from "react";
 import { colors } from "@/shared/config";
 
-interface Bubble {
+const particleColors = [colors.pink, colors.teal, colors.orange, colors.lavender, colors.lime, colors.sky];
+
+interface Particle {
   x: number;
   y: number;
   vy: number;
@@ -12,13 +14,10 @@ interface Bubble {
   wobbleSpeed: number;
 }
 
-const bubbleColors = [colors.pink, colors.teal, colors.orange, colors.lavender, colors.lime];
-
 export function ParticleField() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const bubblesRef = useRef<Bubble[]>([]);
+  const particlesRef = useRef<Particle[]>([]);
   const animRef = useRef<number>(0);
-  const timeRef = useRef(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -35,23 +34,22 @@ export function ParticleField() {
 
     const count = Math.min(35, Math.floor(window.innerWidth / 40));
 
-    bubblesRef.current = Array.from({ length: count }, () => ({
+    particlesRef.current = Array.from({ length: count }, () => ({
       x: Math.random() * canvas.width,
       y: canvas.height + Math.random() * 200,
       vy: -(Math.random() * 0.4 + 0.1),
       size: Math.random() * 8 + 3,
       opacity: Math.random() * 0.15 + 0.03,
-      color: bubbleColors[Math.floor(Math.random() * bubbleColors.length)],
+      color: particleColors[Math.floor(Math.random() * particleColors.length)],
       wobble: Math.random() * Math.PI * 2,
       wobbleSpeed: Math.random() * 0.02 + 0.01,
     }));
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      timeRef.current += 1;
-      const bubbles = bubblesRef.current;
+      const particles = particlesRef.current;
 
-      for (const b of bubbles) {
+      for (const b of particles) {
         b.y += b.vy;
         b.wobble += b.wobbleSpeed;
         const wx = Math.sin(b.wobble) * 20;
@@ -59,9 +57,10 @@ export function ParticleField() {
         if (b.y < -20) {
           b.y = canvas.height + 20;
           b.x = Math.random() * canvas.width;
-          b.color = bubbleColors[Math.floor(Math.random() * bubbleColors.length)];
+          b.color = particleColors[Math.floor(Math.random() * particleColors.length)];
         }
 
+        // Draw bubble
         ctx.beginPath();
         ctx.arc(b.x + wx, b.y, b.size, 0, Math.PI * 2);
         ctx.fillStyle = b.color;
