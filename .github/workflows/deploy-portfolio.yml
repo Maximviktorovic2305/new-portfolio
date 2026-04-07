@@ -29,10 +29,15 @@ jobs:
               . "$NVM_DIR/nvm.sh"
             fi
 
-            # Ensure Node is in PATH (adjust if needed)
+            # Ensure Node is in PATH
             export PATH="$NVM_DIR/versions/node/v20.19.4/bin:$HOME/.npm-global/bin:$PATH"
 
-            # SSH config for GitHub private repo using deploy key (REPO_DEPLOY_KEY)
+            echo "Node version:"
+            node -v
+            echo "npm version:"
+            npm -v
+
+            # SSH config for GitHub private repo using deploy key
             mkdir -p ~/.ssh
             chmod 700 ~/.ssh
             ssh-keyscan github.com >> ~/.ssh/known_hosts
@@ -56,8 +61,6 @@ jobs:
             APP_DIR="/home/max/portfolio"
             REPO_SSH="git@github.com:Maximviktorovic2305/new-portfolio.git"
             PORT="3015"
-
-            # Detect branch from GitHub push
             BRANCH="${GITHUB_REF_NAME:-master}"
 
             mkdir -p "$APP_DIR"
@@ -74,26 +77,35 @@ jobs:
               cd "$APP_DIR"
             fi
 
+            echo "Current directory: $(pwd)"
+            ls -la
+
             # Create .env from GitHub Secrets
             cat > .env << EOF
             VITE_EMAILJS_SERVICE_ID=${{ secrets.VITE_EMAILJS_SERVICE_ID }}
             VITE_EMAILJS_TEMPLATE_ID=${{ secrets.VITE_EMAILJS_TEMPLATE_ID }}
             VITE_EMAILJS_PUBLIC_KEY=${{ secrets.VITE_EMAILJS_PUBLIC_KEY }}
+            PORT=${PORT}
+            NODE_ENV=production
             EOF
 
-            # Install & build (React + Vite)
+            # Install & build
             if [ -f package-lock.json ]; then
               npm ci
             else
               npm install --no-audit --no-fund
             fi
+
             npm run build
 
-            # Start in production mode and restart PM2 process
             export NODE_ENV=production
             export PORT="$PORT"
 
-            # Kill any old process that still listens on this port
+            # Stop/remove old PM2 process
+            pm2 stop portfolio || true
+            pm2 delete portfolio || true
+
+            # Free only portfolio port
             if command -v lsof >/dev/null 2>&1; then
               OLD_PIDS="$(lsof -t -iTCP:${PORT} -sTCP:LISTEN || true)"
               if [ -n "$OLD_PIDS" ]; then
@@ -110,14 +122,16 @@ jobs:
               fi
             fi
 
-            pm2 delete portfolio || true
-            pm2 start npm --name portfolio -- start
-            pm2 restart portfolio --update-env
+            echo "Check port ${PORT} after cleanup:"
+            ss -lntp | grep ":${PORT} " || true
+
+            # Start from correct working directory
+            pm2 start npm --name portfolio --cwd "$APP_DIR" -- start
             pm2 save
             pm2 list
 
-            # Health check: fail deployment if app is not serving locally
-            sleep 3
+            # Health check
+            sleep 5
             if command -v curl >/dev/null 2>&1; then
               HEALTH_OK=0
               curl -fsS "http://127.0.0.1:${PORT}" >/dev/null || HEALTH_OK=1
