@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { ChevronDown, Github, Mail, MessageCircle } from "lucide-react";
+import { ChevronDown, GitFork, Mail, MessageCircle } from "lucide-react";
 import { ParticleField } from "@/shared/ui";
 import { colors, useTheme } from "@/shared/config";
 import { TypeWriter } from "./TypeWriter";
@@ -177,7 +177,7 @@ export function HeroSection() {
         {/* Social links */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 1.3 }} className="flex items-center justify-center gap-4">
           {[
-            { icon: Github, href: "https://github.com/Maximviktorovic2305", color: colors.lavender, emoji: "🐙" },
+            { icon: GitFork, href: "https://github.com/Maximviktorovic2305", color: colors.lavender, emoji: "🐙" },
             { icon: MessageCircle, href: "https://t.me/maximviktorovic2305", color: colors.teal, emoji: "✈️" },
             { icon: Mail, href: "mailto:Maximviktorovic@mail.ru", color: colors.pink, emoji: "💌" },
           ].map((social, i) => (

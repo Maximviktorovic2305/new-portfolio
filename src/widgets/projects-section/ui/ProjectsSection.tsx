@@ -1,6 +1,6 @@
 import { motion, useInView } from "motion/react";
 import { useRef, useState } from "react";
-import { ExternalLink, Github, ArrowUpRight } from "lucide-react";
+import { ExternalLink, GitFork, ArrowUpRight } from "lucide-react";
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
 import { SectionDivider } from "@/shared/ui";
 import { colors, useTheme } from "@/shared/config";
@@ -62,7 +62,7 @@ function ClassicProjectCard({ project, index, isInView }: { project: typeof proj
               whileHover={{ scale: 1.1 }}
               className="w-10 h-10 rounded-md border border-border bg-card flex items-center justify-center text-text-primary"
             >
-              <Github size={18} />
+              <GitFork size={18} />
             </motion.a>
           )}
         </motion.div>
@@ -208,7 +208,7 @@ export function ProjectsSection() {
                               initial={{ y: 20, opacity: 0 }} animate={hoveredId === project.id ? { y: 0, opacity: 1 } : { y: 20, opacity: 0 }}
                               transition={{ delay: 0.2 }} whileHover={{ scale: 1.2, rotate: -10 }}
                               className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center text-white">
-                              <Github size={20} />
+                              <GitFork size={20} />
                             </motion.a>
                           )}
                         </div>
