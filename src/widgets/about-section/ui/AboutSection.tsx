@@ -101,7 +101,7 @@ export function AboutSection() {
               style={{ fontFamily: "var(--t-font-body)" }}
             >
               Привет! Я <span className="text-text-primary" style={{ fontFamily: "var(--t-font-heading)", fontWeight: 700 }}>Максим</span> — fullstack-разработчик
-              с 4+ годами коммерческого опыта. Работаю на полном стеке: от интерактивных
+              с 5+ годами коммерческого опыта. Работаю на полном стеке: от интерактивных
               интерфейсов на React/Vue до высоконагруженного бэкенда на Node.js и Golang{!isClassic && " 💪"}
             </motion.p>
 

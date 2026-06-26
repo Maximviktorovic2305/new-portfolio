@@ -130,7 +130,7 @@ export function HeroSection() {
           className="text-[1.05rem] sm:text-[1.15rem] text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed"
           style={{ fontFamily: "var(--t-font-body)" }}
         >
-          Fullstack-разработчик с 4+ годами коммерческого опыта. Строю высоконагруженные веб-приложения от архитектуры до деплоя.
+          Fullstack-разработчик с5+ годами коммерческого опыта. Строю высоконагруженные веб-приложения от архитектуры до деплоя.
           {isClassic ? " Открыт к удалённой работе, любой часовой пояс." : " Открыт к удалённой работе, любой часовой пояс ✨"}
         </motion.p>
 

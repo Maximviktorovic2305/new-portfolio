@@ -23,7 +23,7 @@ export interface HobbyItem {
 }
 
 export const stats: StatItem[] = [
-  { value: "4+", label: "Лет опыта", emoji: "🎯", color: colors.pink },
+  { value: "5+", label: "Лет опыта", emoji: "🎯", color: colors.pink },
   { value: "40+", label: "Проектов", emoji: "📦", color: colors.teal },
   { value: "JS/TS", label: "Основной стек", emoji: "💻", color: colors.orange },
   { value: "Go", label: "Изучаю", emoji: "🚀", color: colors.lime },
