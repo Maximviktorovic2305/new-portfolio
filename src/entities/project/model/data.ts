@@ -30,6 +30,17 @@ export const projects: Project[] = [
     github: "https://github.com/Maximviktorovic2305/chat-gpt-app",
   },
   {
+    id: 11,
+    title: "Banya Digital",
+    desc: "CRM и сервис онлайн-бронирования для банных комплексов 🧖",
+    image: "https://banya.digital/og.png",
+    tags: ["Next.js", "TypeScript", "CRM", "Онлайн-запись"],
+    emoji: "🧖",
+    category: "Fullstack",
+    site: "https://banya.digital",
+    github: "",
+  },
+  {
     id: 3,
     title: "Туристическая компания Bitomo",
     desc: "Сайт туристической компании Bitomo ✈️",
