@@ -15,7 +15,7 @@ export const projects: Project[] = [
     tags: ["Next 15", "Tanstack", "Redux", "Nest.js", "Postgres", "CI/CD"],
     emoji: "🎵",
     category: "Fullstack",
-    site: "https://maxmusic.pro",
+    site: "https://maxmusic.site",
     github: "https://github.com/Maximviktorovic2305/my-songs-site",
   },
   {
@@ -26,7 +26,7 @@ export const projects: Project[] = [
     tags: ["Next 15", "Tailwind", "Shadcn", "Nest.js", "CI/CD"],
     emoji: "🤖",
     category: "Fullstack",
-    site: "https://aicontact.tech",
+    site: "https://ai-contact.site",
     github: "https://github.com/Maximviktorovic2305/chat-gpt-app",
   },
   {
