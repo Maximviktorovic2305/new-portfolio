@@ -206,7 +206,7 @@ function DefaultSkillCard({ skill, color, index, isInView }: { skill: Skill; col
   const [hovered, setHovered] = useState(false);
   const { isCrayon, theme } = useTheme();
   const isOriginal = theme === "original";
-  const randomRot = useRef((Math.random() - 0.5) * (isCrayon ? 6 : 0)).current;
+  const cardRotation = isCrayon ? [-1.15, 0.75, -0.55, 1, -0.8, 0.45][index % 6] : 0;
 
   const shakeVariants = {
     idle: { rotate: 0, x: 0, y: 0 },
@@ -220,10 +220,11 @@ function DefaultSkillCard({ skill, color, index, isInView }: { skill: Skill; col
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30, scale: 0.9, rotate: randomRot }}
-      animate={isInView ? { opacity: 1, y: 0, scale: 1, rotate: randomRot } : {}}
+      initial={{ opacity: 0, y: 30, scale: 0.9, rotate: cardRotation * 1.8 }}
+      animate={isInView ? { opacity: 1, y: 0, scale: 1, rotate: cardRotation } : {}}
       exit={{ opacity: 0, scale: 0.8 }}
       transition={{ duration: 0.4, delay: 0.05 * (index % 6), type: "spring" }}
+      whileHover={isCrayon ? { rotate: 0, y: -4 } : undefined}
       className="relative"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -233,14 +234,20 @@ function DefaultSkillCard({ skill, color, index, isInView }: { skill: Skill; col
       <motion.div
         variants={isOriginal ? shakeVariants : undefined}
         animate={isOriginal ? (hovered ? "shaking" : "idle") : undefined}
-        whileHover={{ scale: isCrayon ? 1.08 : 1.05, rotate: isCrayon ? 0 : undefined }}
-        whileTap={{ scale: 0.95, rotate: isCrayon ? -5 : -2 }}
+        whileHover={{ scale: isCrayon ? 1.035 : 1.05, rotate: 0 }}
+        whileTap={{ scale: 0.97, rotate: 0 }}
         className="relative p-6 rounded-3xl border-2 cursor-pointer overflow-hidden"
         style={{
           borderStyle: "var(--t-border-style)" as any,
           borderColor: hovered ? `${color}50` : `${color}15`,
           backgroundColor: hovered ? `${color}10` : `${color}05`,
-          boxShadow: hovered && isOriginal ? `0 8px 35px ${color}20, inset 0 -20px 40px ${color}06` : "none",
+          boxShadow: isCrayon
+            ? hovered
+              ? `0 18px 42px ${color}1f`
+              : `0 12px 32px ${color}0f`
+            : hovered && isOriginal
+              ? `0 8px 35px ${color}20, inset 0 -20px 40px ${color}06`
+              : "none",
           filter: "var(--t-filter)",
           transition: "border-color 0.3s, background-color 0.3s, box-shadow 0.3s",
         }}
@@ -345,7 +352,7 @@ export function SkillsSection() {
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 40 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, type: "spring" }} className="text-center mb-16">
           {!isClassic && (
-            <motion.span initial={{ scale: 0, rotate: -180 }} animate={isInView ? { scale: 1, rotate: 0 } : {}} transition={{ type: "spring", stiffness: 200, delay: 0.2 }} className="inline-block text-[3rem] mb-3">⚡</motion.span>
+            <motion.span initial={{ scale: 0, rotate: -90 }} animate={isInView ? { scale: 1, rotate: 0 } : {}} transition={{ type: "spring", stiffness: 200, delay: 0.2 }} className="inline-block text-[2.4rem] mb-3">{isCrayon ? "✦" : "⚡"}</motion.span>
           )}
           <h2 className="text-[2.6rem] sm:text-[3.2rem] mb-4 text-text-primary" style={{ fontFamily: "var(--t-font-heading)", fontWeight: 700 }}>
             {isClassic ? "Стек технологий" : <>Стек <span className="text-brand-pink">технологий</span></>}
@@ -354,7 +361,7 @@ export function SkillsSection() {
             <svg viewBox="0 0 200 8" className="w-32 h-3 mx-auto">
               <motion.path
                 d={isCrayon ? "M5 4 Q 25 1 50 5 Q 75 8 100 3 Q 125 0 150 5 Q 175 8 195 4" : "M5 4 L195 4"}
-                stroke={colors.pink} strokeWidth="3" fill="none" strokeLinecap="round" strokeDasharray={isCrayon ? "6 3" : "none"}
+                stroke={colors.pink} strokeWidth="3" fill="none" strokeLinecap="round" strokeDasharray="none"
                 initial={{ pathLength: 0 }} animate={isInView ? { pathLength: 1 } : {}} transition={{ duration: 1, delay: 0.3 }}
               />
             </svg>
@@ -367,7 +374,7 @@ export function SkillsSection() {
             <motion.button
               key={cat.label}
               onClick={() => setActiveCategory(cat.label)}
-              whileHover={{ scale: isClassic ? 1.04 : 1.1, rotate: isCrayon ? 3 : 0 }}
+              whileHover={{ scale: isClassic ? 1.04 : isCrayon ? 1.04 : 1.1, rotate: 0 }}
               whileTap={{ scale: 0.9 }}
               className="px-5 py-2.5 text-[0.95rem] cursor-pointer border transition-all flex items-center gap-2"
               style={{

@@ -24,7 +24,6 @@ export function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <motion.a
             href="#hero"
-            onClick={(e) => { e.preventDefault(); document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" }); }}
             whileHover={{ scale: isClassic ? 1.03 : 1.1, rotate: isClassic ? 0 : -5 }}
             whileTap={{ scale: 0.9 }}
             className="cursor-pointer flex items-center gap-2"

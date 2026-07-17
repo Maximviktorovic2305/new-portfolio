@@ -21,7 +21,7 @@ export function HeroSection() {
       id="hero"
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      {!isClassic && <ParticleField />}
+      {!isClassic && !isCrayon && <ParticleField />}
 
       {!isClassic && (
         <>
@@ -49,7 +49,7 @@ export function HeroSection() {
         >
           {!isClassic && (
             <motion.span animate={{ rotate: [0, 25, -25, 0] }} transition={{ duration: 2, repeat: Infinity }} className="text-[1.2rem]">
-              🚀
+              {isCrayon ? "✦" : "🚀"}
             </motion.span>
           )}
           <span
@@ -94,7 +94,7 @@ export function HeroSection() {
             {!isClassic && (
               <motion.svg viewBox="0 0 300 20" className="absolute -bottom-2 left-0 w-full" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.5, delay: 1 }}>
                 <motion.path
-                  d={isCrayon ? "M5 10 Q 30 3 60 12 Q 90 18 120 8 Q 150 2 180 14 Q 210 20 240 8 Q 270 2 295 10" : "M5 6 Q 75 0 150 6 Q 225 12 295 6"}
+                  d={isCrayon ? "M5 9 Q 75 2 150 9 Q 225 16 295 8" : "M5 6 Q 75 0 150 6 Q 225 12 295 6"}
                   stroke={colors.orange}
                   strokeWidth={isCrayon ? "4" : "3"}
                   fill="none"
@@ -130,7 +130,7 @@ export function HeroSection() {
           className="text-[1.05rem] sm:text-[1.15rem] text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed"
           style={{ fontFamily: "var(--t-font-body)" }}
         >
-          Fullstack-разработчик с5+ годами коммерческого опыта. Строю высоконагруженные веб-приложения от архитектуры до деплоя.
+          Fullstack-разработчик с 5+ годами коммерческого опыта. Строю высоконагруженные веб-приложения от архитектуры до деплоя.
           {isClassic ? " Открыт к удалённой работе, любой часовой пояс." : " Открыт к удалённой работе, любой часовой пояс ✨"}
         </motion.p>
 
@@ -138,8 +138,7 @@ export function HeroSection() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1 }} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-14">
           <motion.a
             href="#projects"
-            onClick={(e) => { e.preventDefault(); document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" }); }}
-            whileHover={{ scale: isClassic ? 1.03 : 1.08, rotate: isClassic ? 0 : -2 }}
+            whileHover={{ scale: isClassic ? 1.03 : 1.05, rotate: isClassic || isCrayon ? 0 : -2 }}
             whileTap={{ scale: 0.95 }}
             className="px-8 py-4 text-[1rem] tracking-wide cursor-pointer no-underline border"
             style={{
@@ -147,17 +146,17 @@ export function HeroSection() {
               borderStyle: BS as any, filter: TF,
               borderRadius: isClassic ? "0.375rem" : "1rem",
               cursor: isClassic ? "default" : "pointer",
+              boxShadow: isCrayon ? "0 14px 32px rgba(22, 159, 145, 0.2)" : undefined,
               ...(isClassic
                 ? { backgroundColor: "var(--text-primary)", color: "var(--background)", borderColor: "var(--text-primary)" }
                 : { backgroundColor: "var(--brand-teal)", color: "white", borderColor: "rgba(20,184,166,0.5)", borderWidth: "2px" }),
             }}
           >
-            {isClassic ? "Смотреть проекты" : isCrayon ? "🎨 Смотреть проекты" : "🚀 Смотреть проекты"}
+            {isClassic ? "Смотреть проекты" : isCrayon ? "Смотреть проекты" : "🚀 Смотреть проекты"}
           </motion.a>
           <motion.a
             href="#contact"
-            onClick={(e) => { e.preventDefault(); document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }); }}
-            whileHover={{ scale: isClassic ? 1.03 : 1.08, rotate: isClassic ? 0 : 2 }}
+            whileHover={{ scale: isClassic ? 1.03 : 1.05, rotate: isClassic || isCrayon ? 0 : 2 }}
             whileTap={{ scale: 0.95 }}
             className="px-8 py-4 text-[1rem] tracking-wide cursor-pointer no-underline border"
             style={{
@@ -170,37 +169,38 @@ export function HeroSection() {
                 : { borderColor: "rgba(20,184,166,0.4)", color: "var(--brand-teal)", borderWidth: "2px" }),
             }}
           >
-            {isClassic ? "Связаться" : "💬 Связаться"}
+            {isClassic || isCrayon ? "Связаться" : "💬 Связаться"}
           </motion.a>
         </motion.div>
 
         {/* Social links */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 1.3 }} className="flex items-center justify-center gap-4">
           {[
-            { icon: GitFork, href: "https://github.com/Maximviktorovic2305", color: colors.lavender, emoji: "🐙" },
-            { icon: MessageCircle, href: "https://t.me/maximviktorovic2305", color: colors.teal, emoji: "✈️" },
-            { icon: Mail, href: "mailto:Maximviktorovic@mail.ru", color: colors.pink, emoji: "💌" },
+            { icon: GitFork, href: "https://github.com/Maximviktorovic2305", color: colors.lavender },
+            { icon: MessageCircle, href: "https://t.me/maximviktorovic2305", color: colors.teal },
+            { icon: Mail, href: "mailto:Maximviktorovic@mail.ru", color: colors.pink },
           ].map((social, i) => (
             <motion.a
               key={i}
               href={social.href}
               target="_blank"
               rel="noopener noreferrer"
-              whileHover={{ y: isClassic ? -3 : -6, scale: isClassic ? 1.05 : 1.15, rotate: isClassic ? 0 : 5 }}
+              whileHover={{ y: isClassic ? -3 : -5, scale: isClassic ? 1.05 : 1.1, rotate: isClassic || isCrayon ? 0 : 5 }}
               whileTap={{ scale: 0.9 }}
               className="w-14 h-14 flex items-center justify-center transition-all cursor-pointer"
               style={{
                 borderStyle: BS as any,
                 borderWidth: isClassic ? "1px" : "2px",
                 borderColor: isClassic ? "var(--border)" : `${social.color}40`,
-                backgroundColor: isClassic ? "transparent" : `${social.color}10`,
+                backgroundColor: isClassic ? "transparent" : isCrayon ? "var(--card)" : `${social.color}10`,
                 color: isClassic ? "var(--text-secondary)" : social.color,
                 filter: TF,
                 borderRadius: isClassic ? "0.375rem" : "1rem",
                 cursor: isClassic ? "default" : "pointer",
+                boxShadow: isCrayon ? `0 10px 28px ${social.color}16` : undefined,
               }}
             >
-              {isCrayon ? <span className="text-[1.4rem]">{social.emoji}</span> : <social.icon size={22} />}
+              <social.icon size={22} />
             </motion.a>
           ))}
         </motion.div>

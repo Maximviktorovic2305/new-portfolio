@@ -19,7 +19,7 @@ export function ContactSection() {
       <div ref={ref} className="max-w-7xl mx-auto px-6 relative z-10">
         <motion.div initial={{ opacity: 0, y: 40 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, type: "spring" }} className="text-center mb-16">
           {!isClassic && (
-            <motion.span initial={{ scale: 0, rotate: -180 }} animate={isInView ? { scale: 1, rotate: 0 } : {}} transition={{ type: "spring", stiffness: 200, delay: 0.2 }} className="inline-block text-[3rem] mb-3">💬</motion.span>
+            <motion.span initial={{ scale: 0, rotate: -90 }} animate={isInView ? { scale: 1, rotate: 0 } : {}} transition={{ type: "spring", stiffness: 200, delay: 0.2 }} className="inline-block text-[2.4rem] mb-3">{isCrayon ? "✦" : "💬"}</motion.span>
           )}
           <h2 className="text-[2.6rem] sm:text-[3.2rem] mb-4 text-text-primary" style={{ fontFamily: "var(--t-font-heading)", fontWeight: 700 }}>
             {isClassic ? "Давайте общаться" : <>Давайте <span className="text-brand-lime">общаться!</span></>}
@@ -27,7 +27,7 @@ export function ContactSection() {
           {!isClassic && (
             <svg viewBox="0 0 200 8" className="w-32 h-3 mx-auto">
               <motion.path d={isCrayon ? "M5 4 Q 25 1 50 5 Q 75 8 100 3 Q 125 0 150 5 Q 175 8 195 4" : "M5 4 L195 4"}
-                stroke={colors.lime} strokeWidth="3" fill="none" strokeLinecap="round" strokeDasharray={isCrayon ? "6 3" : "none"}
+                stroke={colors.lime} strokeWidth="3" fill="none" strokeLinecap="round" strokeDasharray="none"
                 initial={{ pathLength: 0 }} animate={isInView ? { pathLength: 1 } : {}} transition={{ duration: 1, delay: 0.3 }} />
             </svg>
           )}
@@ -50,17 +50,18 @@ export function ContactSection() {
                   rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
                   initial={{ opacity: 0, x: -30 }} animate={isInView ? { opacity: 1, x: 0 } : {}}
                   transition={{ delay: 0.4 + i * 0.1, type: "spring" }}
-                  whileHover={{ x: isClassic ? 4 : 12, scale: isClassic ? 1.02 : 1.04, rotate: isCrayon ? 1 : 0 }}
+                  whileHover={{ x: isClassic ? 4 : isCrayon ? 6 : 12, scale: isClassic ? 1.02 : 1.035, rotate: 0 }}
                   whileTap={{ scale: 0.97 }}
                   className="flex items-center gap-4 p-4 no-underline group"
                   style={{
                     borderStyle: BS,
                     borderWidth: isClassic ? "1px" : "2px",
                     borderColor: isClassic ? "var(--border)" : `${item.color}20`,
-                    backgroundColor: isClassic ? "transparent" : `${item.color}04`,
+                    backgroundColor: isClassic ? "transparent" : isCrayon ? "var(--card)" : `${item.color}04`,
                     filter: TF,
                     borderRadius: rad || "1rem",
                     cursor: isClassic ? "default" : "pointer",
+                    boxShadow: isCrayon ? `0 12px 34px ${item.color}0e` : undefined,
                   }}
                 >
                   <motion.div
@@ -71,7 +72,7 @@ export function ContactSection() {
                     }}
                     whileHover={isClassic ? {} : { scale: 1.2, rotate: [0, -15, 15, 0] }}
                   >
-                    {isClassic ? (
+                    {isClassic || isCrayon ? (
                       <item.icon size={20} style={{ color: "var(--text-secondary)" }} />
                     ) : (
                       <span className="text-[1.5rem]">{item.emoji}</span>
@@ -98,8 +99,8 @@ export function ContactSection() {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.8 }} className="flex gap-3">
               {socials.map((social) => (
                 <motion.a key={social.label} href={social.href} target="_blank" rel="noopener noreferrer"
-                  whileHover={{ y: isClassic ? -3 : -8, scale: isClassic ? 1.05 : 1.2, rotate: isClassic ? 0 : 10 }}
-                  whileTap={{ scale: 0.85, rotate: isClassic ? 0 : -15 }}
+                  whileHover={{ y: isClassic ? -3 : isCrayon ? -5 : -8, scale: isClassic ? 1.05 : isCrayon ? 1.08 : 1.2, rotate: isClassic || isCrayon ? 0 : 10 }}
+                  whileTap={{ scale: 0.9, rotate: isClassic || isCrayon ? 0 : -15 }}
                   className="flex items-center justify-center"
                   style={{
                     borderStyle: BS,

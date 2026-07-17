@@ -26,7 +26,7 @@ export const stats: StatItem[] = [
   { value: "5+", label: "Лет опыта", emoji: "🎯", color: colors.pink },
   { value: "40+", label: "Проектов", emoji: "📦", color: colors.teal },
   { value: "JS/TS", label: "Основной стек", emoji: "💻", color: colors.orange },
-  { value: "Go", label: "Изучаю", emoji: "🚀", color: colors.lime },
+  { value: "Go", label: "Рабочий стек", emoji: "🚀", color: colors.lime },
 ];
 
 export const highlights: HighlightItem[] = [

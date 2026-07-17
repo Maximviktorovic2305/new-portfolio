@@ -3,15 +3,11 @@ import { useEffect } from "react";
 import { colors, useTheme } from "@/shared/config";
 
 const doodles = [
-  { emoji: "⭐", x: "8%", y: "12%", size: 28, delay: 0 },
-  { emoji: "🌈", x: "88%", y: "20%", size: 30, delay: 1.2 },
-  { emoji: "☁️", x: "75%", y: "60%", size: 34, delay: 2 },
-  { emoji: "🎨", x: "12%", y: "65%", size: 26, delay: 0.8 },
-  { emoji: "✏️", x: "50%", y: "40%", size: 22, delay: 1.5 },
-  { emoji: "💫", x: "35%", y: "80%", size: 24, delay: 3 },
-  { emoji: "🌻", x: "65%", y: "8%", size: 26, delay: 2.5 },
-  { emoji: "🦋", x: "20%", y: "35%", size: 22, delay: 1.8 },
-  { emoji: "🎵", x: "80%", y: "85%", size: 20, delay: 0.5 },
+  { symbol: "✦", x: "7%", y: "15%", size: 54, delay: 0, color: "#7866d5", radius: "42% 58% 55% 45%" },
+  { symbol: "●", x: "90%", y: "24%", size: 38, delay: 1.2, color: "#ee5f8b", radius: "50%" },
+  { symbol: "◆", x: "82%", y: "70%", size: 46, delay: 2, color: "#4898cf", radius: "36% 64% 42% 58%" },
+  { symbol: "✿", x: "10%", y: "76%", size: 50, delay: 0.8, color: "#169f91", radius: "58% 42% 62% 38%" },
+  { symbol: "★", x: "65%", y: "9%", size: 42, delay: 2.5, color: "#f39142", radius: "48% 52% 40% 60%" },
 ];
 
 // depth: 0 = far, 1 = mid, 2 = near
@@ -122,27 +118,33 @@ export function FloatingShapes() {
             <motion.div
               key={`doodle-${i}`}
               animate={{
-                y: [0, -20, 5, -15, 0],
-                x: [0, 10, -8, 12, 0],
-                rotate: [0, 15, -10, 8, 0],
-                scale: [1, 1.15, 0.95, 1.1, 1],
+                y: [0, -10, 0, 7, 0],
+                rotate: [0, 5, -3, 0],
+                scale: [1, 1.04, 0.98, 1],
               }}
               transition={{
-                duration: 10 + i * 2,
+                duration: 12 + i * 1.5,
                 repeat: Infinity,
                 delay: d.delay,
                 ease: "easeInOut",
               }}
-              className="absolute select-none"
+              className="absolute hidden sm:flex items-center justify-center select-none"
               style={{
                 left: d.x,
                 top: d.y,
-                fontSize: d.size,
-                opacity: 0.15,
-                filter: "blur(0.5px)",
+                width: d.size,
+                height: d.size,
+                fontSize: d.size * 0.38,
+                color: d.color,
+                opacity: 0.62,
+                borderRadius: d.radius,
+                border: `1px solid ${d.color}30`,
+                background: `linear-gradient(145deg, #ffffffcc, ${d.color}12)`,
+                boxShadow: `0 12px 34px ${d.color}16`,
+                backdropFilter: "blur(8px)",
               }}
             >
-              {d.emoji}
+              {d.symbol}
             </motion.div>
           ))
         : blobShapes.map((shape, i) => (

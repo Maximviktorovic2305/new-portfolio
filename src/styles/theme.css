@@ -8,35 +8,35 @@
   --font-size: 16px;
 
   /* ── theme structural tokens ── */
-  --t-font-heading: 'Caveat', cursive;
-  --t-font-body: 'Patrick Hand', cursive;
-  --t-font-mono: 'Patrick Hand', cursive;
-  --t-border-style: dashed;
-  --t-border-w: 3px;
-  --t-filter: url(#sketchy);
+  --t-font-heading: 'Baloo 2', cursive;
+  --t-font-body: 'Nunito', sans-serif;
+  --t-font-mono: 'JetBrains Mono', monospace;
+  --t-border-style: solid;
+  --t-border-w: 2px;
+  --t-filter: none;
 
   /* ── surfaces — crayon default ── */
-  --background: #fdf6e3;
-  --foreground: #2d2a24;
-  --card: #fff9ed;
-  --card-foreground: #2d2a24;
-  --popover: #fff9ed;
-  --popover-foreground: #2d2a24;
-  --secondary: #f5edd6;
-  --secondary-foreground: #2d2a24;
-  --muted: #f0e8d0;
+  --background: #fffaf7;
+  --foreground: #2f2942;
+  --card: #ffffff;
+  --card-foreground: #2f2942;
+  --popover: #ffffff;
+  --popover-foreground: #2f2942;
+  --secondary: #f6f1fb;
+  --secondary-foreground: #2f2942;
+  --muted: #f2ecf7;
   --input: transparent;
-  --input-background: #fff9ed;
-  --switch-background: #e8dfc8;
+  --input-background: #ffffff;
+  --switch-background: #e8def2;
 
   /* ── brand palette ── */
-  --brand-pink: #e8366d;
-  --brand-teal: #00a58c;
-  --brand-teal-hover: #008f79;
-  --brand-orange: #f5820b;
-  --brand-lavender: #8b5cf6;
-  --brand-lime: #65a30d;
-  --brand-sky: #2fa4d8;
+  --brand-pink: #ee5f8b;
+  --brand-teal: #169f91;
+  --brand-teal-hover: #0f887c;
+  --brand-orange: #f39142;
+  --brand-lavender: #7866d5;
+  --brand-lime: #75a33d;
+  --brand-sky: #4898cf;
   --brand-red: #e53e3e;
   --brand-yellow: #eab308;
 
@@ -46,15 +46,15 @@
   --accent: var(--brand-teal);
   --accent-foreground: #ffffff;
   --ring: var(--brand-lavender);
-  --border: #d4c9a8;
+  --border: #e6dcec;
   --destructive: #e53e3e;
   --destructive-foreground: #ffffff;
 
   /* ── text ── */
-  --text-primary: #2d2a24;
-  --text-secondary: #5c564a;
-  --muted-foreground: #8a8070;
-  --text-dim: #b0a590;
+  --text-primary: #2f2942;
+  --text-secondary: #625a75;
+  --muted-foreground: #7f768f;
+  --text-dim: #aaa0b7;
 
   --font-weight-medium: 600;
   --font-weight-normal: 500;
@@ -67,8 +67,8 @@
 
   --radius: 1rem;
 
-  --sidebar: #fdf6e3;
-  --sidebar-foreground: #2d2a24;
+  --sidebar: #fffaf7;
+  --sidebar-foreground: #2f2942;
   --sidebar-primary: var(--brand-pink);
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #f0e8d0;
@@ -77,34 +77,51 @@
   --sidebar-ring: var(--brand-lavender);
 }
 
-/* ═══ 1. CRAYON — kid-drawn (default) ═══ */
+/* ═══ 1. CRAYON — polished editorial cartoon ═══ */
 .theme-crayon {
-  --t-font-heading: 'Caveat', cursive;
-  --t-font-body: 'Patrick Hand', cursive;
-  --t-font-mono: 'Patrick Hand', cursive;
-  --t-border-style: dashed;
-  --t-border-w: 3px;
-  --t-filter: url(#sketchy);
-  --background: #fdf6e3;
-  --foreground: #2d2a24;
-  --card: #fff9ed;
-  --card-foreground: #2d2a24;
-  --secondary: #f5edd6;
-  --muted: #f0e8d0;
-  --input-background: #fff9ed;
-  --brand-teal: #00a58c;
-  --brand-teal-hover: #008f79;
-  --brand-orange: #f5820b;
-  --brand-lavender: #8b5cf6;
-  --brand-lime: #65a30d;
-  --brand-sky: #2fa4d8;
-  --border: #d4c9a8;
-  --text-primary: #2d2a24;
-  --text-secondary: #5c564a;
-  --muted-foreground: #8a8070;
-  --text-dim: #b0a590;
-  --sidebar: #fdf6e3;
-  --sidebar-foreground: #2d2a24;
+  --t-font-heading: 'Baloo 2', cursive;
+  --t-font-body: 'Nunito', sans-serif;
+  --t-font-mono: 'JetBrains Mono', monospace;
+  --t-border-style: solid;
+  --t-border-w: 2px;
+  --t-filter: none;
+  --background: #fffaf7;
+  --foreground: #2f2942;
+  --card: #ffffff;
+  --card-foreground: #2f2942;
+  --popover: #ffffff;
+  --popover-foreground: #2f2942;
+  --secondary: #f6f1fb;
+  --muted: #f2ecf7;
+  --input-background: #ffffff;
+  --switch-background: #e8def2;
+  --brand-pink: #ee5f8b;
+  --brand-teal: #169f91;
+  --brand-teal-hover: #0f887c;
+  --brand-orange: #f39142;
+  --brand-lavender: #7866d5;
+  --brand-lime: #75a33d;
+  --brand-sky: #4898cf;
+  --border: #e6dcec;
+  --text-primary: #2f2942;
+  --text-secondary: #625a75;
+  --muted-foreground: #7f768f;
+  --text-dim: #aaa0b7;
+  --sidebar: #fffaf7;
+  --sidebar-foreground: #2f2942;
+}
+
+.theme-crayon body {
+  background-image:
+    radial-gradient(circle at 12% 8%, rgba(238, 95, 139, 0.08), transparent 28rem),
+    radial-gradient(circle at 88% 24%, rgba(72, 152, 207, 0.08), transparent 30rem),
+    radial-gradient(circle at 50% 82%, rgba(120, 102, 213, 0.06), transparent 34rem);
+  background-attachment: fixed;
+}
+
+.theme-crayon ::selection {
+  color: #ffffff;
+  background: var(--brand-lavender);
 }
 
 /* ═══ 2. ORIGINAL — cosmic dark (with fancy animations) ═══ */
@@ -198,9 +215,17 @@
 
 /* ═══ Crossfade transition ═══ */
 html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
   transition:
     background-color 0.5s ease,
     color 0.5s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 html *:not([class*="motion"]):not(canvas) {
   transition:

@@ -36,12 +36,6 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const scrollTo = (href: string) => {
-    setMobileOpen(false);
-    const el = document.getElementById(href.replace("#", ""));
-    el?.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
     <>
       <motion.nav
@@ -62,10 +56,6 @@ export function Navbar() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <motion.a
             href="#hero"
-            onClick={(e) => {
-              e.preventDefault();
-              scrollTo("#hero");
-            }}
             className="relative group cursor-pointer flex items-center gap-2"
             whileHover={{ scale: isClassic ? 1.03 : 1.1, rotate: isClassic ? 0 : -3 }}
             whileTap={{ scale: 0.9 }}
@@ -98,9 +88,9 @@ export function Navbar() {
 
           <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
-              <motion.button
+              <motion.a
                 key={link.href}
-                onClick={() => scrollTo(link.href)}
+                href={link.href}
                 className={`relative px-4 py-2 text-[1rem] transition-colors cursor-pointer ${
                   activeSection === link.href.replace("#", "")
                     ? (isClassic ? "text-text-primary" : "text-brand-pink")
@@ -134,7 +124,7 @@ export function Navbar() {
                 <span className="relative z-10">
                   {showEmojis ? `${link.emoji} ` : ""}{link.label}
                 </span>
-              </motion.button>
+              </motion.a>
             ))}
           </div>
 
@@ -160,12 +150,13 @@ export function Navbar() {
           >
             <div className="flex flex-col gap-3">
               {navLinks.map((link, i) => (
-                <motion.button
+                <motion.a
                   key={link.href}
+                  href={link.href}
                   initial={{ opacity: 0, x: -50, rotate: -5 }}
                   animate={{ opacity: 1, x: 0, rotate: 0 }}
                   transition={{ delay: i * 0.08, type: "spring", stiffness: 200 }}
-                  onClick={() => scrollTo(link.href)}
+                  onClick={() => setMobileOpen(false)}
                   className="text-left text-[1.6rem] py-3 px-4 text-text-primary hover:text-text-secondary transition-colors cursor-pointer border border-transparent"
                   style={{
                     fontFamily: "var(--t-font-heading)",
@@ -175,7 +166,7 @@ export function Navbar() {
                   }}
                 >
                   {!isClassic && `${link.emoji} `}{link.label}
-                </motion.button>
+                </motion.a>
               ))}
             </div>
           </motion.div>

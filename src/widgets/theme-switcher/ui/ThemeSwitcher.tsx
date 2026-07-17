@@ -16,7 +16,7 @@ function getHintEnabled(): boolean {
 }
 
 export function ThemeSwitcher() {
-  const { theme, setTheme, isClassic } = useTheme();
+  const { theme, setTheme, isClassic, isCrayon } = useTheme();
   const [open, setOpen] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [hintEnabled, setHintEnabled] = useState(getHintEnabled);
@@ -31,31 +31,31 @@ export function ThemeSwitcher() {
     if (!next) setShowHint(false);
   };
 
-  // Show hint initially after 1.5s, then every 20s
+  // Show the first hint quickly enough to be noticed.
   useEffect(() => {
     if (!hintEnabled || open) return;
 
     // First appearance
     const firstTimer = setTimeout(() => {
       if (!open) setShowHint(true);
-    }, 1500);
+    }, 700);
 
     return () => clearTimeout(firstTimer);
   }, [hintEnabled, open]);
 
-  // Auto-hide hint after 5s, then re-show every 20s
+  // Keep it visible long enough to be read without rushing.
   useEffect(() => {
     if (!showHint) return;
-    const hideTimer = setTimeout(() => setShowHint(false), 5000);
+    const hideTimer = setTimeout(() => setShowHint(false), 8000);
     return () => clearTimeout(hideTimer);
   }, [showHint]);
 
-  // Recurring hint every 20s
+  // Recurring hint for visitors who missed the first appearance.
   useEffect(() => {
     if (!hintEnabled || open) return;
     const interval = setInterval(() => {
       if (!open) setShowHint(true);
-    }, 20000);
+    }, 16000);
     return () => clearInterval(interval);
   }, [hintEnabled, open]);
 
@@ -72,10 +72,10 @@ export function ThemeSwitcher() {
     const bounceLoop = async () => {
       while (!cancelled) {
         await hintControls.start({
-          y: [0, -14, 0, -8, 0, -4, 0],
-          transition: { duration: 0.8, ease: "easeOut" },
+          y: [0, -5, 0],
+          transition: { duration: 1.4, ease: "easeInOut" },
         });
-        await new Promise((r) => setTimeout(r, 2200));
+        await new Promise((r) => setTimeout(r, 900));
         if (cancelled) break;
       }
     };
@@ -84,24 +84,24 @@ export function ThemeSwitcher() {
     return () => { cancelled = true; };
   }, [showHint, open, hintControls]);
 
-  // Shake button every 10s when closed
+  // A short, controlled nudge keeps the control discoverable.
   const shake = useCallback(async () => {
     if (open) return;
     await btnControls.start({
-      rotate: [0, -8, 8, -8, 8, -4, 4, 0],
-      scale: [1, 1.1, 1.1, 1.1, 1.1, 1.05, 1.05, 1],
-      transition: { duration: 0.6, ease: "easeInOut" },
+      rotate: [0, -5, 5, -3, 3, 0],
+      scale: [1, 1.08, 1.08, 1.04, 1.04, 1],
+      transition: { duration: 0.55, ease: "easeInOut" },
     });
   }, [btnControls, open]);
 
   useEffect(() => {
     if (open) return;
-    const interval = setInterval(shake, 10000);
+    const interval = setInterval(shake, 8000);
     return () => clearInterval(interval);
   }, [shake, open]);
 
   return (
-    <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-end gap-3">
+    <div className="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-[100] flex flex-col items-end gap-3">
       {/* Theme panel */}
       <AnimatePresence>
         {open && (
@@ -258,28 +258,44 @@ export function ThemeSwitcher() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.8 }}
             transition={{ type: "spring", stiffness: 400, damping: 18 }}
-            className="absolute bottom-[4.5rem] right-0 flex items-center gap-2 whitespace-nowrap shadow-lg"
+            className="absolute bottom-[5.25rem] right-0 w-[15.5rem] cursor-pointer"
             style={{
               fontFamily: "var(--t-font-heading)",
               fontWeight: 700,
-              borderRadius: isClassic ? "0.375rem" : "0.75rem",
-              backgroundColor: isClassic ? "var(--text-primary)" : "var(--brand-teal)",
+              borderRadius: isClassic ? "0.375rem" : "1.15rem",
+              background: isClassic
+                ? "var(--text-primary)"
+                : "linear-gradient(135deg, #6557c7 0%, #7d68dc 52%, #a25ec8 100%)",
               color: isClassic ? "var(--background)" : "white",
+              border: isClassic ? "1px solid var(--border)" : "2px solid rgba(255,255,255,0.82)",
+              boxShadow: isClassic
+                ? "0 10px 30px rgba(0,0,0,0.28)"
+                : "0 18px 45px rgba(92,72,171,0.34), 0 0 0 6px rgba(120,102,213,0.12)",
+              animation: isClassic ? undefined : "theme-hint-pulse 1.8s ease-in-out infinite",
             }}
-            onClick={() => setShowHint(false)}
+            onClick={() => setOpen(true)}
           >
             <motion.div
               animate={hintControls}
-              className="px-4 py-2.5 flex items-center gap-2"
+              className="px-4 py-3.5 flex items-center gap-3"
             >
-              <span className="text-[0.9rem]">
-                {isClassic ? "Нажмите для смены стиля \u2193" : "\uD83D\uDC46 Нажми для смены стиля!"}
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/18 ring-1 ring-white/25">
+                <Palette size={21} strokeWidth={2.4} />
+              </span>
+              <span className="min-w-0 leading-tight">
+                <span className="block text-[1rem]">Попробуй другой стиль</span>
+                <span
+                  className="mt-1 block text-[0.75rem] font-semibold"
+                  style={{ color: isClassic ? "var(--background)" : "rgba(255,255,255,0.8)" }}
+                >
+                  Нажми на палитру, чтобы переключить
+                </span>
               </span>
             </motion.div>
             <div
-              className="absolute -bottom-2 right-5 w-3 h-3 rotate-45"
+              className="absolute -bottom-2 right-6 h-4 w-4 rotate-45 border-b-2 border-r-2 border-white/80"
               style={{
-                backgroundColor: isClassic ? "var(--text-primary)" : "var(--brand-teal)",
+                backgroundColor: isClassic ? "var(--text-primary)" : "#8f62d2",
               }}
             />
           </motion.div>
@@ -292,16 +308,34 @@ export function ThemeSwitcher() {
         onClick={() => setOpen(!open)}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.9 }}
+        aria-label={open ? "Закрыть выбор стиля" : "Выбрать стиль сайта"}
         className="relative flex items-center justify-center bg-card backdrop-blur-xl overflow-hidden"
         style={{
-          width: 56,
-          height: 56,
+          width: isClassic ? 56 : 64,
+          height: isClassic ? 56 : 64,
           borderRadius: isClassic ? "0.375rem" : "9999px",
           border: isClassic
             ? "1px solid rgba(229,229,229,0.15)"
-            : "1px solid rgba(255,255,255,0.08)",
+            : isCrayon
+              ? "3px solid rgba(255,255,255,0.95)"
+              : "1px solid rgba(255,255,255,0.12)",
+          background: isCrayon
+            ? "linear-gradient(145deg, #7866d5 0%, #9a66cf 55%, #ee5f8b 115%)"
+            : undefined,
+          boxShadow: isCrayon
+            ? showHint
+              ? "0 14px 38px rgba(120,102,213,0.42), 0 0 0 8px rgba(120,102,213,0.15)"
+              : "0 12px 32px rgba(120,102,213,0.28), 0 0 0 4px rgba(120,102,213,0.08)"
+            : undefined,
         }}
       >
+        {isCrayon && showHint && !open && (
+          <motion.span
+            className="absolute inset-0 rounded-full border-2 border-white/55"
+            animate={{ scale: [1, 1.28], opacity: [0.75, 0] }}
+            transition={{ duration: 1.35, repeat: Infinity, ease: "easeOut" }}
+          />
+        )}
         {/* Sweep glare */}
         <div
           className="absolute inset-0 pointer-events-none"
@@ -320,6 +354,8 @@ export function ThemeSwitcher() {
             <X size={20} className="text-muted-foreground" />
           ) : isClassic ? (
             <Palette size={20} className="text-text-secondary" />
+          ) : isCrayon ? (
+            <Palette size={27} strokeWidth={2.3} className="text-white drop-shadow-sm" />
           ) : (
             <motion.span
               animate={{ scale: [1, 1.1, 1, 1.1, 1] }}
@@ -335,6 +371,10 @@ export function ThemeSwitcher() {
           @keyframes theme-btn-glare {
             0%   { background-position: 200% center; }
             100% { background-position: -100% center; }
+          }
+          @keyframes theme-hint-pulse {
+            0%, 100% { box-shadow: 0 18px 45px rgba(92,72,171,0.34), 0 0 0 6px rgba(120,102,213,0.12); }
+            50% { box-shadow: 0 20px 52px rgba(92,72,171,0.44), 0 0 0 10px rgba(120,102,213,0.18); }
           }
         `}</style>
       </motion.button>

@@ -11,7 +11,7 @@ export interface ThemePreset {
 }
 
 export const themePresets: ThemePreset[] = [
-  { id: "crayon",   label: "Карандаши", emoji: "🖍️", description: "Нарисовано ребёнком",     isLight: true },
+  { id: "crayon",   label: "Иллюстрация", emoji: "✨", description: "Мягкий авторский стиль",   isLight: true },
   { id: "original", label: "Космос",   emoji: "🌌", description: "Тёмный с анимациями",     isLight: false },
   { id: "classic",  label: "Классика", emoji: "🖤", description: "Чистый тёмный минимализм", isLight: false },
 ];

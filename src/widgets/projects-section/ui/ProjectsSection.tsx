@@ -130,7 +130,7 @@ export function ProjectsSection() {
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 40 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, type: "spring" }} className="text-center mb-16">
           {!isClassic && (
-            <motion.span initial={{ scale: 0, rotate: -180 }} animate={isInView ? { scale: 1, rotate: 0 } : {}} transition={{ type: "spring", stiffness: 200, delay: 0.2 }} className="inline-block text-[3rem] mb-3">🚀</motion.span>
+            <motion.span initial={{ scale: 0, rotate: -90 }} animate={isInView ? { scale: 1, rotate: 0 } : {}} transition={{ type: "spring", stiffness: 200, delay: 0.2 }} className="inline-block text-[2.4rem] mb-3">{isCrayon ? "✦" : "🚀"}</motion.span>
           )}
           <h2 className="text-[2.6rem] sm:text-[3.2rem] mb-4 text-text-primary" style={{ fontFamily: "var(--t-font-heading)", fontWeight: 700 }}>
             {isClassic ? "Мои проекты" : <>Мои <span className="text-brand-orange">проекты</span></>}
@@ -138,7 +138,7 @@ export function ProjectsSection() {
           {!isClassic && (
             <svg viewBox="0 0 200 8" className="w-32 h-3 mx-auto">
               <motion.path d={isCrayon ? "M5 4 Q 25 1 50 5 Q 75 8 100 3 Q 125 0 150 5 Q 175 8 195 4" : "M5 4 L195 4"}
-                stroke={colors.orange} strokeWidth="3" fill="none" strokeLinecap="round" strokeDasharray={isCrayon ? "6 3" : "none"}
+                stroke={colors.orange} strokeWidth="3" fill="none" strokeLinecap="round" strokeDasharray="none"
                 initial={{ pathLength: 0 }} animate={isInView ? { pathLength: 1 } : {}} transition={{ duration: 1, delay: 0.3 }} />
             </svg>
           )}
@@ -175,39 +175,52 @@ export function ProjectsSection() {
             <div className="grid lg:grid-cols-2 gap-6">
               {visibleProjects.map((project, i) => {
                 const color = projectColors[i % projectColors.length];
-                const rot = isCrayon ? (i % 2 === 0 ? -1.5 : 1.5) : 0;
+                const rot = isCrayon ? (i % 2 === 0 ? -0.7 : 0.7) : 0;
                 return (
                   <motion.div
                     key={project.id}
-                    initial={{ opacity: 0, y: 50, rotate: isCrayon ? (i % 2 === 0 ? -4 : 4) : 0 }}
+                    initial={{ opacity: 0, y: 50, rotate: isCrayon ? rot * 2.5 : 0 }}
                     animate={isInView ? { opacity: 1, y: 0, rotate: rot } : {}}
                     transition={{ duration: 0.7, delay: i * 0.15, type: "spring" }}
                     onMouseEnter={() => setHoveredId(project.id)}
                     onMouseLeave={() => setHoveredId(null)}
-                    whileHover={{ rotate: 0, scale: 1.02 }}
+                    whileHover={{ rotate: 0, scale: isCrayon ? 1.012 : 1.02 }}
                     className="group relative rounded-3xl overflow-hidden border-2 cursor-pointer"
-                    style={{ borderStyle: BS, borderColor: `${color}30`, backgroundColor: `${color}04`, filter: TF }}
+                    style={{
+                      borderStyle: BS,
+                      borderColor: `${color}30`,
+                      backgroundColor: isCrayon ? "var(--card)" : `${color}04`,
+                      filter: TF,
+                      boxShadow: isCrayon ? `0 18px 48px ${color}12` : undefined,
+                    }}
                   >
                     <div className="relative h-56 overflow-hidden">
                       <motion.div animate={hoveredId === project.id ? { scale: 1.1 } : { scale: 1 }} transition={{ duration: 0.5 }} className="w-full h-full">
                         <ImageWithFallback src={project.image} alt={project.title} className="w-full h-full object-cover" />
                       </motion.div>
-                      <motion.div initial={{ opacity: 0 }} animate={hoveredId === project.id ? { opacity: 1 } : { opacity: 0 }} transition={{ duration: 0.3 }}
-                        className="absolute inset-0 flex items-center justify-center" style={{ backgroundColor: `${color}dd` }}>
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={hoveredId === project.id ? { opacity: 1 } : { opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="absolute inset-0 flex items-center justify-center backdrop-blur-[2px]"
+                        style={{ backgroundColor: isCrayon ? "rgba(47, 41, 66, 0.68)" : "rgba(15, 14, 26, 0.76)" }}
+                      >
                         <div className="flex gap-4">
                           {project.site && (
                             <motion.a href={project.site} target="_blank" rel="noopener noreferrer"
                               initial={{ y: 20, opacity: 0 }} animate={hoveredId === project.id ? { y: 0, opacity: 1 } : { y: 20, opacity: 0 }}
-                              transition={{ delay: 0.1 }} whileHover={{ scale: 1.2, rotate: 10 }}
-                              className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-background">
+                              transition={{ delay: 0.1 }} whileHover={{ scale: 1.1 }}
+                              aria-label={`Открыть сайт ${project.title}`}
+                              className="w-12 h-12 rounded-2xl bg-white/95 flex items-center justify-center text-[#2f2942] shadow-lg ring-1 ring-black/5">
                               <ExternalLink size={20} />
                             </motion.a>
                           )}
                           {project.github && (
                             <motion.a href={project.github} target="_blank" rel="noopener noreferrer"
                               initial={{ y: 20, opacity: 0 }} animate={hoveredId === project.id ? { y: 0, opacity: 1 } : { y: 20, opacity: 0 }}
-                              transition={{ delay: 0.2 }} whileHover={{ scale: 1.2, rotate: -10 }}
-                              className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center text-white">
+                              transition={{ delay: 0.2 }} whileHover={{ scale: 1.1 }}
+                              aria-label={`Открыть GitHub проекта ${project.title}`}
+                              className="w-12 h-12 rounded-2xl bg-white/15 backdrop-blur flex items-center justify-center text-white border border-white/30 shadow-lg">
                               <GitFork size={20} />
                             </motion.a>
                           )}
@@ -253,7 +266,7 @@ export function ProjectsSection() {
 
             {projects.length > 4 && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.6 }} className="text-center mt-10">
-                <motion.button whileHover={{ scale: 1.08, rotate: isCrayon ? -2 : 0 }} whileTap={{ scale: 0.95 }}
+                <motion.button whileHover={{ scale: isCrayon ? 1.04 : 1.08, rotate: 0 }} whileTap={{ scale: 0.95 }}
                   onClick={() => setShowAll(!showAll)}
                   className="px-8 py-3.5 rounded-2xl border-2 border-brand-teal/30 bg-brand-teal/5 text-brand-teal text-[1rem] uppercase tracking-wide cursor-pointer transition-colors hover:bg-brand-teal/10"
                   style={{ fontFamily: "var(--t-font-heading)", fontWeight: 700, borderStyle: BS, filter: TF }}>

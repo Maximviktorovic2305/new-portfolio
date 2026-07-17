@@ -40,7 +40,7 @@ export function TypeWriter({ texts }: Props) {
         transition={{ duration: 0.4, repeat: Infinity, repeatType: "reverse" }}
         style={{ color: colors.orange }}
       >
-        {isCrayon ? "✏️" : "|"}
+        {isCrayon ? "▍" : "|"}
       </motion.span>
     </span>
   );
