@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useReducedMotion } from "motion/react";
 import { colors } from "@/shared/config";
 
 const particleColors = [colors.pink, colors.teal, colors.orange, colors.lavender, colors.lime, colors.sky];
@@ -15,11 +16,13 @@ interface Particle {
 }
 
 export function ParticleField() {
+  const shouldReduceMotion = useReducedMotion();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const animRef = useRef<number>(0);
 
   useEffect(() => {
+    if (shouldReduceMotion) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -40,7 +43,7 @@ export function ParticleField() {
       vy: -(Math.random() * 0.4 + 0.1),
       size: Math.random() * 8 + 3,
       opacity: Math.random() * 0.15 + 0.03,
-      color: particleColors[Math.floor(Math.random() * particleColors.length)],
+      color: particleColors[Math.floor(Math.random() * particleColors.length)] ?? colors.lavender,
       wobble: Math.random() * Math.PI * 2,
       wobbleSpeed: Math.random() * 0.02 + 0.01,
     }));
@@ -57,7 +60,7 @@ export function ParticleField() {
         if (b.y < -20) {
           b.y = canvas.height + 20;
           b.x = Math.random() * canvas.width;
-          b.color = particleColors[Math.floor(Math.random() * particleColors.length)];
+          b.color = particleColors[Math.floor(Math.random() * particleColors.length)] ?? colors.lavender;
         }
 
         // Draw bubble
@@ -84,10 +87,13 @@ export function ParticleField() {
       cancelAnimationFrame(animRef.current);
       window.removeEventListener("resize", resize);
     };
-  }, []);
+  }, [shouldReduceMotion]);
+
+  if (shouldReduceMotion) return null;
 
   return (
     <canvas
+      aria-hidden="true"
       ref={canvasRef}
       className="absolute inset-0 pointer-events-none"
       style={{ zIndex: 0 }}

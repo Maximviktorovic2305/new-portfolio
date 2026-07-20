@@ -8,9 +8,9 @@
   --font-size: 16px;
 
   /* ── theme structural tokens ── */
-  --t-font-heading: 'Baloo 2', cursive;
-  --t-font-body: 'Nunito', sans-serif;
-  --t-font-mono: 'JetBrains Mono', monospace;
+  --t-font-heading: "Baloo 2", cursive;
+  --t-font-body: "Nunito", sans-serif;
+  --t-font-mono: "JetBrains Mono", monospace;
   --t-border-style: solid;
   --t-border-w: 2px;
   --t-filter: none;
@@ -79,9 +79,9 @@
 
 /* ═══ 1. CRAYON — polished editorial cartoon ═══ */
 .theme-crayon {
-  --t-font-heading: 'Baloo 2', cursive;
-  --t-font-body: 'Nunito', sans-serif;
-  --t-font-mono: 'JetBrains Mono', monospace;
+  --t-font-heading: "Baloo 2", cursive;
+  --t-font-body: "Nunito", sans-serif;
+  --t-font-mono: "JetBrains Mono", monospace;
   --t-border-style: solid;
   --t-border-w: 2px;
   --t-filter: none;
@@ -126,9 +126,9 @@
 
 /* ═══ 2. ORIGINAL — cosmic dark (with fancy animations) ═══ */
 .theme-original {
-  --t-font-heading: 'Baloo 2', cursive;
-  --t-font-body: 'Nunito', sans-serif;
-  --t-font-mono: 'JetBrains Mono', monospace;
+  --t-font-heading: "Baloo 2", cursive;
+  --t-font-body: "Nunito", sans-serif;
+  --t-font-mono: "JetBrains Mono", monospace;
   --t-border-style: solid;
   --t-border-w: 2px;
   --t-filter: none;
@@ -166,9 +166,9 @@
 
 /* ═══ 3. CLASSIC — clean dark, minimal animations ═══ */
 .theme-classic {
-  --t-font-heading: 'Inter', sans-serif;
-  --t-font-body: 'Inter', sans-serif;
-  --t-font-mono: 'JetBrains Mono', monospace;
+  --t-font-heading: "Inter", sans-serif;
+  --t-font-body: "Inter", sans-serif;
+  --t-font-mono: "JetBrains Mono", monospace;
   --t-border-style: solid;
   --t-border-w: 1px;
   --t-filter: none;
@@ -204,15 +204,6 @@
   --sidebar-border: #2a2a2a;
 }
 
-/* Classic — force default cursor everywhere */
-.theme-classic,
-.theme-classic *,
-.theme-classic a,
-.theme-classic button,
-.theme-classic [role="button"] {
-  cursor: default !important;
-}
-
 /* ═══ Crossfade transition ═══ */
 html {
   scroll-behavior: smooth;
@@ -225,6 +216,15 @@ html {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }
 html *:not([class*="motion"]):not(canvas) {
@@ -299,6 +299,22 @@ html *:not([class*="motion"]):not(canvas) {
 
   body {
     @apply bg-background text-foreground;
+    margin: 0;
+    min-width: 20rem;
+    font-family: var(--t-font-body);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--ring);
+    outline-offset: 3px;
+  }
+
+  button,
+  a,
+  [role="button"] {
+    cursor: pointer;
   }
 
   html {
@@ -306,11 +322,39 @@ html *:not([class*="motion"]):not(canvas) {
     font-family: var(--t-font-body);
   }
 
-  h1 { font-size: var(--text-2xl); font-weight: var(--font-weight-medium); line-height: 1.5; }
-  h2 { font-size: var(--text-xl); font-weight: var(--font-weight-medium); line-height: 1.5; }
-  h3 { font-size: var(--text-lg); font-weight: var(--font-weight-medium); line-height: 1.5; }
-  h4 { font-size: var(--text-base); font-weight: var(--font-weight-medium); line-height: 1.5; }
-  label { font-size: var(--text-base); font-weight: var(--font-weight-medium); line-height: 1.5; }
-  button { font-size: var(--text-base); font-weight: var(--font-weight-medium); line-height: 1.5; }
-  input { font-size: var(--text-base); font-weight: var(--font-weight-normal); line-height: 1.5; }
+  h1 {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+  h2 {
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+  h3 {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+  h4 {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+  label {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+  button {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+  input {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-normal);
+    line-height: 1.5;
+  }
 }

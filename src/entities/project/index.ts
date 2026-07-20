@@ -1,2 +1,2 @@
-export type { Project } from "./model/types";
+export type { Project, SecureExternalUrl } from "./model/types";
 export { projects, projectColors } from "./model/data";

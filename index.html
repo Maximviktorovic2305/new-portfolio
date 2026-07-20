@@ -1,16 +1,88 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link rel="icon" type="image/png" href="/favicon.png" />
-      <title>Stylish Portfolio Website</title>
-    </head>
+    <title>Максим Викторович — Fullstack-разработчик</title>
+    <meta
+      name="description"
+      content="Портфолио Максима Викторовича: fullstack-разработка на React, Next.js, Node.js, NestJS, TypeScript и Golang. Проекты, опыт и контакты."
+    />
+    <meta name="author" content="Максим Викторович" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <meta name="theme-color" content="#fffaf7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0f0e1a" media="(prefers-color-scheme: dark)" />
 
-    <body>
-      <div id="root"></div>
-      <script type="module" src="/src/main.tsx"></script>
-    </body>
-  </html>
-  
+    <link rel="canonical" href="https://itmyportfolio.site/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:site_name" content="Max.dev" />
+    <meta property="og:url" content="https://itmyportfolio.site/" />
+    <meta property="og:title" content="Максим Викторович — Fullstack-разработчик" />
+    <meta
+      property="og:description"
+      content="React, Next.js, Node.js, NestJS, TypeScript и Golang — проекты, опыт и контакты fullstack-разработчика."
+    />
+    <meta property="og:image" content="https://itmyportfolio.site/og-cover.jpg" />
+    <meta property="og:image:secure_url" content="https://itmyportfolio.site/og-cover.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Максим Викторович — Fullstack Developer" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Максим Викторович — Fullstack-разработчик" />
+    <meta
+      name="twitter:description"
+      content="Проекты, стек и контакты fullstack-разработчика Максима Викторовича."
+    />
+    <meta name="twitter:image" content="https://itmyportfolio.site/og-cover.jpg" />
+    <meta name="twitter:image:alt" content="Максим Викторович — Fullstack Developer" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://itmyportfolio.site/#person",
+            "name": "Максим Викторович",
+            "url": "https://itmyportfolio.site/",
+            "image": "https://itmyportfolio.site/og-cover.jpg",
+            "jobTitle": "Fullstack Developer",
+            "email": "mailto:Maximviktorovic@mail.ru",
+            "sameAs": ["https://github.com/Maximviktorovic2305", "https://t.me/maximviktorovic2305"],
+            "knowsAbout": [
+              "React",
+              "Next.js",
+              "TypeScript",
+              "Node.js",
+              "NestJS",
+              "Golang",
+              "PostgreSQL",
+              "Docker",
+              "CI/CD"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://itmyportfolio.site/#website",
+            "url": "https://itmyportfolio.site/",
+            "name": "Max.dev",
+            "inLanguage": "ru-RU",
+            "publisher": { "@id": "https://itmyportfolio.site/#person" }
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>Для просмотра интерактивного портфолио включите JavaScript.</noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useSpring } from "motion/react";
+import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
 import { useEffect, useState } from "react";
 import { colors, useTheme } from "@/shared/config";
 
@@ -14,9 +14,10 @@ export function CustomCursor() {
   const [colorIdx, setColorIdx] = useState(0);
   const [trails, setTrails] = useState<{ x: number; y: number; id: number; color: string }[]>([]);
   const trailId = useMotionValue(0);
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
-    if (isClassic) return;
+    if (isClassic || shouldReduceMotion) return;
     let lastTrailTime = 0;
     const handleMove = (e: MouseEvent) => {
       cursorX.set(e.clientX);
@@ -26,12 +27,12 @@ export function CustomCursor() {
         lastTrailTime = now;
         const id = trailId.get() + 1;
         trailId.set(id);
-        const color = crayonColors[id % crayonColors.length];
-        setTrails(prev => [...prev.slice(-8), { x: e.clientX, y: e.clientY, id, color }]);
+        const color = crayonColors[id % crayonColors.length] ?? colors.lavender;
+        setTrails((prev) => [...prev.slice(-8), { x: e.clientX, y: e.clientY, id, color }]);
       }
     };
     const handleClick = () => {
-      setColorIdx(prev => (prev + 1) % crayonColors.length);
+      setColorIdx((prev) => (prev + 1) % crayonColors.length);
     };
     window.addEventListener("mousemove", handleMove);
     window.addEventListener("click", handleClick);
@@ -39,17 +40,17 @@ export function CustomCursor() {
       window.removeEventListener("mousemove", handleMove);
       window.removeEventListener("click", handleClick);
     };
-  }, [cursorX, cursorY, trailId, isClassic]);
+  }, [cursorX, cursorY, trailId, isClassic, shouldReduceMotion]);
 
-  if (isClassic) return null;
+  if (isClassic || shouldReduceMotion) return null;
   if (typeof window !== "undefined" && "ontouchstart" in window) return null;
 
-  const color = crayonColors[colorIdx];
+  const color = crayonColors[colorIdx] ?? colors.lavender;
 
   return (
     <>
       {/* Trailing dots */}
-      {trails.map((t, i) => (
+      {trails.map((t) => (
         <motion.div
           key={t.id}
           initial={{ opacity: 0.4, scale: 1 }}
@@ -64,7 +65,7 @@ export function CustomCursor() {
             backgroundColor: t.color,
           }}
           onAnimationComplete={() => {
-            setTrails(prev => prev.filter(tr => tr.id !== t.id));
+            setTrails((prev) => prev.filter((tr) => tr.id !== t.id));
           }}
         />
       ))}

@@ -2,7 +2,6 @@ import { motion, AnimatePresence, useAnimation } from "motion/react";
 import { useState, useEffect, useCallback } from "react";
 import { X, Palette, Check } from "lucide-react";
 import { useTheme, themePresets } from "@/shared/config";
-import type { ThemeName } from "@/shared/config";
 
 const LS_KEY = "theme-hint-enabled";
 
@@ -27,7 +26,11 @@ export function ThemeSwitcher() {
   const toggleHintEnabled = () => {
     const next = !hintEnabled;
     setHintEnabled(next);
-    localStorage.setItem(LS_KEY, String(next));
+    try {
+      localStorage.setItem(LS_KEY, String(next));
+    } catch {
+      // The preference remains in memory when browser storage is unavailable.
+    }
     if (!next) setShowHint(false);
   };
 
@@ -59,11 +62,6 @@ export function ThemeSwitcher() {
     return () => clearInterval(interval);
   }, [hintEnabled, open]);
 
-  // Hide hint when panel opens
-  useEffect(() => {
-    if (open) setShowHint(false);
-  }, [open]);
-
   // Bouncing hint animation loop
   useEffect(() => {
     if (!showHint || open) return;
@@ -80,8 +78,10 @@ export function ThemeSwitcher() {
       }
     };
 
-    bounceLoop();
-    return () => { cancelled = true; };
+    void bounceLoop();
+    return () => {
+      cancelled = true;
+    };
   }, [showHint, open, hintControls]);
 
   // A short, controlled nudge keeps the control discoverable.
@@ -96,7 +96,7 @@ export function ThemeSwitcher() {
 
   useEffect(() => {
     if (open) return;
-    const interval = setInterval(shake, 8000);
+    const interval = setInterval(() => void shake(), 8000);
     return () => clearInterval(interval);
   }, [shake, open]);
 
@@ -106,11 +106,14 @@ export function ThemeSwitcher() {
       <AnimatePresence>
         {open && (
           <motion.div
+            aria-label="Выбор стиля сайта"
             initial={{ opacity: 0, y: 20, scale: 0.8 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.8 }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
             className="p-4 bg-card border shadow-lg backdrop-blur-xl min-w-[15rem]"
+            id="theme-panel"
+            role="dialog"
             style={{
               borderStyle: "var(--t-border-style)",
               borderColor: "var(--border)",
@@ -137,8 +140,9 @@ export function ThemeSwitcher() {
                 return (
                   <motion.button
                     key={preset.id}
+                    type="button"
                     initial={false}
-                    onClick={() => setTheme(preset.id as ThemeName)}
+                    onClick={() => setTheme(preset.id)}
                     whileHover={{ scale: isClassic ? 1.01 : 1.03, x: isClassic ? 2 : 4 }}
                     whileTap={{ scale: 0.97 }}
                     className={`flex items-center gap-3 px-3 py-2.5 border transition-all text-left ${
@@ -204,48 +208,18 @@ export function ThemeSwitcher() {
             </div>
 
             {/* ── Checkbox: show hint notifications ── */}
-            <div
-              className="mt-3 pt-3 flex items-center gap-2"
-              style={{ borderTop: "1px solid var(--border)" }}
+            <label
+              className="mt-3 flex cursor-pointer items-center gap-2 border-t border-border pt-3 text-[0.7rem] text-muted-foreground"
+              style={{ fontFamily: "var(--t-font-body)" }}
             >
-              <button
-                type="button"
-                role="checkbox"
-                aria-checked={hintEnabled}
-                onClick={toggleHintEnabled}
-                className="flex items-center justify-center shrink-0 transition-colors"
-                style={{
-                  width: 16,
-                  height: 16,
-                  borderRadius: isClassic ? "0.2rem" : "0.25rem",
-                  border: hintEnabled
-                    ? isClassic
-                      ? "1.5px solid var(--text-primary)"
-                      : "1.5px solid var(--brand-teal)"
-                    : "1.5px solid var(--muted-foreground)",
-                  backgroundColor: hintEnabled
-                    ? isClassic
-                      ? "var(--text-primary)"
-                      : "var(--brand-teal)"
-                    : "transparent",
-                }}
-              >
-                {hintEnabled && (
-                  <Check
-                    size={11}
-                    strokeWidth={3}
-                    style={{ color: isClassic ? "var(--background)" : "white" }}
-                  />
-                )}
-              </button>
-              <span
-                className="text-[0.7rem] text-muted-foreground select-none cursor-pointer"
-                onClick={toggleHintEnabled}
-                style={{ fontFamily: "var(--t-font-body)" }}
-              >
-                Показывать уведомление
-              </span>
-            </div>
+              <input
+                checked={hintEnabled}
+                className="size-4 accent-brand-teal"
+                onChange={toggleHintEnabled}
+                type="checkbox"
+              />
+              Показывать уведомление
+            </label>
           </motion.div>
         )}
       </AnimatePresence>
@@ -253,7 +227,8 @@ export function ThemeSwitcher() {
       {/* Hint tooltip */}
       <AnimatePresence>
         {showHint && !open && hintEnabled && (
-          <motion.div
+          <motion.button
+            type="button"
             initial={{ opacity: 0, y: 30, scale: 0.7 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.8 }}
@@ -273,12 +248,13 @@ export function ThemeSwitcher() {
                 : "0 18px 45px rgba(92,72,171,0.34), 0 0 0 6px rgba(120,102,213,0.12)",
               animation: isClassic ? undefined : "theme-hint-pulse 1.8s ease-in-out infinite",
             }}
-            onClick={() => setOpen(true)}
+            onClick={() => {
+              setShowHint(false);
+              setOpen(true);
+            }}
+            aria-label="Открыть выбор стиля сайта"
           >
-            <motion.div
-              animate={hintControls}
-              className="px-4 py-3.5 flex items-center gap-3"
-            >
+            <motion.div animate={hintControls} className="px-4 py-3.5 flex items-center gap-3">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/18 ring-1 ring-white/25">
                 <Palette size={21} strokeWidth={2.4} />
               </span>
@@ -298,17 +274,23 @@ export function ThemeSwitcher() {
                 backgroundColor: isClassic ? "var(--text-primary)" : "#8f62d2",
               }}
             />
-          </motion.div>
+          </motion.button>
         )}
       </AnimatePresence>
 
       {/* ── Toggle button with sweep glare + periodic shake ── */}
       <motion.button
+        type="button"
         animate={btnControls}
-        onClick={() => setOpen(!open)}
+        onClick={() => {
+          setShowHint(false);
+          setOpen((current) => !current);
+        }}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.9 }}
         aria-label={open ? "Закрыть выбор стиля" : "Выбрать стиль сайта"}
+        aria-controls="theme-panel"
+        aria-expanded={open}
         className="relative flex items-center justify-center bg-card backdrop-blur-xl overflow-hidden"
         style={{
           width: isClassic ? 56 : 64,
@@ -319,9 +301,7 @@ export function ThemeSwitcher() {
             : isCrayon
               ? "3px solid rgba(255,255,255,0.95)"
               : "1px solid rgba(255,255,255,0.12)",
-          background: isCrayon
-            ? "linear-gradient(145deg, #7866d5 0%, #9a66cf 55%, #ee5f8b 115%)"
-            : undefined,
+          background: isCrayon ? "linear-gradient(145deg, #7866d5 0%, #9a66cf 55%, #ee5f8b 115%)" : undefined,
           boxShadow: isCrayon
             ? showHint
               ? "0 14px 38px rgba(120,102,213,0.42), 0 0 0 8px rgba(120,102,213,0.15)"

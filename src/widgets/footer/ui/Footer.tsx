@@ -15,7 +15,7 @@ export function Footer() {
     <footer
       className="relative py-12 border-t"
       style={{
-        borderTopStyle: "var(--t-border-style)" as any,
+        borderTopStyle: "solid",
         borderTopWidth: isClassic ? "1px" : "2px",
         borderTopColor: isClassic ? "var(--border)" : "rgba(var(--brand-orange-rgb, 251, 146, 60), 0.2)",
       }}
@@ -30,7 +30,11 @@ export function Footer() {
             style={{ cursor: isClassic ? "default" : "pointer" }}
           >
             {!isClassic && (
-              <motion.span animate={{ rotate: [0, 15, -15, 0] }} transition={{ duration: 2, repeat: Infinity }} className="text-[1.3rem]">
+              <motion.span
+                animate={{ rotate: [0, 15, -15, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="text-[1.3rem]"
+              >
                 {logoEmoji}
               </motion.span>
             )}
@@ -47,11 +51,17 @@ export function Footer() {
             </span>
           </motion.a>
 
-          <div className="text-[0.95rem] text-muted-foreground flex items-center gap-1" style={{ fontFamily: "var(--t-font-body)" }}>
-            {footerTexts[theme] || footerTexts.classic}
+          <div
+            className="text-[0.95rem] text-muted-foreground flex items-center gap-1"
+            style={{ fontFamily: "var(--t-font-body)" }}
+          >
+            {footerTexts[theme] ?? footerTexts.classic}
           </div>
 
-          <div className="text-[0.9rem] text-text-dim" style={{ fontFamily: "var(--t-font-heading)", fontWeight: 700 }}>
+          <div
+            className="text-[0.9rem] text-text-dim"
+            style={{ fontFamily: "var(--t-font-heading)", fontWeight: 700 }}
+          >
             &copy; 2026{!isClassic && " ✨"}
           </div>
         </div>

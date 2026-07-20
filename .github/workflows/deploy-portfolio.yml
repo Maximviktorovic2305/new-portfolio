@@ -1,11 +1,16 @@
-name: Deploy Portfolio to Server
+name: Deploy portfolio
 
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
-      - master
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: portfolio-production
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -15,139 +20,85 @@ jobs:
 
     steps:
       - name: Deploy to server
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@2ead5e36573f08b82fbfce1504f1a4b05a647c6f
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          command_timeout: 25m
+          script_stop: true
           script: |
-            set -e
+            set -eu
 
-            # Load nvm (if installed)
-            export NVM_DIR="$HOME/.nvm"
-            if [ -s "$NVM_DIR/nvm.sh" ]; then
-              . "$NVM_DIR/nvm.sh"
-            fi
-
-            # Ensure Node is in PATH
-            export PATH="$NVM_DIR/versions/node/v20.19.4/bin:$HOME/.npm-global/bin:$PATH"
-
-            echo "Node version:"
-            node -v
-            echo "npm version:"
-            npm -v
-
-            # SSH config for GitHub private repo using deploy key
-            mkdir -p ~/.ssh
-            chmod 700 ~/.ssh
-            ssh-keyscan github.com >> ~/.ssh/known_hosts
-            chmod 600 ~/.ssh/known_hosts
-
-            cat > ~/.ssh/portfolio_repo << 'EOF'
-            ${{ secrets.REPO_DEPLOY_KEY }}
-            EOF
-            chmod 600 ~/.ssh/portfolio_repo
-
-            cat > ~/.ssh/config << 'EOF'
-            Host github.com
-              HostName github.com
-              User git
-              IdentityFile ~/.ssh/portfolio_repo
-              IdentitiesOnly yes
-            EOF
-            chmod 600 ~/.ssh/config
-
-            # App config
             APP_DIR="/home/max/portfolio"
             REPO_SSH="git@github.com:Maximviktorovic2305/new-portfolio.git"
-            PORT="3015"
-            BRANCH="${GITHUB_REF_NAME:-master}"
+            BRANCH="${{ github.ref_name }}"
 
-            mkdir -p "$APP_DIR"
+            export NVM_DIR="$HOME/.nvm"
+            test -s "$NVM_DIR/nvm.sh"
+            . "$NVM_DIR/nvm.sh"
+            nvm install 24
+            nvm use 24
+            node -v
+            npm -v
+            command -v git >/dev/null
+            command -v pm2 >/dev/null
+            command -v curl >/dev/null
 
-            # Clone / Update
+            mkdir -p ~/.ssh
+            chmod 700 ~/.ssh
+            if ! ssh-keygen -F github.com >/dev/null; then
+              ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+            fi
+            chmod 600 ~/.ssh/known_hosts
+
+            DEPLOY_KEY="$(mktemp "$HOME/.ssh/portfolio-deploy.XXXXXX")"
+            trap 'rm -f "$DEPLOY_KEY"' EXIT
+            cat > "$DEPLOY_KEY" << 'EOF'
+            ${{ secrets.REPO_DEPLOY_KEY }}
+            EOF
+            chmod 600 "$DEPLOY_KEY"
+            export GIT_SSH_COMMAND="ssh -i $DEPLOY_KEY -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes"
+
             if [ -d "$APP_DIR/.git" ]; then
               cd "$APP_DIR"
-              git fetch origin
+              git fetch --prune origin "$BRANCH"
               git reset --hard "origin/$BRANCH"
               git clean -fdx
             else
-              rm -rf "$APP_DIR"
+              test ! -e "$APP_DIR" || rmdir "$APP_DIR"
               git clone -b "$BRANCH" "$REPO_SSH" "$APP_DIR"
               cd "$APP_DIR"
             fi
 
-            echo "Current directory: $(pwd)"
-            ls -la
-
-            # Create .env from GitHub Secrets
+            umask 077
             cat > .env << EOF
             VITE_EMAILJS_SERVICE_ID=${{ secrets.VITE_EMAILJS_SERVICE_ID }}
             VITE_EMAILJS_TEMPLATE_ID=${{ secrets.VITE_EMAILJS_TEMPLATE_ID }}
             VITE_EMAILJS_PUBLIC_KEY=${{ secrets.VITE_EMAILJS_PUBLIC_KEY }}
-            PORT=${PORT}
-            NODE_ENV=production
             EOF
 
-            # Install & build
-            if [ -f package-lock.json ]; then
-              npm ci
-            else
-              npm install --no-audit --no-fund
-            fi
+            npm ci
+            npm run check
+            npm prune --omit=dev
 
-            npm run build
-
-            export NODE_ENV=production
-            export PORT="$PORT"
-
-            # Stop/remove old PM2 process
-            pm2 stop portfolio || true
             pm2 delete portfolio || true
-
-            # Free only portfolio port
-            if command -v lsof >/dev/null 2>&1; then
-              OLD_PIDS="$(lsof -t -iTCP:${PORT} -sTCP:LISTEN || true)"
-              if [ -n "$OLD_PIDS" ]; then
-                echo "Killing processes on port ${PORT}: $OLD_PIDS"
-                kill -9 $OLD_PIDS || true
-              fi
-            elif command -v fuser >/dev/null 2>&1; then
-              fuser -k "${PORT}/tcp" || true
-            elif command -v ss >/dev/null 2>&1; then
-              OLD_PIDS="$(ss -lptn "sport = :${PORT}" 2>/dev/null | sed -n 's/.*pid=\([0-9]\+\).*/\1/p' | sort -u)"
-              if [ -n "$OLD_PIDS" ]; then
-                echo "Killing processes on port ${PORT}: $OLD_PIDS"
-                kill -9 $OLD_PIDS || true
-              fi
-            fi
-
-            echo "Check port ${PORT} after cleanup:"
-            ss -lntp | grep ":${PORT} " || true
-
-            # Start from correct working directory
             pm2 start npm --name portfolio --cwd "$APP_DIR" -- start
             pm2 save
-            pm2 list
 
-            # Health check
-            sleep 5
-            if command -v curl >/dev/null 2>&1; then
-              HEALTH_OK=0
-              curl -fsS "http://127.0.0.1:${PORT}" >/dev/null || HEALTH_OK=1
-            elif command -v wget >/dev/null 2>&1; then
-              HEALTH_OK=0
-              wget -q -O /dev/null "http://127.0.0.1:${PORT}" || HEALTH_OK=1
-            else
-              echo "No curl/wget found; skipping health check"
-              HEALTH_OK=0
-            fi
-
-            if [ "$HEALTH_OK" -ne 0 ]; then
-              echo "Health check failed on port ${PORT}"
-              pm2 status
+            HEALTHY=0
+            for attempt in 1 2 3 4 5 6; do
+              if curl --fail --silent --show-error http://127.0.0.1:3015/ >/dev/null; then
+                HEALTHY=1
+                break
+              fi
+              sleep 2
+            done
+            if [ "$HEALTHY" -ne 1 ]; then
               pm2 logs portfolio --lines 80 --nostream || true
               exit 1
             fi
 
-            echo "Deployment complete: http://$(hostname -I | awk '{print $1}'):${PORT}"
+            curl --fail --silent http://127.0.0.1:3015/robots.txt | grep -q 'Sitemap:'
+            curl --fail --silent --head http://127.0.0.1:3015/ | grep -qi '^Content-Security-Policy:'
+            pm2 status portfolio

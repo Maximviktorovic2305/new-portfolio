@@ -1,0 +1,19 @@
+{
+  "name": "Максим Викторович — Fullstack Developer",
+  "short_name": "Max.dev",
+  "description": "Портфолио fullstack-разработчика Максима Викторовича: React, Next.js, Node.js, NestJS, TypeScript и Golang.",
+  "lang": "ru",
+  "start_url": "/",
+  "scope": "/",
+  "display": "browser",
+  "background_color": "#fffaf7",
+  "theme_color": "#7866d5",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

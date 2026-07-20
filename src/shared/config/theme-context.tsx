@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
 export type ThemeName = "crayon" | "original" | "classic";
 
@@ -10,65 +10,90 @@ export interface ThemePreset {
   isLight: boolean;
 }
 
-export const themePresets: ThemePreset[] = [
-  { id: "crayon",   label: "Иллюстрация", emoji: "✨", description: "Мягкий авторский стиль",   isLight: true },
-  { id: "original", label: "Космос",   emoji: "🌌", description: "Тёмный с анимациями",     isLight: false },
-  { id: "classic",  label: "Классика", emoji: "🖤", description: "Чистый тёмный минимализм", isLight: false },
-];
+export const themePresets = [
+  {
+    id: "crayon",
+    label: "Иллюстрация",
+    emoji: "✨",
+    description: "Мягкий авторский стиль",
+    isLight: true,
+  },
+  {
+    id: "original",
+    label: "Космос",
+    emoji: "🌌",
+    description: "Тёмный с анимациями",
+    isLight: false,
+  },
+  {
+    id: "classic",
+    label: "Классика",
+    emoji: "🖤",
+    description: "Чистый тёмный минимализм",
+    isLight: false,
+  },
+] as const satisfies readonly ThemePreset[];
 
-const ALL_THEME_CLASSES = themePresets.map(p => `theme-${p.id}`);
+const THEME_STORAGE_KEY = "portfolio-theme";
+const themeNames = new Set<ThemeName>(themePresets.map(({ id }) => id));
+const allThemeClasses = themePresets.map(({ id }) => `theme-${id}`);
 
-interface ThemeCtx {
+export function isThemeName(value: unknown): value is ThemeName {
+  return typeof value === "string" && themeNames.has(value as ThemeName);
+}
+
+function readStoredTheme(): ThemeName {
+  try {
+    const value = window.localStorage.getItem(THEME_STORAGE_KEY);
+    return isThemeName(value) ? value : "crayon";
+  } catch {
+    return "crayon";
+  }
+}
+
+interface ThemeContextValue {
   theme: ThemeName;
-  setTheme: (t: ThemeName) => void;
+  setTheme: (theme: ThemeName) => void;
   isCrayon: boolean;
   isDark: boolean;
   isClassic: boolean;
 }
 
-const ThemeContext = createContext<ThemeCtx>({
-  theme: "crayon",
-  setTheme: () => {},
-  isCrayon: true,
-  isDark: false,
-  isClassic: false,
-});
+const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<ThemeName>(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("portfolio-theme") as ThemeName | null;
-      if (saved && ALL_THEME_CLASSES.includes(`theme-${saved}`)) return saved;
-    }
-    return "crayon";
-  });
-
-  const setTheme = (t: ThemeName) => {
-    setThemeState(t);
-    localStorage.setItem("portfolio-theme", t);
-  };
+  const [theme, setThemeState] = useState<ThemeName>(readStoredTheme);
+  const setTheme = useCallback((nextTheme: ThemeName) => setThemeState(nextTheme), []);
 
   useEffect(() => {
     const root = document.documentElement;
-    ALL_THEME_CLASSES.forEach(c => root.classList.remove(c));
+    root.classList.remove(...allThemeClasses);
     root.classList.add(`theme-${theme}`);
+    root.style.colorScheme = theme === "crayon" ? "light" : "dark";
+
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      // Storage can be unavailable in privacy modes; the in-memory theme still works.
+    }
   }, [theme]);
 
-  const preset = themePresets.find(p => p.id === theme)!;
-
-  return (
-    <ThemeContext.Provider value={{
+  const value = useMemo<ThemeContextValue>(() => {
+    const preset = themePresets.find(({ id }) => id === theme);
+    return {
       theme,
       setTheme,
       isCrayon: theme === "crayon",
-      isDark: !preset.isLight,
+      isDark: !preset?.isLight,
       isClassic: theme === "classic",
-    }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+    };
+  }, [setTheme, theme]);
+
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
-export function useTheme() {
-  return useContext(ThemeContext);
+export function useTheme(): ThemeContextValue {
+  const context = useContext(ThemeContext);
+  if (!context) throw new Error("useTheme must be used within ThemeProvider");
+  return context;
 }

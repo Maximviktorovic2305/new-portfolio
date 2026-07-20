@@ -1,25 +1,40 @@
 import emailjs from "@emailjs/browser";
+import type { ContactMessage } from "../model/validation";
 
-const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || "";
-const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || "";
-const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || "";
+const emailJsConfig = {
+  serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID?.trim() ?? "",
+  templateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID?.trim() ?? "",
+  publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY?.trim() ?? "",
+};
 
-export interface SendMessageParams {
-  name: string;
-  email: string;
-  message: string;
+export class ContactServiceUnavailableError extends Error {
+  constructor() {
+    super("Contact service is not configured");
+    this.name = "ContactServiceUnavailableError";
+  }
 }
 
-export async function sendMessage(params: SendMessageParams): Promise<void> {
+export function isContactServiceConfigured(): boolean {
+  return Object.values(emailJsConfig).every(Boolean);
+}
+
+export async function sendMessage(message: ContactMessage): Promise<void> {
+  if (!isContactServiceConfigured()) throw new ContactServiceUnavailableError();
+
   await emailjs.send(
-    SERVICE_ID,
-    TEMPLATE_ID,
+    emailJsConfig.serviceId,
+    emailJsConfig.templateId,
     {
-      from_name: params.name,
-      from_email: params.email,
-      message: params.message,
-      to_email: "maximviktorovic@mail.ru",
+      from_name: message.name,
+      from_email: message.email,
+      reply_to: message.email,
+      message: message.message,
+      to_email: "Maximviktorovic@mail.ru",
     },
-    PUBLIC_KEY,
+    {
+      publicKey: emailJsConfig.publicKey,
+      blockHeadless: true,
+      limitRate: { id: "portfolio-contact", throttle: 10_000 },
+    },
   );
 }

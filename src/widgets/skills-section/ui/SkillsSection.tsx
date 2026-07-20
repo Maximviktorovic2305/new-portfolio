@@ -1,4 +1,5 @@
 import { motion, useInView, AnimatePresence } from "motion/react";
+import type { Variants } from "motion/react";
 import { useRef, useState, useCallback, useEffect } from "react";
 import { SectionDivider } from "@/shared/ui";
 import { colors, useTheme } from "@/shared/config";
@@ -18,6 +19,14 @@ interface SmokePuff {
   drift: number;
 }
 
+const sparkPaths = [
+  { initialX: 34, x: 18, y: 32, duration: 0.78 },
+  { initialX: 43, x: 36, y: 18, duration: 0.94 },
+  { initialX: 50, x: 57, y: 42, duration: 1.12 },
+  { initialX: 58, x: 73, y: 25, duration: 0.86 },
+  { initialX: 66, x: 88, y: 38, duration: 1.04 },
+] as const;
+
 function SmokeAnimation({ color, active }: { color: string; active: boolean }) {
   const [puffs, setPuffs] = useState<SmokePuff[]>([]);
   const idCounter = useRef(0);
@@ -32,19 +41,20 @@ function SmokeAnimation({ color, active }: { color: string; active: boolean }) {
       duration: 1.2 + Math.random() * 0.8,
       drift: -20 + Math.random() * 40,
     }));
-    setPuffs((prev) => [...prev, ...newPuffs]);
+    setPuffs((previous) => [...previous, ...newPuffs].slice(-30));
   }, []);
 
   useEffect(() => {
-    if (!active) { setPuffs([]); return; }
-    spawnPuffs();
+    if (!active) return;
+    const firstSpawn = window.setTimeout(spawnPuffs, 0);
     const interval = setInterval(spawnPuffs, 800);
-    return () => clearInterval(interval);
+    return () => {
+      window.clearTimeout(firstSpawn);
+      clearInterval(interval);
+    };
   }, [active, spawnPuffs]);
 
-  useEffect(() => {
-    if (puffs.length > 30) setPuffs((p) => p.slice(-16));
-  }, [puffs.length]);
+  if (!active) return null;
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl">
@@ -58,9 +68,11 @@ function SmokeAnimation({ color, active }: { color: string; active: boolean }) {
             transition={{ duration: puff.duration, delay: puff.delay, ease: "easeOut" }}
             className="absolute rounded-full"
             style={{
-              width: puff.size, height: puff.size,
+              width: puff.size,
+              height: puff.size,
               background: `radial-gradient(circle, ${color}30 0%, ${color}08 60%, transparent 100%)`,
-              filter: "blur(6px)", transform: "translate(-50%, -50%)",
+              filter: "blur(6px)",
+              transform: "translate(-50%, -50%)",
             }}
           />
         ))}
@@ -68,24 +80,42 @@ function SmokeAnimation({ color, active }: { color: string; active: boolean }) {
       <AnimatePresence>
         {active && (
           <motion.div
-            initial={{ opacity: 0, scaleY: 0 }} animate={{ opacity: 1, scaleY: 1 }} exit={{ opacity: 0, scaleY: 0 }}
+            initial={{ opacity: 0, scaleY: 0 }}
+            animate={{ opacity: 1, scaleY: 1 }}
+            exit={{ opacity: 0, scaleY: 0 }}
             transition={{ duration: 0.3 }}
             className="absolute bottom-0 left-[10%] right-[10%] h-[45%] origin-bottom"
-            style={{ background: `radial-gradient(ellipse at bottom, ${color}18 0%, ${color}08 40%, transparent 80%)` }}
+            style={{
+              background: `radial-gradient(ellipse at bottom, ${color}18 0%, ${color}08 40%, transparent 80%)`,
+            }}
           />
         )}
       </AnimatePresence>
       <AnimatePresence>
         {active && (
           <>
-            {[...Array(5)].map((_, i) => (
+            {sparkPaths.map((path, i) => (
               <motion.div
                 key={`spark-${i}`}
-                initial={{ opacity: 1, scale: 1, x: `${30 + Math.random() * 40}%`, y: "85%" }}
-                animate={{ opacity: 0, scale: 0, x: `${10 + Math.random() * 80}%`, y: `${10 + Math.random() * 40}%` }}
-                transition={{ duration: 0.6 + Math.random() * 0.6, delay: i * 0.15, repeat: Infinity, repeatDelay: 0.5, ease: "easeOut" }}
+                initial={{ opacity: 1, scale: 1, x: `${path.initialX}%`, y: "85%" }}
+                animate={{
+                  opacity: 0,
+                  scale: 0,
+                  x: `${path.x}%`,
+                  y: `${path.y}%`,
+                }}
+                transition={{
+                  duration: path.duration,
+                  delay: i * 0.15,
+                  repeat: Infinity,
+                  repeatDelay: 0.5,
+                  ease: "easeOut",
+                }}
                 className="absolute w-1.5 h-1.5 rounded-full"
-                style={{ backgroundColor: i % 2 === 0 ? colors.orange : color, boxShadow: `0 0 6px ${color}` }}
+                style={{
+                  backgroundColor: i % 2 === 0 ? colors.orange : color,
+                  boxShadow: `0 0 6px ${color}`,
+                }}
               />
             ))}
           </>
@@ -106,14 +136,27 @@ function SkillPopup({ skill, color }: { skill: Skill; color: string }) {
       exit={{ opacity: 0, y: 8, scale: 0.9 }}
       transition={{ duration: 0.25, type: "spring", stiffness: 400, damping: 20 }}
       className="absolute z-50 left-1/2 -translate-x-1/2 bottom-full mb-3 w-64 p-4 rounded-2xl border-2 pointer-events-none bg-card/95 backdrop-blur-sm"
-      style={{ borderStyle: "var(--t-border-style)" as any, borderColor: `${color}40`, filter: "var(--t-filter)" }}
+      style={{ borderStyle: "solid", borderColor: `${color}40`, filter: "var(--t-filter)" }}
     >
-      <div className="absolute left-1/2 -translate-x-1/2 -bottom-2 w-4 h-4 rotate-45 border-r-2 border-b-2 bg-card" style={{ borderStyle: "var(--t-border-style)" as any, borderColor: `${color}40` }} />
+      <div
+        className="absolute left-1/2 -translate-x-1/2 -bottom-2 w-4 h-4 rotate-45 border-r-2 border-b-2 bg-card"
+        style={{ borderStyle: "solid", borderColor: `${color}40` }}
+      />
       <div className="flex items-center gap-2.5 mb-2.5">
         <span className="text-[1.5rem]">{skill.emoji}</span>
-        <span className="text-[1.1rem] text-text-primary" style={{ fontFamily: "var(--t-font-heading)", fontWeight: 700 }}>{skill.name}</span>
+        <span
+          className="text-[1.1rem] text-text-primary"
+          style={{ fontFamily: "var(--t-font-heading)", fontWeight: 700 }}
+        >
+          {skill.name}
+        </span>
       </div>
-      <p className="text-[0.85rem] text-text-secondary leading-relaxed" style={{ fontFamily: "var(--t-font-body)" }}>{skill.description}</p>
+      <p
+        className="text-[0.85rem] text-text-secondary leading-relaxed"
+        style={{ fontFamily: "var(--t-font-body)" }}
+      >
+        {skill.description}
+      </p>
     </motion.div>
   );
 }
@@ -121,7 +164,17 @@ function SkillPopup({ skill, color }: { skill: Skill; color: string }) {
 /* ═══════════════════════════════════════════
    CLASSIC SKILL CARD — minimal, narrow, no icons
    ═══════════════════════════════════════════ */
-function ClassicSkillCard({ skill, color, index, isInView }: { skill: Skill; color: string; index: number; isInView: boolean }) {
+function ClassicSkillCard({
+  skill,
+  color,
+  index,
+  isInView,
+}: {
+  skill: Skill;
+  color: string;
+  index: number;
+  isInView: boolean;
+}) {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -143,7 +196,10 @@ function ClassicSkillCard({ skill, color, index, isInView }: { skill: Skill; col
             transition={{ duration: 0.15 }}
             className="absolute z-50 left-0 bottom-full mb-2 px-3 py-2 rounded-md bg-card border border-border pointer-events-none max-w-[14rem]"
           >
-            <p className="text-[0.78rem] text-text-secondary leading-snug" style={{ fontFamily: "var(--t-font-body)" }}>
+            <p
+              className="text-[0.78rem] text-text-secondary leading-snug"
+              style={{ fontFamily: "var(--t-font-body)" }}
+            >
               {skill.description}
             </p>
           </motion.div>
@@ -202,13 +258,23 @@ function ClassicSkillCard({ skill, color, index, isInView }: { skill: Skill; col
 /* ═══════════════════════════════════════════
    DEFAULT SKILL CARD — crayon & original
    ═══════════════════════════════════════════ */
-function DefaultSkillCard({ skill, color, index, isInView }: { skill: Skill; color: string; index: number; isInView: boolean }) {
+function DefaultSkillCard({
+  skill,
+  color,
+  index,
+  isInView,
+}: {
+  skill: Skill;
+  color: string;
+  index: number;
+  isInView: boolean;
+}) {
   const [hovered, setHovered] = useState(false);
   const { isCrayon, theme } = useTheme();
   const isOriginal = theme === "original";
-  const cardRotation = isCrayon ? [-1.15, 0.75, -0.55, 1, -0.8, 0.45][index % 6] : 0;
+  const cardRotation = isCrayon ? ([-1.15, 0.75, -0.55, 1, -0.8, 0.45][index % 6] ?? 0) : 0;
 
-  const shakeVariants = {
+  const shakeVariants: Variants = {
     idle: { rotate: 0, x: 0, y: 0 },
     shaking: {
       rotate: [0, -1.5, 1.5, -2, 2, -1, 1, 0],
@@ -238,7 +304,7 @@ function DefaultSkillCard({ skill, color, index, isInView }: { skill: Skill; col
         whileTap={{ scale: 0.97, rotate: 0 }}
         className="relative p-6 rounded-3xl border-2 cursor-pointer overflow-hidden"
         style={{
-          borderStyle: "var(--t-border-style)" as any,
+          borderStyle: "solid",
           borderColor: hovered ? `${color}50` : `${color}15`,
           backgroundColor: hovered ? `${color}10` : `${color}05`,
           boxShadow: isCrayon
@@ -266,12 +332,21 @@ function DefaultSkillCard({ skill, color, index, isInView }: { skill: Skill; col
           >
             {skill.emoji}
           </motion.div>
-          <span className="text-text-primary text-[1.05rem]" style={{ fontFamily: "var(--t-font-heading)", fontWeight: 700 }}>
+          <span
+            className="text-text-primary text-[1.05rem]"
+            style={{ fontFamily: "var(--t-font-heading)", fontWeight: 700 }}
+          >
             {skill.name}
           </span>
           <span
             className="text-[0.7rem] px-3 py-1 rounded-full uppercase tracking-wider border"
-            style={{ fontFamily: "var(--t-font-body)", fontWeight: 700, color, backgroundColor: `${color}12`, borderColor: `${color}20` }}
+            style={{
+              fontFamily: "var(--t-font-body)",
+              fontWeight: 700,
+              color,
+              backgroundColor: `${color}12`,
+              borderColor: `${color}20`,
+            }}
           >
             {skill.category}
           </span>
@@ -280,7 +355,11 @@ function DefaultSkillCard({ skill, color, index, isInView }: { skill: Skill; col
         {/* Underline on hover */}
         <AnimatePresence>
           {hovered && (
-            <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} exit={{ scaleX: 0 }} transition={{ duration: 0.4 }}
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              exit={{ scaleX: 0 }}
+              transition={{ duration: 0.4 }}
               className="absolute bottom-0 left-0 right-0 h-[0.1875rem] origin-center rounded-full"
               style={{
                 background: `linear-gradient(90deg, transparent, ${color}, ${colors.orange}, ${color}, transparent)`,
@@ -331,18 +410,26 @@ export function SkillsSection() {
   const [activeCategory, setActiveCategory] = useState("Все");
   const { isCrayon, isClassic } = useTheme();
 
-  const filteredSkills = activeCategory === "Все" ? skills : skills.filter((s) => s.category === activeCategory);
+  const filteredSkills =
+    activeCategory === "Все" ? skills : skills.filter((s) => s.category === activeCategory);
 
   /* Group skills by category for classic layout */
   const groupedSkills = isClassic
-    ? (activeCategory === "Все"
-        ? categories.filter(c => c.label !== "Все").map(cat => ({
+    ? activeCategory === "Все"
+      ? categories
+          .filter((c) => c.label !== "Все")
+          .map((cat) => ({
             label: cat.label,
             color: cat.color,
-            items: skills.filter(s => s.category === cat.label),
+            items: skills.filter((s) => s.category === cat.label),
           }))
-        : [{ label: activeCategory, color: categoryColors[activeCategory] || colors.lavender, items: filteredSkills }]
-      )
+      : [
+          {
+            label: activeCategory,
+            color: categoryColors[activeCategory] ?? colors.lavender,
+            items: filteredSkills,
+          },
+        ]
     : [];
 
   return (
@@ -350,26 +437,58 @@ export function SkillsSection() {
       <SectionDivider color={isClassic ? "var(--border)" : colors.pink} />
       <div ref={ref} className="max-w-7xl mx-auto px-6 relative z-10">
         {/* Header */}
-        <motion.div initial={{ opacity: 0, y: 40 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, type: "spring" }} className="text-center mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, type: "spring" }}
+          className="text-center mb-16"
+        >
           {!isClassic && (
-            <motion.span initial={{ scale: 0, rotate: -90 }} animate={isInView ? { scale: 1, rotate: 0 } : {}} transition={{ type: "spring", stiffness: 200, delay: 0.2 }} className="inline-block text-[2.4rem] mb-3">{isCrayon ? "✦" : "⚡"}</motion.span>
+            <motion.span
+              initial={{ scale: 0, rotate: -90 }}
+              animate={isInView ? { scale: 1, rotate: 0 } : {}}
+              transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
+              className="inline-block text-[2.4rem] mb-3"
+            >
+              {isCrayon ? "✦" : "⚡"}
+            </motion.span>
           )}
-          <h2 className="text-[2.6rem] sm:text-[3.2rem] mb-4 text-text-primary" style={{ fontFamily: "var(--t-font-heading)", fontWeight: 700 }}>
-            {isClassic ? "Стек технологий" : <>Стек <span className="text-brand-pink">технологий</span></>}
+          <h2
+            className="text-[2.6rem] sm:text-[3.2rem] mb-4 text-text-primary"
+            style={{ fontFamily: "var(--t-font-heading)", fontWeight: 700 }}
+          >
+            {isClassic ? (
+              "Стек технологий"
+            ) : (
+              <>
+                Стек <span className="text-brand-pink">технологий</span>
+              </>
+            )}
           </h2>
           {!isClassic && (
             <svg viewBox="0 0 200 8" className="w-32 h-3 mx-auto">
               <motion.path
                 d={isCrayon ? "M5 4 Q 25 1 50 5 Q 75 8 100 3 Q 125 0 150 5 Q 175 8 195 4" : "M5 4 L195 4"}
-                stroke={colors.pink} strokeWidth="3" fill="none" strokeLinecap="round" strokeDasharray="none"
-                initial={{ pathLength: 0 }} animate={isInView ? { pathLength: 1 } : {}} transition={{ duration: 1, delay: 0.3 }}
+                stroke={colors.pink}
+                strokeWidth="3"
+                fill="none"
+                strokeLinecap="round"
+                strokeDasharray="none"
+                initial={{ pathLength: 0 }}
+                animate={isInView ? { pathLength: 1 } : {}}
+                transition={{ duration: 1, delay: 0.3 }}
               />
             </svg>
           )}
         </motion.div>
 
         {/* Category filters */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5, delay: 0.2 }} className="flex items-center justify-center gap-3 mb-12 flex-wrap">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="flex items-center justify-center gap-3 mb-12 flex-wrap"
+        >
           {categories.map((cat) => (
             <motion.button
               key={cat.label}
@@ -378,31 +497,47 @@ export function SkillsSection() {
               whileTap={{ scale: 0.9 }}
               className="px-5 py-2.5 text-[0.95rem] cursor-pointer border transition-all flex items-center gap-2"
               style={{
-                fontFamily: "var(--t-font-body)", fontWeight: 700,
-                borderStyle: "var(--t-border-style)" as any,
+                fontFamily: "var(--t-font-body)",
+                fontWeight: 700,
+                borderStyle: "solid",
                 borderRadius: isClassic ? "0.375rem" : "1rem",
                 borderWidth: isClassic ? "1px" : "2px",
                 cursor: isClassic ? "default" : "pointer",
                 borderColor: isClassic
-                  ? (activeCategory === cat.label ? "var(--text-dim)" : "var(--border)")
-                  : (activeCategory === cat.label ? `${cat.color}60` : `${cat.color}15`),
+                  ? activeCategory === cat.label
+                    ? "var(--text-dim)"
+                    : "var(--border)"
+                  : activeCategory === cat.label
+                    ? `${cat.color}60`
+                    : `${cat.color}15`,
                 backgroundColor: isClassic
-                  ? (activeCategory === cat.label ? "var(--card)" : "transparent")
-                  : (activeCategory === cat.label ? `${cat.color}15` : "transparent"),
+                  ? activeCategory === cat.label
+                    ? "var(--card)"
+                    : "transparent"
+                  : activeCategory === cat.label
+                    ? `${cat.color}15`
+                    : "transparent",
                 color: isClassic
-                  ? (activeCategory === cat.label ? "var(--text-primary)" : "var(--muted-foreground)")
-                  : (activeCategory === cat.label ? cat.color : "var(--muted-foreground)"),
+                  ? activeCategory === cat.label
+                    ? "var(--text-primary)"
+                    : "var(--muted-foreground)"
+                  : activeCategory === cat.label
+                    ? cat.color
+                    : "var(--muted-foreground)",
                 filter: "var(--t-filter)",
               }}
             >
-              {!isClassic && <span>{cat.emoji}</span>}{cat.label}
+              {!isClassic && <span>{cat.emoji}</span>}
+              {cat.label}
             </motion.button>
           ))}
         </motion.div>
 
         {/* ── Classic layout: grouped columns ── */}
         {isClassic && (
-          <div className={`grid gap-8 ${activeCategory === "Все" ? "sm:grid-cols-2 lg:grid-cols-3" : "max-w-md mx-auto"}`}>
+          <div
+            className={`grid gap-8 ${activeCategory === "Все" ? "sm:grid-cols-2 lg:grid-cols-3" : "max-w-md mx-auto"}`}
+          >
             {groupedSkills.map((group, gi) => (
               <motion.div
                 key={group.label}
@@ -411,18 +546,21 @@ export function SkillsSection() {
                 transition={{ duration: 0.4, delay: 0.1 * gi }}
               >
                 {/* Group header */}
-                <div className="flex items-center gap-2 mb-3 pb-2 border-b" style={{ borderColor: "var(--border)" }}>
-                  <span
-                    className="w-2 h-2 rounded-full"
-                    style={{ backgroundColor: "var(--text-dim)" }}
-                  />
+                <div
+                  className="flex items-center gap-2 mb-3 pb-2 border-b"
+                  style={{ borderColor: "var(--border)" }}
+                >
+                  <span className="w-2 h-2 rounded-full" style={{ backgroundColor: "var(--text-dim)" }} />
                   <span
                     className="text-[0.75rem] uppercase tracking-[0.15em] text-text-secondary"
                     style={{ fontFamily: "var(--t-font-body)", fontWeight: 700 }}
                   >
                     {group.label}
                   </span>
-                  <span className="text-[0.7rem] text-text-dim ml-auto" style={{ fontFamily: "var(--t-font-mono)" }}>
+                  <span
+                    className="text-[0.7rem] text-text-dim ml-auto"
+                    style={{ fontFamily: "var(--t-font-mono)" }}
+                  >
                     {group.items.length}
                   </span>
                 </div>
@@ -448,8 +586,16 @@ export function SkillsSection() {
         {!isClassic && (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {filteredSkills.map((skill, i) => {
-              const color = categoryColors[skill.category] || colors.lavender;
-              return <DefaultSkillCard key={skill.name} skill={skill} color={color} index={i} isInView={isInView} />;
+              const color = categoryColors[skill.category] ?? colors.lavender;
+              return (
+                <DefaultSkillCard
+                  key={skill.name}
+                  skill={skill}
+                  color={color}
+                  index={i}
+                  isInView={isInView}
+                />
+              );
             })}
           </div>
         )}

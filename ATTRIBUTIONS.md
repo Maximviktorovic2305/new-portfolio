@@ -1,3 +1,7 @@
-This Figma Make file includes components from [shadcn/ui](https://ui.shadcn.com/) used under [MIT license](https://github.com/shadcn-ui/ui/blob/main/LICENSE.md).
+# Атрибуции
 
-This Figma Make file includes photos from [Unsplash](https://unsplash.com) used under [license](https://unsplash.com/license).
+- Фотографии проектов загружаются с [Unsplash](https://unsplash.com/) и [Banya Digital](https://banya.digital/).
+- Локальные вариативные шрифты поставляются пакетами [Fontsource](https://fontsource.org/).
+- Иконки интерфейса предоставлены [Lucide](https://lucide.dev/).
+
+Остальные графические элементы и Open Graph-обложка созданы специально для этого проекта.

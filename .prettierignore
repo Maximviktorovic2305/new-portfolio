@@ -1,0 +1,6 @@
+dist
+node_modules
+.codebase-memory
+package-lock.json
+public/og-cover.jpg
+src/assets/*.png

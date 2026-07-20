@@ -15,7 +15,7 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
-  const { isCrayon, theme, isClassic } = useTheme();
+  const { isCrayon, isClassic } = useTheme();
 
   const logoEmoji = isCrayon ? "✏️" : "✨";
   const showEmojis = isCrayon;
@@ -24,10 +24,10 @@ export function Navbar() {
     const onScroll = () => {
       setScrolled(window.scrollY > 50);
       const sections = navLinks.map((l) => l.href.replace("#", ""));
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const el = document.getElementById(sections[i]);
+      for (const section of [...sections].reverse()) {
+        const el = document.getElementById(section);
         if (el && el.getBoundingClientRect().top <= 150) {
-          setActiveSection(sections[i]);
+          setActiveSection(section);
           break;
         }
       }
@@ -36,21 +36,40 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileOpen(false);
+    };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [mobileOpen]);
+
   return (
     <>
       <motion.nav
+        aria-label="Основная навигация"
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          scrolled
-            ? "bg-background/90 backdrop-blur-xl border-b-2"
-            : "bg-transparent"
+          scrolled ? "bg-background/90 backdrop-blur-xl border-b-2" : "bg-transparent"
         }`}
         style={{
-          borderBottomStyle: scrolled ? "var(--t-border-style)" as any : "none",
-          borderBottomColor: isClassic ? "var(--border)" : (isCrayon ? "var(--brand-orange)" : "var(--brand-lavender)"),
-          borderBottomWidth: scrolled ? (isClassic ? "1px" : "var(--t-border-w)" as any) : "0",
+          borderBottomStyle: scrolled ? "solid" : "none",
+          borderBottomColor: isClassic
+            ? "var(--border)"
+            : isCrayon
+              ? "var(--brand-orange)"
+              : "var(--brand-lavender)",
+          borderBottomWidth: scrolled ? (isClassic ? "1px" : "var(--t-border-w)") : "0",
         }}
       >
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -70,10 +89,7 @@ export function Navbar() {
                 {logoEmoji}
               </motion.span>
             )}
-            <span
-              className="text-[1.5rem]"
-              style={{ fontFamily: "var(--t-font-heading)", fontWeight: 700 }}
-            >
+            <span className="text-[1.5rem]" style={{ fontFamily: "var(--t-font-heading)", fontWeight: 700 }}>
               {isClassic ? (
                 <span className="text-text-primary">Max.dev</span>
               ) : (
@@ -93,11 +109,14 @@ export function Navbar() {
                 href={link.href}
                 className={`relative px-4 py-2 text-[1rem] transition-colors cursor-pointer ${
                   activeSection === link.href.replace("#", "")
-                    ? (isClassic ? "text-text-primary" : "text-brand-pink")
+                    ? isClassic
+                      ? "text-text-primary"
+                      : "text-brand-pink"
                     : "text-muted-foreground hover:text-text-primary"
                 }`}
                 style={{
-                  fontFamily: "var(--t-font-heading)", fontWeight: 700,
+                  fontFamily: "var(--t-font-heading)",
+                  fontWeight: 700,
                   borderRadius: isClassic ? "0.375rem" : "0.75rem",
                   cursor: isClassic ? "default" : "pointer",
                 }}
@@ -111,10 +130,12 @@ export function Navbar() {
                     className="absolute inset-0 border"
                     style={{
                       borderRadius: isClassic ? "0.375rem" : "0.75rem",
-                      borderStyle: "var(--t-border-style)" as any,
+                      borderStyle: "solid",
                       borderColor: isClassic ? "var(--border)" : "var(--brand-pink)",
                       borderWidth: isClassic ? "1px" : "2px",
-                      backgroundColor: isClassic ? "var(--card)" : "rgba(var(--brand-pink-rgb, 244, 114, 182), 0.05)",
+                      backgroundColor: isClassic
+                        ? "var(--card)"
+                        : "rgba(var(--brand-pink-rgb, 244, 114, 182), 0.05)",
                       opacity: isClassic ? 1 : 0.4,
                       filter: "var(--t-filter)",
                     }}
@@ -122,13 +143,18 @@ export function Navbar() {
                   />
                 )}
                 <span className="relative z-10">
-                  {showEmojis ? `${link.emoji} ` : ""}{link.label}
+                  {showEmojis ? `${link.emoji} ` : ""}
+                  {link.label}
                 </span>
               </motion.a>
             ))}
           </div>
 
           <motion.button
+            type="button"
+            aria-controls="mobile-navigation"
+            aria-expanded={mobileOpen}
+            aria-label={mobileOpen ? "Закрыть меню" : "Открыть меню"}
             className="md:hidden p-2 cursor-pointer"
             style={{ color: isClassic ? "var(--text-primary)" : "var(--brand-orange)" }}
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -142,6 +168,7 @@ export function Navbar() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
+            id="mobile-navigation"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
@@ -161,11 +188,12 @@ export function Navbar() {
                   style={{
                     fontFamily: "var(--t-font-heading)",
                     fontWeight: 700,
-                    borderStyle: "var(--t-border-style)" as any,
+                    borderStyle: "solid",
                     borderRadius: isClassic ? "0.375rem" : "1rem",
                   }}
                 >
-                  {!isClassic && `${link.emoji} `}{link.label}
+                  {!isClassic && `${link.emoji} `}
+                  {link.label}
                 </motion.a>
               ))}
             </div>

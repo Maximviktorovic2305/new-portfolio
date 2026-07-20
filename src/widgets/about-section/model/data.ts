@@ -30,10 +30,30 @@ export const stats: StatItem[] = [
 ];
 
 export const highlights: HighlightItem[] = [
-  { icon: Globe, title: "Frontend", desc: "React, Next.js, Vue.js, Nuxt, React Native, TypeScript, Tailwind, Redux, Zustand", color: colors.pink },
-  { icon: Server, title: "Backend", desc: "Node.js, NestJS, Express, Golang, REST API, GraphQL, Socket.io", color: colors.teal },
-  { icon: Database, title: "Базы данных & ORM", desc: "PostgreSQL, MongoDB, Redis, Prisma, Sequelize, TypeORM", color: colors.orange },
-  { icon: Code2, title: "DevOps & Тулинг", desc: "Docker, CI/CD, Nginx, RabbitMQ, Git, Jest, Vitest, Webpack, Vite", color: colors.lavender },
+  {
+    icon: Globe,
+    title: "Frontend",
+    desc: "React, Next.js, Vue.js, Nuxt, React Native, TypeScript, Tailwind, Redux, Zustand",
+    color: colors.pink,
+  },
+  {
+    icon: Server,
+    title: "Backend",
+    desc: "Node.js, NestJS, Express, Golang, REST API, GraphQL, Socket.io",
+    color: colors.teal,
+  },
+  {
+    icon: Database,
+    title: "Базы данных & ORM",
+    desc: "PostgreSQL, MongoDB, Redis, Prisma, Sequelize, TypeORM",
+    color: colors.orange,
+  },
+  {
+    icon: Code2,
+    title: "DevOps & Тулинг",
+    desc: "Docker, CI/CD, Nginx, RabbitMQ, Git, Jest, Vitest, Webpack, Vite",
+    color: colors.lavender,
+  },
 ];
 
 export const hobbies: HobbyItem[] = [

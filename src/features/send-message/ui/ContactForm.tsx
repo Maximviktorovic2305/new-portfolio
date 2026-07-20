@@ -1,198 +1,184 @@
-import { motion } from "motion/react";
-import { useRef, useState } from "react";
 import { Send } from "lucide-react";
+import { motion } from "motion/react";
+import { useEffect, useState, type CSSProperties, type SyntheticEvent } from "react";
 import { useTheme } from "@/shared/config";
 import { sendMessage } from "../lib/emailjs";
+import { CONTACT_LIMITS, validateContactForm, type ContactFormValues } from "../model/validation";
+
+const initialValues: ContactFormValues = { name: "", email: "", message: "" };
+type SubmissionStatus = "idle" | "sending" | "sent" | "error";
 
 export function ContactForm() {
-  const formRef = useRef<HTMLFormElement>(null);
-  const [formState, setFormState] = useState({ name: "", email: "", message: "" });
-  const [sent, setSent] = useState(false);
-  const [sending, setSending] = useState(false);
-  const [error, setError] = useState("");
+  const [values, setValues] = useState<ContactFormValues>(initialValues);
+  const [website, setWebsite] = useState("");
+  const [status, setStatus] = useState<SubmissionStatus>("idle");
+  const [feedback, setFeedback] = useState("");
   const { isClassic } = useTheme();
+  const isSending = status === "sending";
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formState.name.trim() || !formState.email.trim() || !formState.message.trim()) {
-      setError("Пожалуйста, заполните все поля!");
-      setTimeout(() => setError(""), 3000);
+  useEffect(() => {
+    if (status !== "sent" && status !== "error") return;
+    const timer = window.setTimeout(
+      () => {
+        setStatus("idle");
+        setFeedback("");
+      },
+      status === "sent" ? 4_000 : 6_000,
+    );
+    return () => window.clearTimeout(timer);
+  }, [status]);
+
+  const updateValue = (field: keyof ContactFormValues, value: string) => {
+    setValues((current) => ({ ...current, [field]: value }));
+  };
+
+  const handleSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (isSending) return;
+
+    // A filled hidden field is treated as automated spam without disclosing the filter.
+    if (website) {
+      setStatus("sent");
+      setFeedback("Сообщение отправлено.");
+      setValues(initialValues);
       return;
     }
-    setSending(true);
-    setError("");
+
+    const validation = validateContactForm(values);
+    if (!validation.success) {
+      setStatus("error");
+      setFeedback(validation.error);
+      return;
+    }
+
+    setStatus("sending");
+    setFeedback("");
     try {
-      await sendMessage(formState);
-      setSent(true);
-      setFormState({ name: "", email: "", message: "" });
-      setTimeout(() => setSent(false), 3000);
+      await sendMessage(validation.data);
+      setStatus("sent");
+      setFeedback("Сообщение отправлено. Спасибо!");
+      setValues(initialValues);
     } catch {
-      setError("Не удалось отправить. Напишите в Telegram!");
-      setTimeout(() => setError(""), 4000);
-    } finally {
-      setSending(false);
+      setStatus("error");
+      setFeedback("Не удалось отправить сообщение. Напишите мне в Telegram.");
     }
   };
 
-  const BS = "var(--t-border-style)" as any;
+  const borderStyle: CSSProperties["borderStyle"] = "solid";
+  const formClass = isClassic
+    ? "space-y-5 rounded-md border border-border p-6 sm:p-8"
+    : "space-y-5 rounded-3xl border-2 border-brand-lavender/20 bg-brand-lavender/[0.03] p-6 sm:p-8";
+  const inputClass = isClassic
+    ? "w-full rounded-md border border-border bg-background px-4 py-3 text-text-primary placeholder:text-text-dim focus:border-text-dim focus:outline-none"
+    : "w-full rounded-2xl border-2 border-border bg-background px-4 py-3.5 text-text-primary placeholder:text-text-dim focus:border-brand-lavender/50 focus:outline-none";
 
-  /* ── Classic form ── */
-  if (isClassic) {
-    return (
-      <form
-        ref={formRef}
-        onSubmit={handleSubmit}
-        className="p-6 sm:p-8 rounded-md border border-border space-y-5"
-      >
-        <div className="grid sm:grid-cols-2 gap-5">
-          <div>
-            <label
-              className="block text-[0.78rem] text-text-secondary uppercase tracking-[0.15em] mb-2"
-              style={{ fontFamily: "var(--t-font-heading)", fontWeight: 700 }}
-            >
-              Имя
-            </label>
-            <input
-              type="text"
-              value={formState.name}
-              onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-              placeholder="Ваше имя"
-              className="w-full px-4 py-3 rounded-md bg-background border border-border text-text-primary text-[0.95rem] placeholder:text-text-dim focus:outline-none focus:border-text-dim transition-colors"
-              style={{ fontFamily: "var(--t-font-body)" }}
-            />
-          </div>
-          <div>
-            <label
-              className="block text-[0.78rem] text-text-secondary uppercase tracking-[0.15em] mb-2"
-              style={{ fontFamily: "var(--t-font-heading)", fontWeight: 700 }}
-            >
-              Email
-            </label>
-            <input
-              type="email"
-              value={formState.email}
-              onChange={(e) => setFormState({ ...formState, email: e.target.value })}
-              placeholder="your@email.com"
-              className="w-full px-4 py-3 rounded-md bg-background border border-border text-text-primary text-[0.95rem] placeholder:text-text-dim focus:outline-none focus:border-text-dim transition-colors"
-              style={{ fontFamily: "var(--t-font-mono)" }}
-            />
-          </div>
-        </div>
-
-        <div>
-          <label
-            className="block text-[0.78rem] text-text-secondary uppercase tracking-[0.15em] mb-2"
-            style={{ fontFamily: "var(--t-font-heading)", fontWeight: 700 }}
-          >
-            Сообщение
-          </label>
-          <textarea
-            value={formState.message}
-            onChange={(e) => setFormState({ ...formState, message: e.target.value })}
-            placeholder="Расскажите о вашем проекте..."
-            rows={5}
-            className="w-full px-4 py-3 rounded-md bg-background border border-border text-text-primary text-[0.95rem] placeholder:text-text-dim focus:outline-none focus:border-text-dim transition-colors resize-none"
-            style={{ fontFamily: "var(--t-font-body)" }}
-          />
-        </div>
-
-        <button
-          type="submit"
-          disabled={sending}
-          className="w-full py-3.5 rounded-md flex items-center justify-center gap-2 text-[0.95rem] uppercase tracking-wider border transition-colors"
-          style={{
-            fontFamily: "var(--t-font-heading)",
-            fontWeight: 700,
-            backgroundColor: sent ? "transparent" : "var(--text-primary)",
-            color: sent ? "var(--text-primary)" : "var(--background)",
-            borderColor: "var(--text-primary)",
-          }}
-        >
-          {sent ? (
-            <span className="flex items-center gap-2">Отправлено</span>
-          ) : sending ? (
-            <span className="flex items-center gap-2">Отправляется...</span>
-          ) : (
-            <>
-              <Send size={16} />
-              <span>Отправить</span>
-            </>
-          )}
-        </button>
-
-        {error && (
-          <motion.p
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-[0.85rem] text-center mt-2"
-            style={{ fontFamily: "var(--t-font-body)", color: "var(--brand-red, #ef4444)" }}
-          >
-            {error}
-          </motion.p>
-        )}
-      </form>
-    );
-  }
-
-  /* ── Default form (crayon & original) ── */
   return (
     <form
-      ref={formRef}
-      onSubmit={handleSubmit}
-      className="p-8 rounded-3xl border-2 border-brand-lavender/20 bg-brand-lavender/[0.03] space-y-5"
-      style={{ borderStyle: BS, filter: "var(--t-filter)" }}
+      aria-busy={isSending}
+      className={formClass}
+      noValidate
+      onSubmit={(event) => void handleSubmit(event)}
+      style={{ borderStyle, filter: "var(--t-filter)" }}
     >
-      <div className="grid sm:grid-cols-2 gap-5">
+      <div className="hidden">
+        <label htmlFor="contact-website">Ваш сайт</label>
+        <input
+          autoComplete="off"
+          id="contact-website"
+          name="website"
+          onChange={(event) => setWebsite(event.target.value)}
+          tabIndex={-1}
+          value={website}
+        />
+      </div>
+
+      <div className="grid gap-5 sm:grid-cols-2">
         <div>
-          <label className="flex items-center gap-2 text-[0.9rem] text-brand-lavender uppercase tracking-[0.15em] mb-2"
-            style={{ fontFamily: "var(--t-font-heading)", fontWeight: 700 }}>
-            <span>👤</span> Имя
+          <label
+            className="mb-2 block text-[0.85rem] font-bold uppercase tracking-[0.15em]"
+            htmlFor="contact-name"
+          >
+            {!isClassic && <span aria-hidden="true">👤 </span>}Имя
           </label>
-          <motion.input whileFocus={{ scale: 1.02 }} type="text" value={formState.name}
-            onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-            placeholder="Ваше имя"
-            className="w-full px-4 py-3.5 rounded-2xl bg-background border-2 border-brand-lavender/15 text-text-primary text-[1rem] placeholder:text-text-dim focus:outline-none focus:border-brand-lavender/40 transition-all"
-            style={{ fontFamily: "var(--t-font-body)", borderStyle: BS }} />
+          <motion.input
+            autoComplete="name"
+            className={inputClass}
+            disabled={isSending}
+            id="contact-name"
+            maxLength={CONTACT_LIMITS.name}
+            onChange={(event) => updateValue("name", event.target.value)}
+            required
+            type="text"
+            value={values.name}
+            whileFocus={isClassic ? undefined : { scale: 1.01 }}
+          />
         </div>
         <div>
-          <label className="flex items-center gap-2 text-[0.9rem] text-brand-teal uppercase tracking-[0.15em] mb-2"
-            style={{ fontFamily: "var(--t-font-heading)", fontWeight: 700 }}>
-            <span>📧</span> Email
+          <label
+            className="mb-2 block text-[0.85rem] font-bold uppercase tracking-[0.15em]"
+            htmlFor="contact-email"
+          >
+            {!isClassic && <span aria-hidden="true">📧 </span>}Email
           </label>
-          <motion.input whileFocus={{ scale: 1.02 }} type="email" value={formState.email}
-            onChange={(e) => setFormState({ ...formState, email: e.target.value })}
-            placeholder="your@email.com"
-            className="w-full px-4 py-3.5 rounded-2xl bg-background border-2 border-brand-teal/15 text-text-primary text-[1rem] placeholder:text-text-dim focus:outline-none focus:border-brand-teal/40 transition-all"
-            style={{ fontFamily: "var(--t-font-mono)", borderStyle: BS }} />
+          <motion.input
+            autoComplete="email"
+            className={inputClass}
+            disabled={isSending}
+            id="contact-email"
+            inputMode="email"
+            maxLength={CONTACT_LIMITS.email}
+            onChange={(event) => updateValue("email", event.target.value)}
+            required
+            type="email"
+            value={values.email}
+            whileFocus={isClassic ? undefined : { scale: 1.01 }}
+          />
         </div>
       </div>
+
       <div>
-        <label className="flex items-center gap-2 text-[0.9rem] text-brand-orange uppercase tracking-[0.15em] mb-2"
-          style={{ fontFamily: "var(--t-font-heading)", fontWeight: 700 }}>
-          <span>💭</span> Сообщение
+        <label
+          className="mb-2 block text-[0.85rem] font-bold uppercase tracking-[0.15em]"
+          htmlFor="contact-message"
+        >
+          {!isClassic && <span aria-hidden="true">💭 </span>}Сообщение
         </label>
-        <motion.textarea whileFocus={{ scale: 1.01 }} value={formState.message}
-          onChange={(e) => setFormState({ ...formState, message: e.target.value })}
-          placeholder="Расскажите о вашем проекте..." rows={5}
-          className="w-full px-4 py-3.5 rounded-2xl bg-background border-2 border-brand-orange/15 text-text-primary text-[1rem] placeholder:text-text-dim focus:outline-none focus:border-brand-orange/40 transition-all resize-none"
-          style={{ fontFamily: "var(--t-font-body)", borderStyle: BS }} />
+        <motion.textarea
+          className={`${inputClass} resize-y`}
+          disabled={isSending}
+          id="contact-message"
+          maxLength={CONTACT_LIMITS.message}
+          onChange={(event) => updateValue("message", event.target.value)}
+          required
+          rows={6}
+          value={values.message}
+          whileFocus={isClassic ? undefined : { scale: 1.005 }}
+        />
+        <p className="mt-1 text-right text-[0.75rem] text-muted-foreground">
+          {values.message.length}/{CONTACT_LIMITS.message}
+        </p>
       </div>
-      <motion.button type="submit" disabled={sending}
-        whileHover={{ scale: 1.03, rotate: -1 }} whileTap={{ scale: 0.97 }}
-        className="w-full py-4 bg-brand-teal hover:bg-brand-teal-hover text-white rounded-2xl flex items-center justify-center gap-2 cursor-pointer text-[1.05rem] uppercase tracking-wide border-2 border-brand-teal/50 transition-colors"
-        style={{ fontFamily: "var(--t-font-heading)", fontWeight: 700, borderStyle: BS }}>
-        {sent ? (
-          <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="flex items-center gap-2">✅ Отправлено!</motion.span>
-        ) : sending ? (
-          <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="flex items-center gap-2">🔄 Отправляется...</motion.span>
-        ) : (
-          <><Send size={18} /><span>Отправить 🚀</span></>
-        )}
+
+      <motion.button
+        className="flex w-full items-center justify-center gap-2 rounded-xl border border-brand-teal bg-brand-teal px-5 py-3.5 font-bold text-white transition-colors hover:bg-brand-teal-hover disabled:cursor-not-allowed disabled:opacity-60"
+        disabled={isSending}
+        type="submit"
+        whileHover={isClassic || isSending ? undefined : { scale: 1.02 }}
+        whileTap={isSending ? undefined : { scale: 0.98 }}
+      >
+        <Send aria-hidden="true" size={18} />
+        {isSending ? "Отправляется…" : status === "sent" ? "Отправлено" : "Отправить"}
       </motion.button>
-      {error && (
-        <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }}
-          className="text-[0.9rem] text-center text-brand-red mt-2" style={{ fontFamily: "var(--t-font-body)" }}>
-          {error}
+
+      {feedback && (
+        <motion.p
+          animate={{ opacity: 1, y: 0 }}
+          aria-live="polite"
+          className={status === "error" ? "text-center text-brand-red" : "text-center text-brand-teal"}
+          initial={{ opacity: 0, y: -5 }}
+          role={status === "error" ? "alert" : "status"}
+        >
+          {feedback}
         </motion.p>
       )}
     </form>

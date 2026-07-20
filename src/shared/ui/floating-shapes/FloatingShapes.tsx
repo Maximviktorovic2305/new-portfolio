@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
+import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "motion/react";
 import { useEffect } from "react";
 import { colors, useTheme } from "@/shared/config";
 
@@ -11,6 +11,15 @@ const doodles = [
 ];
 
 // depth: 0 = far, 1 = mid, 2 = near
+interface BlobShape {
+  color: string;
+  size: number;
+  x: string;
+  y: string;
+  delay: number;
+  depth: 0 | 1 | 2;
+}
+
 const blobShapes = [
   { color: colors.pink, size: 200, x: "5%", y: "15%", delay: 0, depth: 2 },
   { color: colors.teal, size: 150, x: "85%", y: "25%", delay: 1, depth: 1 },
@@ -19,13 +28,13 @@ const blobShapes = [
   { color: colors.lime, size: 100, x: "50%", y: "45%", delay: 1.5, depth: 0 },
   { color: colors.pink, size: 80, x: "30%", y: "85%", delay: 3, depth: 1 },
   { color: colors.teal, size: 160, x: "60%", y: "10%", delay: 2.5, depth: 1 },
-];
+] as const satisfies readonly BlobShape[];
 
 const depthConfig = [
-  { parallax: 0.02, opacity: 0.06, blur: 3, sizeScale: 0.6 },    // far — barely moves
-  { parallax: 0.06, opacity: 0.1, blur: 1.5, sizeScale: 0.85 },  // mid
-  { parallax: 0.12, opacity: 0.14, blur: 0.5, sizeScale: 1 },    // near — moves a lot
-];
+  { parallax: 0.02, opacity: 0.06, blur: 3, sizeScale: 0.6 }, // far — barely moves
+  { parallax: 0.06, opacity: 0.1, blur: 1.5, sizeScale: 0.85 }, // mid
+  { parallax: 0.12, opacity: 0.14, blur: 0.5, sizeScale: 1 }, // near — moves a lot
+] as const;
 
 /**
  * Outer div = parallax shift (style.x/y driven by mouse motion values)
@@ -38,7 +47,7 @@ function ParallaxBlob({
   mouseX,
   mouseY,
 }: {
-  shape: (typeof blobShapes)[number];
+  shape: BlobShape;
   index: number;
   mouseX: ReturnType<typeof useSpring>;
   mouseY: ReturnType<typeof useSpring>;
@@ -93,6 +102,7 @@ function ParallaxBlob({
 
 export function FloatingShapes() {
   const { isCrayon, isClassic } = useTheme();
+  const shouldReduceMotion = useReducedMotion();
 
   const rawMouseX = useMotionValue(0);
   const rawMouseY = useMotionValue(0);
@@ -100,19 +110,19 @@ export function FloatingShapes() {
   const mouseY = useSpring(rawMouseY, { stiffness: 40, damping: 15 });
 
   useEffect(() => {
-    if (isClassic) return;
+    if (isClassic || shouldReduceMotion) return;
     const onMove = (e: MouseEvent) => {
       rawMouseX.set(e.clientX - window.innerWidth / 2);
       rawMouseY.set(e.clientY - window.innerHeight / 2);
     };
     window.addEventListener("mousemove", onMove);
     return () => window.removeEventListener("mousemove", onMove);
-  }, [isClassic, rawMouseX, rawMouseY]);
+  }, [isClassic, rawMouseX, rawMouseY, shouldReduceMotion]);
 
-  if (isClassic) return null;
+  if (isClassic || shouldReduceMotion) return null;
 
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden z-[1]">
+    <div aria-hidden="true" className="fixed inset-0 pointer-events-none overflow-hidden z-[1]">
       {isCrayon
         ? doodles.map((d, i) => (
             <motion.div
@@ -148,13 +158,7 @@ export function FloatingShapes() {
             </motion.div>
           ))
         : blobShapes.map((shape, i) => (
-            <ParallaxBlob
-              key={`blob-${i}`}
-              shape={shape}
-              index={i}
-              mouseX={mouseX}
-              mouseY={mouseY}
-            />
+            <ParallaxBlob key={`blob-${i}`} shape={shape} index={i} mouseX={mouseX} mouseY={mouseY} />
           ))}
     </div>
   );
