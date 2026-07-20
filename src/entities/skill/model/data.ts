@@ -7,48 +7,56 @@ export const skills: Skill[] = [
     category: "Frontend",
     emoji: "🟡",
     description: "Основной язык разработки. ES2024+, замыкания, промисы, async/await — на уровне эксперта.",
+    website: "https://developer.mozilla.org/docs/Web/JavaScript",
   },
   {
     name: "TypeScript",
     category: "Frontend",
     emoji: "💙",
     description: "Строгая типизация для всех проектов. Дженерики, utility types, type guards — must have.",
+    website: "https://www.typescriptlang.org/",
   },
   {
     name: "React",
     category: "Frontend",
     emoji: "⚛️",
     description: "Основной фреймворк. Hooks, Context, SSR, Redux Toolkit, Zustand, TanStack Query.",
+    website: "https://react.dev/",
   },
   {
     name: "Next.js",
     category: "Frontend",
     emoji: "▲",
     description: "Фулстек на React. SSR, ISR, API Routes, App Router. Оптимизация Core Web Vitals.",
+    website: "https://nextjs.org/",
   },
   {
     name: "Vue.js",
     category: "Frontend",
     emoji: "💚",
     description: "Composition API, Pinia, реактивность. Опыт на крупных коммерческих проектах.",
+    website: "https://vuejs.org/",
   },
   {
     name: "Nuxt.js",
     category: "Frontend",
     emoji: "🟩",
     description: "SSR/SSG на Vue.js. Модули, middleware, серверные маршруты, SEO-оптимизация.",
+    website: "https://nuxt.com/",
   },
   {
     name: "React Native",
     category: "Frontend",
     emoji: "📱",
     description: "Кроссплатформенная мобильная разработка. Expo, навигация, нативные модули.",
+    website: "https://reactnative.dev/",
   },
   {
     name: "Tailwind CSS",
     category: "Frontend",
     emoji: "🎨",
     description: "Utility-first подход. Кастомные темы, анимации, адаптив. Основной инструмент стилизации.",
+    website: "https://tailwindcss.com/",
   },
   {
     name: "SCSS",
@@ -56,12 +64,14 @@ export const skills: Skill[] = [
     emoji: "🎀",
     description:
       "Модульные стили, переменные, миксины и поддерживаемая архитектура CSS для крупных интерфейсов.",
+    website: "https://sass-lang.com/",
   },
   {
     name: "Three.js / GSAP / Motion",
     category: "Frontend",
     emoji: "✨",
     description: "3D-графика и продвинутые анимации. Интерактивные интерфейсы на GSAP и Framer Motion.",
+    website: "https://threejs.org/",
   },
   {
     name: "Redux Toolkit / Zustand",
@@ -69,6 +79,7 @@ export const skills: Skill[] = [
     emoji: "🧠",
     description:
       "Управление клиентским состоянием в React-приложениях: предсказуемые хранилища и модульная архитектура.",
+    website: "https://redux-toolkit.js.org/",
   },
   {
     name: "TanStack Query",
@@ -76,30 +87,35 @@ export const skills: Skill[] = [
     emoji: "🔄",
     description:
       "Серверное состояние на клиенте. Кэширование, рефетчинг, оптимистичные обновления. Замена Redux для API-данных.",
+    website: "https://tanstack.com/query/latest",
   },
   {
     name: "Vite / Webpack",
     category: "Frontend",
     emoji: "⚙️",
     description: "Настройка сборки, оптимизация бандлов, code splitting и окружения для SPA и SSR-проектов.",
+    website: "https://vite.dev/",
   },
   {
     name: "Node.js",
     category: "Backend",
     emoji: "🟢",
     description: "Серверная платформа. Неблокирующий I/O, стримы, кластеризация. Высоконагруженные API.",
+    website: "https://nodejs.org/",
   },
   {
     name: "NestJS",
     category: "Backend",
     emoji: "🐈",
     description: "Enterprise-фреймворк. Модули, DI, Guards, Interceptors. Микросервисная архитектура.",
+    website: "https://nestjs.com/",
   },
   {
     name: "Express",
     category: "Backend",
     emoji: "🚂",
     description: "Минималистичный фреймворк. REST API, middleware, маршрутизация. Быстрый старт проектов.",
+    website: "https://expressjs.com/",
   },
   {
     name: "Golang",
@@ -107,36 +123,42 @@ export const skills: Skill[] = [
     emoji: "🐹",
     description:
       "Разработка производительных микросервисов. Горутины, каналы, конкурентность и интеграция с Node.js-системами.",
+    website: "https://go.dev/",
   },
   {
     name: "PostgreSQL",
     category: "Backend",
     emoji: "🐘",
     description: "Основная реляционная БД. Сложные запросы, индексы, оптимизация, пулы соединений.",
+    website: "https://www.postgresql.org/",
   },
   {
     name: "MongoDB",
     category: "Backend",
     emoji: "🍃",
     description: "NoSQL для гибких схем. Агрегации, репликация, работа через Mongoose и нативный драйвер.",
+    website: "https://www.mongodb.com/",
   },
   {
     name: "Redis",
     category: "Backend",
     emoji: "⚡",
     description: "In-memory кэширование. Pub/Sub, очереди, сессии. Ускорение эндпоинтов на 40–60%.",
+    website: "https://redis.io/",
   },
   {
     name: "GraphQL",
     category: "Backend",
     emoji: "🔷",
     description: "Декларативные запросы данных. Apollo Server, Type-safe resolvers, подписки.",
+    website: "https://graphql.org/",
   },
   {
     name: "WebSockets",
     category: "Backend",
     emoji: "🔌",
     description: "Real-time коммуникации. Socket.io, чаты, уведомления, live-обновления данных.",
+    website: "https://developer.mozilla.org/docs/Web/API/WebSockets_API",
   },
   {
     name: "Moleculer.js",
@@ -144,42 +166,49 @@ export const skills: Skill[] = [
     emoji: "🧩",
     description:
       "Микросервисная архитектура на Node.js: сервисы, брокеры, балансировка и отказоустойчивое взаимодействие.",
+    website: "https://moleculer.services/",
   },
   {
     name: "gRPC",
     category: "Backend",
     emoji: "📡",
     description: "Быстрое типизированное взаимодействие между микросервисами на основе Protocol Buffers.",
+    website: "https://grpc.io/",
   },
   {
     name: "RabbitMQ",
     category: "Backend",
     emoji: "🐰",
     description: "Брокер сообщений. Очереди задач, надёжная обработка транзакций при пиковых нагрузках.",
+    website: "https://www.rabbitmq.com/",
   },
   {
     name: "TypeORM",
     category: "Backend",
     emoji: "🗄️",
     description: "ORM для TypeScript и Node.js: сущности, связи, миграции, транзакции и QueryBuilder.",
+    website: "https://typeorm.io/",
   },
   {
     name: "Prisma / Sequelize",
     category: "Backend",
     emoji: "💾",
     description: "Типобезопасная работа с данными, модели, миграции и поддерживаемый слой доступа к БД.",
+    website: "https://www.prisma.io/",
   },
   {
     name: "Jest / Vitest",
     category: "Backend",
     emoji: "🧪",
     description: "Юнит и интеграционное тестирование. Быстрая сборка проектов с Vite и Webpack.",
+    website: "https://vitest.dev/",
   },
   {
     name: "Docker",
     category: "DevOps",
     emoji: "🐳",
     description: "Контейнеризация сервисов. Docker Compose, мульти-стейдж билды, унификация окружений.",
+    website: "https://www.docker.com/",
   },
   {
     name: "Kubernetes",
@@ -187,24 +216,28 @@ export const skills: Skill[] = [
     emoji: "☸️",
     description:
       "Оркестрация контейнеров, масштабирование микросервисов, управление конфигурацией и стабильными релизами.",
+    website: "https://kubernetes.io/",
   },
   {
     name: "CI/CD",
     category: "DevOps",
     emoji: "🔄",
     description: "GitHub Actions, GitLab CI. Автоматическое тестирование, деплой, ускорение релизов.",
+    website: "https://docs.github.com/actions",
   },
   {
     name: "Git",
     category: "DevOps",
     emoji: "📦",
     description: "Контроль версий. Branching стратегии, code review, merge/rebase workflows.",
+    website: "https://git-scm.com/",
   },
   {
     name: "Nginx",
     category: "DevOps",
     emoji: "🌀",
     description: "Reverse proxy, балансировка, SSL-терминация, кэширование статики.",
+    website: "https://nginx.org/",
   },
 ];
 

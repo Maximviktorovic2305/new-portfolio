@@ -3,6 +3,7 @@ export interface Skill {
   category: string;
   emoji: string;
   description: string;
+  website: `https://${string}`;
 }
 
 export interface SkillCategory {

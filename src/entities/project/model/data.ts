@@ -85,7 +85,7 @@ export const projects: Project[] = [
   {
     id: 6,
     title: "Сайт для путешествий",
-    desc: "Сайт для путешествий на Сахалине 🏔️",
+    desc: "Сайт для путешествий по России 🏔️",
     image:
       "https://images.unsplash.com/photo-1718671418340-9f351ec40874?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYWtoYWxpbiUyMG5hdHVyZSUyMGxhbmRzY2FwZSUyMGhpa2luZ3xlbnwxfHx8fDE3NzI1MzkzMjF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     tags: ["Next 15", "Redux", "Nest.js", "Админка"],
@@ -95,8 +95,8 @@ export const projects: Project[] = [
   },
   {
     id: 7,
-    title: "Сайт музея Сахалина",
-    desc: "Сайт для музея на Сахалине 🏛️",
+    title: "Сайт российского музея",
+    desc: "Сайт для музея в России 🏛️",
     image:
       "https://images.unsplash.com/photo-1569342380852-035f42d9ca41?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtdXNldW0lMjBleGhpYml0aW9uJTIwYXJ0JTIwZ2FsbGVyeXxlbnwxfHx8fDE3NzI1MzkzMjF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     tags: ["Next 15", "Zustand", "Nest.js", "Админка"],

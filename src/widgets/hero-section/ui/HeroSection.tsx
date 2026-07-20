@@ -1,307 +1,92 @@
-import { motion } from "motion/react";
-import { ChevronDown, GitFork, Mail, MessageCircle } from "lucide-react";
-import { ParticleField } from "@/shared/ui";
-import { colors, useTheme } from "@/shared/config";
-import { TypeWriter } from "./TypeWriter";
-
-const heroTechnologies = [
-  "React & Next.js",
-  "Vue.js & Nuxt.js",
-  "Node.js & NestJS",
-  "TypeScript & Golang",
-  "PostgreSQL & MongoDB",
-  "Docker & CI/CD",
-] as const;
+import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "motion/react";
+import { useCallback, useRef, type PointerEvent as ReactPointerEvent } from "react";
 
 export function HeroSection() {
-  const { isCrayon, isClassic } = useTheme();
-  const TF = "var(--t-filter)";
-  const BS = "solid";
+  const sectionRef = useRef<HTMLElement>(null);
+  const reduceMotion = useReducedMotion();
+  const pointerX = useMotionValue(0);
+  const pointerY = useMotionValue(0);
+  const imageX = useSpring(pointerX, { damping: 22, mass: 0.7, stiffness: 85 });
+  const imageY = useSpring(pointerY, { damping: 22, mass: 0.7, stiffness: 85 });
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+  const sceneScale = useTransform(scrollYProgress, [0, 1], [1.04, 1.15]);
+  const sceneY = useTransform(scrollYProgress, [0, 1], [0, 120]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, -95]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.72], [1, 0]);
 
-  /* Classic uses neutral muted tones instead of brand colors */
-  const cls = {
-    accent: "var(--text-primary)",
-    muted: "var(--muted-foreground)",
-    border: "var(--border)",
-  };
+  const moveSceneAtPointer = useCallback(
+    (event: ReactPointerEvent<HTMLElement>) => {
+      if (reduceMotion) return;
+
+      const bounds = event.currentTarget.getBoundingClientRect();
+      const x = (event.clientX - bounds.left) / Math.max(bounds.width, 1) - 0.5;
+      const y = (event.clientY - bounds.top) / Math.max(bounds.height, 1) - 0.5;
+      pointerX.set(x * -22);
+      pointerY.set(y * -16);
+    },
+    [pointerX, pointerY, reduceMotion],
+  );
+
+  const resetScenePosition = useCallback(() => {
+    pointerX.set(0);
+    pointerY.set(0);
+  }, [pointerX, pointerY]);
 
   return (
-    <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {!isClassic && !isCrayon && <ParticleField />}
-
-      {!isClassic && (
-        <>
-          <motion.div
-            animate={{
-              scale: [1, 1.2, 1],
-              rotate: [0, 20, 0],
-              borderRadius: ["40% 60% 70% 30%", "60% 40% 30% 70%", "40% 60% 70% 30%"],
-            }}
-            transition={{ duration: 8, repeat: Infinity }}
-            className="absolute top-1/4 left-1/4 w-[20rem] h-[20rem] bg-brand-pink/[0.06] blur-[5rem]"
-          />
-          <motion.div
-            animate={{
-              scale: [1, 1.15, 1],
-              rotate: [0, -30, 0],
-              borderRadius: ["60% 40% 30% 70%", "40% 60% 70% 30%", "60% 40% 30% 70%"],
-            }}
-            transition={{ duration: 10, repeat: Infinity, delay: 2 }}
-            className="absolute bottom-1/3 right-1/4 w-[18rem] h-[18rem] bg-brand-teal/[0.06] blur-[5rem]"
-          />
-        </>
-      )}
-
-      <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 30, scale: 0.8 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.6, type: "spring", stiffness: 200 }}
-          className={`inline-flex items-center gap-2 px-5 py-2.5 mb-8 rounded-full border ${isClassic ? "border-border" : "border-2 border-brand-teal/30 bg-brand-teal/5"}`}
-          style={{ borderStyle: BS, filter: TF }}
-        >
-          {!isClassic && (
-            <motion.span
-              animate={{ rotate: [0, 25, -25, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="text-[1.2rem]"
-            >
-              {isCrayon ? "✦" : "🚀"}
-            </motion.span>
-          )}
-          <span
-            className="text-[1rem] tracking-wide"
-            style={{
-              fontFamily: "var(--t-font-heading)",
-              fontWeight: 700,
-              color: isClassic ? cls.muted : undefined,
-            }}
-          >
-            {isClassic ? (
-              "Fullstack Developer · Remote"
-            ) : (
-              <span className="text-brand-teal">Fullstack Developer &bull; Remote</span>
-            )}
-          </span>
-        </motion.div>
-
-        {/* Name */}
-        <motion.h1
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
-          className="text-[2.6rem] sm:text-[3.6rem] md:text-[5rem] leading-[1.1] tracking-tight mb-6 text-text-primary"
-          style={{ fontFamily: "var(--t-font-heading)", fontWeight: 700 }}
-        >
-          Привет!{" "}
-          {!isClassic && (
-            <motion.span
-              animate={{ rotate: [0, 20, -15, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, delay: 0.5 }}
-              className="inline-block origin-bottom-right"
-            >
-              👋
-            </motion.span>
-          )}
-          <br />Я{" "}
-          <span className="relative inline-block">
-            {isClassic ? (
-              <span className="text-text-primary">Максим</span>
-            ) : (
-              <span className="relative z-10 bg-gradient-to-r from-brand-lavender via-brand-teal to-brand-sky bg-clip-text text-transparent">
-                Максим
-              </span>
-            )}
-            {!isClassic && (
-              <motion.svg
-                viewBox="0 0 300 20"
-                className="absolute -bottom-2 left-0 w-full"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 1.5, delay: 1 }}
-              >
-                <motion.path
-                  d={isCrayon ? "M5 9 Q 75 2 150 9 Q 225 16 295 8" : "M5 6 Q 75 0 150 6 Q 225 12 295 6"}
-                  stroke={colors.orange}
-                  strokeWidth={isCrayon ? "4" : "3"}
-                  fill="none"
-                  strokeLinecap="round"
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{ duration: 1.5, delay: 1 }}
-                />
-              </motion.svg>
-            )}
-          </span>
-        </motion.h1>
-
-        {/* Typing text */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="text-[1.2rem] sm:text-[1.4rem] mb-8"
-          style={{
-            fontFamily: isCrayon ? "var(--t-font-body)" : "var(--t-font-mono)",
-            fontWeight: 600,
-            color: isClassic ? "var(--muted-foreground)" : undefined,
-          }}
-        >
-          <TypeWriter texts={heroTechnologies} />
-        </motion.div>
-
-        {/* Description */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="text-[1.05rem] sm:text-[1.15rem] text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed"
-          style={{ fontFamily: "var(--t-font-body)" }}
-        >
-          Fullstack-разработчик с 5+ годами коммерческого опыта. Строю высоконагруженные веб-приложения от
-          архитектуры до деплоя.
-          {isClassic
-            ? " Открыт к удалённой работе, любой часовой пояс."
-            : " Открыт к удалённой работе, любой часовой пояс ✨"}
-        </motion.p>
-
-        {/* CTA Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-14"
-        >
-          <motion.a
-            href="#projects"
-            whileHover={{ scale: isClassic ? 1.03 : 1.05, rotate: isClassic || isCrayon ? 0 : -2 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-8 py-4 text-[1rem] tracking-wide cursor-pointer no-underline border"
-            style={{
-              fontFamily: "var(--t-font-heading)",
-              fontWeight: 700,
-              borderStyle: BS,
-              filter: TF,
-              borderRadius: isClassic ? "0.375rem" : "1rem",
-              cursor: isClassic ? "default" : "pointer",
-              boxShadow: isCrayon ? "0 14px 32px rgba(22, 159, 145, 0.2)" : undefined,
-              ...(isClassic
-                ? {
-                    backgroundColor: "var(--text-primary)",
-                    color: "var(--background)",
-                    borderColor: "var(--text-primary)",
-                  }
-                : {
-                    backgroundColor: "var(--brand-teal)",
-                    color: "white",
-                    borderColor: "rgba(20,184,166,0.5)",
-                    borderWidth: "2px",
-                  }),
-            }}
-          >
-            {isClassic ? "Смотреть проекты" : isCrayon ? "Смотреть проекты" : "🚀 Смотреть проекты"}
-          </motion.a>
-          <motion.a
-            href="#contact"
-            whileHover={{ scale: isClassic ? 1.03 : 1.05, rotate: isClassic || isCrayon ? 0 : 2 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-8 py-4 text-[1rem] tracking-wide cursor-pointer no-underline border"
-            style={{
-              fontFamily: "var(--t-font-heading)",
-              fontWeight: 700,
-              borderStyle: BS,
-              filter: TF,
-              borderRadius: isClassic ? "0.375rem" : "1rem",
-              cursor: isClassic ? "default" : "pointer",
-              ...(isClassic
-                ? {
-                    borderColor: "var(--border)",
-                    color: "var(--text-primary)",
-                    backgroundColor: "transparent",
-                  }
-                : { borderColor: "rgba(20,184,166,0.4)", color: "var(--brand-teal)", borderWidth: "2px" }),
-            }}
-          >
-            {isClassic || isCrayon ? "Связаться" : "💬 Связаться"}
-          </motion.a>
-        </motion.div>
-
-        {/* Social links */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 1.3 }}
-          className="flex items-center justify-center gap-4"
-        >
-          {[
-            {
-              icon: GitFork,
-              label: "GitHub",
-              href: "https://github.com/Maximviktorovic2305",
-              color: colors.lavender,
-            },
-            {
-              icon: MessageCircle,
-              label: "Telegram",
-              href: "https://t.me/maximviktorovic2305",
-              color: colors.teal,
-            },
-            { icon: Mail, label: "Email", href: "mailto:Maximviktorovic@mail.ru", color: colors.pink },
-          ].map((social) => (
-            <motion.a
-              aria-label={social.label}
-              key={social.href}
-              href={social.href}
-              target={social.href.startsWith("https:") ? "_blank" : undefined}
-              rel={social.href.startsWith("https:") ? "noopener noreferrer" : undefined}
-              whileHover={{
-                y: isClassic ? -3 : -5,
-                scale: isClassic ? 1.05 : 1.1,
-                rotate: isClassic || isCrayon ? 0 : 5,
-              }}
-              whileTap={{ scale: 0.9 }}
-              className="w-14 h-14 flex items-center justify-center transition-all cursor-pointer"
-              style={{
-                borderStyle: BS,
-                borderWidth: isClassic ? "1px" : "2px",
-                borderColor: isClassic ? "var(--border)" : `${social.color}40`,
-                backgroundColor: isClassic ? "transparent" : isCrayon ? "var(--card)" : `${social.color}10`,
-                color: isClassic ? "var(--text-secondary)" : social.color,
-                filter: TF,
-                borderRadius: isClassic ? "0.375rem" : "1rem",
-                cursor: isClassic ? "default" : "pointer",
-                boxShadow: isCrayon ? `0 10px 28px ${social.color}16` : undefined,
-              }}
-            >
-              <social.icon size={22} />
-            </motion.a>
-          ))}
-        </motion.div>
-      </div>
-
-      {/* Scroll indicator */}
+    <section
+      className="immersive-hero"
+      id="hero"
+      onPointerLeave={resetScenePosition}
+      onPointerMove={moveSceneAtPointer}
+      ref={sectionRef}
+    >
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        className="relief-scene"
+        style={reduceMotion ? undefined : { scale: sceneScale, y: sceneY }}
       >
+        <motion.img
+          alt=""
+          aria-hidden="true"
+          animate={reduceMotion ? undefined : { scale: [1.015, 1.035, 1.015] }}
+          className="relief-scene__image"
+          decoding="async"
+          fetchPriority="high"
+          src="/images/relief-hero.png"
+          style={reduceMotion ? undefined : { x: imageX, y: imageY }}
+          transition={{ duration: 16, ease: "easeInOut", repeat: Infinity }}
+        />
         <motion.div
-          animate={{ y: [0, 12, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          className="flex flex-col items-center gap-2"
-          style={{ color: isClassic ? "var(--muted-foreground)" : "var(--brand-orange)" }}
-        >
-          <span
-            className="text-[0.9rem] tracking-wider"
-            style={{ fontFamily: "var(--t-font-heading)", fontWeight: 700 }}
-          >
-            {isClassic ? "Скролл" : "⬇️ Скролл"}
-          </span>
-          <ChevronDown size={20} />
-        </motion.div>
+          aria-hidden="true"
+          className="relief-scene__light"
+          style={reduceMotion ? undefined : { x: imageX, y: imageY }}
+        />
+        <div className="relief-scene__grain" aria-hidden="true" />
       </motion.div>
+
+      <motion.div
+        className="immersive-hero__content"
+        style={reduceMotion ? undefined : { opacity: contentOpacity, y: contentY }}
+      >
+        <p className="immersive-hero__eyebrow">FULLSTACK DEVELOPER · RUSSIA</p>
+        <h1>
+          <span>Цифровые продукты</span>
+          <span>с характером</span>
+        </h1>
+        <p className="immersive-hero__intro">
+          Проектирую и создаю выразительные веб-сервисы — от интерфейса до инфраструктуры.
+        </p>
+      </motion.div>
+
+      <a className="immersive-hero__works" href="#projects">
+        Смотреть проекты <span aria-hidden="true">↘</span>
+      </a>
+      <a className="immersive-hero__scroll" href="#about">
+        <span>Прокрутите вниз</span>
+        <i aria-hidden="true" />
+      </a>
     </section>
   );
 }
