@@ -11,7 +11,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'sha256-EI4oUnrsRdhoCKoe632IVM/32Dw4jASI42QT6EMK7dY='; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://images.unsplash.com https://banya.digital; font-src 'self' data:; connect-src 'self' https://api.emailjs.com; form-action 'self'; frame-ancestors 'none'; media-src 'none'; worker-src 'none'; manifest-src 'self'"
+          "value": "default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'sha256-arAYjLvOaFOB5KcHzpRkUhJv9vEzGid6SwT297hDfwg='; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://images.unsplash.com https://banya.digital; font-src 'self' data:; connect-src 'self' https://api.emailjs.com; form-action 'self'; frame-ancestors 'none'; media-src 'none'; worker-src 'none'; manifest-src 'self'"
         },
         { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" },
         { "key": "Cross-Origin-Resource-Policy", "value": "same-origin" },
