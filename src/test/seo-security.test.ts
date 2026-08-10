@@ -7,6 +7,8 @@ const projectRoot = process.cwd();
 const fromRoot = (...segments: string[]) => join(projectRoot, ...segments);
 const html = readFileSync(fromRoot("index.html"), "utf8");
 const document = new DOMParser().parseFromString(html, "text/html");
+const envExample = readFileSync(fromRoot(".env.example"), "utf8");
+const deployWorkflow = readFileSync(fromRoot(".github", "workflows", "deploy-portfolio.yml"), "utf8");
 
 interface HeaderEntry {
   key: string;
@@ -61,6 +63,12 @@ describe("SEO metadata", () => {
 });
 
 describe("static server security policy", () => {
+  it("keeps production configuration out of tracked environment files", () => {
+    expect(envExample).toMatch(/^VITE_YANDEX_METRIKA_ID=$/mu);
+    expect(html).toContain("https://mc.yandex.ru/watch/%VITE_YANDEX_METRIKA_ID%");
+    expect(deployWorkflow).toContain("VITE_YANDEX_METRIKA_ID: ${{ secrets.VITE_YANDEX_METRIKA_ID }}");
+  });
+
   it("disables directory and symlink traversal", () => {
     expect(serveConfig.directoryListing).toBe(false);
     expect(serveConfig.rewrites).toContainEqual({ source: "**", destination: "/index.html" });

@@ -20,7 +20,7 @@ cp .env.example .env
 npm run dev
 ```
 
-Переменные `VITE_EMAILJS_SERVICE_ID`, `VITE_EMAILJS_TEMPLATE_ID` и `VITE_EMAILJS_PUBLIC_KEY` нужны только для отправки формы. Публичный номер счётчика Метрики задаётся в `VITE_YANDEX_METRIKA_ID`; значение `0` отключает загрузку счётчика. Все переменные с префиксом `VITE_` попадают в клиентский bundle, поэтому в них нельзя хранить приватные ключи.
+Переменные `VITE_EMAILJS_SERVICE_ID`, `VITE_EMAILJS_TEMPLATE_ID` и `VITE_EMAILJS_PUBLIC_KEY` нужны только для отправки формы. Публичный номер счётчика Метрики задаётся в `VITE_YANDEX_METRIKA_ID`; значение `0` отключает загрузку счётчика. Production-значения задаются только через GitHub Actions Secrets. Все переменные с префиксом `VITE_` попадают в клиентский bundle, поэтому в них нельзя хранить пароли и приватные ключи.
 
 ## Проверки
 
@@ -53,6 +53,6 @@ npm prune --omit=dev
 npm start
 ```
 
-`npm start` раздаёт каталог `dist` на `0.0.0.0:3015` с политиками безопасности из `serve.json`. GitHub Actions сначала выполняет полный CI, затем передаёт публичный номер счётчика `111446691` в production `.env`, обновляет `/home/max/portfolio` и перезапускает только PM2-процесс `portfolio`.
+`npm start` раздаёт каталог `dist` на `0.0.0.0:3015` с политиками безопасности из `serve.json`. GitHub Actions сначала выполняет полный CI, затем передаёт настроенный в Actions Secrets публичный номер счётчика в production `.env`, обновляет `/home/max/portfolio` и перезапускает только PM2-процесс `portfolio`.
 
 Сайт: [itmyportfolio.site](https://itmyportfolio.site/)

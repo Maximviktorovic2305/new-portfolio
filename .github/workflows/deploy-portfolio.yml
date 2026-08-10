@@ -12,13 +12,12 @@ concurrency:
   group: portfolio-production
   cancel-in-progress: false
 
-env:
-  VITE_YANDEX_METRIKA_ID: "111446691"
-
 jobs:
   validate:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      VITE_YANDEX_METRIKA_ID: "0"
 
     steps:
       - name: Checkout repository
@@ -46,19 +45,27 @@ jobs:
       - name: Deploy to server
         uses: appleboy/ssh-action@2ead5e36573f08b82fbfce1504f1a4b05a647c6f
         env:
-          VITE_YANDEX_METRIKA_ID: "111446691"
+          DEPLOY_BRANCH: ${{ github.ref_name }}
+          VITE_EMAILJS_PUBLIC_KEY: ${{ secrets.VITE_EMAILJS_PUBLIC_KEY }}
+          VITE_EMAILJS_SERVICE_ID: ${{ secrets.VITE_EMAILJS_SERVICE_ID }}
+          VITE_EMAILJS_TEMPLATE_ID: ${{ secrets.VITE_EMAILJS_TEMPLATE_ID }}
+          VITE_YANDEX_METRIKA_ID: ${{ secrets.VITE_YANDEX_METRIKA_ID }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           command_timeout: 25m
-          envs: VITE_YANDEX_METRIKA_ID
+          envs: DEPLOY_BRANCH,VITE_EMAILJS_PUBLIC_KEY,VITE_EMAILJS_SERVICE_ID,VITE_EMAILJS_TEMPLATE_ID,VITE_YANDEX_METRIKA_ID
           script: |
             set -eu
 
             APP_DIR="/home/max/portfolio"
             REPO_SSH="git@github.com:Maximviktorovic2305/new-portfolio.git"
-            BRANCH="${{ github.ref_name }}"
+            BRANCH="$DEPLOY_BRANCH"
+
+            case "$VITE_YANDEX_METRIKA_ID" in
+              ''|*[!0-9]*) echo "VITE_YANDEX_METRIKA_ID must be configured as a numeric GitHub Actions secret" >&2; exit 1 ;;
+            esac
 
             export NVM_DIR="$HOME/.nvm"
             test -s "$NVM_DIR/nvm.sh"
@@ -100,12 +107,12 @@ jobs:
             fi
 
             umask 077
-            cat > .env << EOF
-            VITE_EMAILJS_SERVICE_ID=${{ secrets.VITE_EMAILJS_SERVICE_ID }}
-            VITE_EMAILJS_TEMPLATE_ID=${{ secrets.VITE_EMAILJS_TEMPLATE_ID }}
-            VITE_EMAILJS_PUBLIC_KEY=${{ secrets.VITE_EMAILJS_PUBLIC_KEY }}
-            VITE_YANDEX_METRIKA_ID=${VITE_YANDEX_METRIKA_ID}
-            EOF
+            {
+              printf 'VITE_EMAILJS_SERVICE_ID=%s\n' "$VITE_EMAILJS_SERVICE_ID"
+              printf 'VITE_EMAILJS_TEMPLATE_ID=%s\n' "$VITE_EMAILJS_TEMPLATE_ID"
+              printf 'VITE_EMAILJS_PUBLIC_KEY=%s\n' "$VITE_EMAILJS_PUBLIC_KEY"
+              printf 'VITE_YANDEX_METRIKA_ID=%s\n' "$VITE_YANDEX_METRIKA_ID"
+            } > .env
 
             npm ci
             npm run check

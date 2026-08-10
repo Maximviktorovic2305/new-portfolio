@@ -34,13 +34,12 @@ export function CookieNotice() {
     <motion.aside
       animate={{ opacity: 1, y: 0, scale: 1 }}
       aria-live="polite"
-      className="fixed right-4 bottom-28 z-[110] w-[calc(100%-2rem)] max-w-sm overflow-hidden rounded-2xl border-2 border-brand-lavender/25 bg-card/95 p-4 text-card-foreground shadow-xl backdrop-blur-xl sm:right-6 sm:bottom-30"
+      className="cookie-notice fixed right-4 bottom-4 z-[110] w-[calc(100%-2rem)] max-w-sm overflow-hidden rounded-2xl border p-4 shadow-xl sm:right-6 sm:bottom-6"
       exit={{ opacity: 0, y: 18, scale: 0.97 }}
       initial={{ opacity: 0, y: 28, scale: 0.96 }}
       role="status"
       transition={{ type: "spring", stiffness: 260, damping: 24 }}
     >
-      <div className="absolute -top-8 -right-8 size-24 rounded-full bg-brand-lavender/10 blur-2xl" />
       <div className="relative">
         <div className="mb-1 font-semibold" style={{ fontFamily: "var(--t-font-heading)" }}>
           Файлы cookie

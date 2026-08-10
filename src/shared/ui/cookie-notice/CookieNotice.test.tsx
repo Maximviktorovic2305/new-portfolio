@@ -14,7 +14,10 @@ describe("CookieNotice", () => {
   it("remembers dismissal in localStorage", () => {
     render(<CookieNotice />);
 
+    const notice = screen.getByRole("status");
     const button = screen.getByRole("button", { name: "Понятно" });
+
+    expect(notice).toHaveClass("cookie-notice", "right-4", "bottom-4", "sm:right-6", "sm:bottom-6");
     fireEvent.click(button);
 
     expect(localStorage.getItem("itmyportfolio-cookie-notice-accepted-v1")).toBe("true");
