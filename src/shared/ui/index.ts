@@ -7,3 +7,5 @@ export { ScrollProgress } from "./scroll-progress/ScrollProgress";
 export { SketchyFilter } from "./sketchy-filter/SketchyFilter";
 export { NotebookBg } from "./notebook-bg/NotebookBg";
 export { ImageWithFallback } from "./image-with-fallback/ImageWithFallback";
+export { CookieNotice } from "./cookie-notice/CookieNotice";
+export { YandexMetrika } from "./yandex-metrika/YandexMetrika";

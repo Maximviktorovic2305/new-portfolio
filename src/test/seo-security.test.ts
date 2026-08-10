@@ -77,6 +77,11 @@ describe("static server security policy", () => {
     const csp = globalHeaders.find(({ key }) => key === "Content-Security-Policy")?.value;
 
     expect(csp).toContain(`script-src 'self' 'sha256-${hash}'`);
+    expect(csp).toContain("https://mc.yandex.ru");
+    expect(csp).toContain("https://yastatic.net");
+    expect(csp).toContain("frame-ancestors 'self' https://metrika.yandex.ru https://analytics.yandex.ru");
+    expect(csp).not.toContain("frame-ancestors *");
     expect(csp).not.toContain("'unsafe-eval'");
+    expect(globalHeaders.find(({ key }) => key === "X-Frame-Options")).toBeUndefined();
   });
 });
