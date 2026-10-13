@@ -16,6 +16,17 @@ export const projectColors = [
 
 export const projects: Project[] = [
   {
+    id: 12,
+    title: "Python Lab",
+    desc: "Бесплатная образовательная платформа по Python: теория, интерактивные уроки, практические задачи с проверкой кода, проекты и личный прогресс. Реалистичная анимированная змея, светлая и тёмная темы.",
+    image: "https://itmyportfolio.site/python-learning.png",
+    tags: ["Next.js 16", "TypeScript", "TanStack Query", "FastAPI", "PostgreSQL", "Docker", "CI/CD"],
+    emoji: "🐍",
+    category: "Fullstack",
+    site: "https://python-learning.tech",
+    github: "https://github.com/Maximviktorovic2305/Python-learning-platform",
+  },
+  {
     id: 1,
     title: "MaxMusic",
     desc: "Мой действующий сайт, где каждый может выложить свой уникальный трек, слушать треки других, обсуждать композиции и тд. На сайте указана моя музыка",
