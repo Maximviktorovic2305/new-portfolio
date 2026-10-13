@@ -1,4 +1,3 @@
-import { AuthorSupportButton } from "@/features/author-support";
 import { PrivacyPreferences } from "@/features/privacy-preferences";
 import { LegalPage } from "@/pages/legal";
 import { LEGAL_ROUTES, type LegalDocument } from "@/shared/config";
@@ -17,7 +16,6 @@ export default function App({
     <ThemeProvider>
       <MotionConfig reducedMotion="user">
         {document ? <LegalPage document={document} /> : <HomePage />}
-        <AuthorSupportButton />
         <PrivacyPreferences />
         <YandexMetrika />
       </MotionConfig>
