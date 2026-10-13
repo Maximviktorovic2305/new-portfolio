@@ -66,6 +66,7 @@ export const projects: Project[] = [
   },
   {
     id: 3,
+    preview: { animation: "/previews/bitomo.gif", poster: "/previews/bitomo.webp" },
     title: "Туристическая компания Bitomo",
     desc: "Сайт туристической компании Bitomo",
     image:
@@ -76,18 +77,8 @@ export const projects: Project[] = [
     site: "https://bitomo.ru/",
   },
   {
-    id: 4,
-    title: "Telegram Presale Bot",
-    desc: "Телеграм мини апп сайт компании",
-    image:
-      "https://images.unsplash.com/photo-1654764450215-c37782b66dd3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWxlZ3JhbSUyMGJvdCUyMG1vYmlsZSUyMGFwcHxlbnwxfHx8fDE3NzI1MzkzMjB8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    tags: ["React 19", "Redux", "Tanstack"],
-    emoji: "📲",
-    category: "Frontend",
-    site: "https://t.me/axiora_presale_bot",
-  },
-  {
     id: 5,
+    preview: { animation: "/previews/deco.gif", poster: "/previews/deco.webp" },
     title: "Мебель на заказ — Deco",
     desc: "Сайт мебельной компании Deco",
     image:
@@ -99,6 +90,7 @@ export const projects: Project[] = [
   },
   {
     id: 6,
+    preview: { animation: "/previews/pohodniki.gif", poster: "/previews/pohodniki.webp" },
     title: "Сайт для путешествий",
     desc: "Сайт для путешествий по России",
     image:
@@ -110,6 +102,7 @@ export const projects: Project[] = [
   },
   {
     id: 7,
+    preview: { animation: "/previews/museum.gif", poster: "/previews/museum.webp" },
     title: "Сайт российского музея",
     desc: "Сайт для музея в России",
     image:
@@ -118,6 +111,18 @@ export const projects: Project[] = [
     emoji: "🏛️",
     category: "Fullstack",
     site: "https://sakhalinmuseum.ru/",
+  },
+  {
+    id: 9,
+    preview: { animation: "/previews/krevetka.gif", poster: "/previews/krevetka.webp" },
+    title: "Креветка Shop",
+    desc: "Сайт компании поставщика морепродуктов",
+    image:
+      "https://images.unsplash.com/photo-1758184665571-6c64f6d19db6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzZWFmb29kJTIwc2hyaW1wJTIwbWFya2V0JTIwZnJlc2h8ZW58MXx8fHwxNzcyNTM5MzIyfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    tags: ["Vue 3", "Pinia", "Nest.js", "Postgres", "Админка"],
+    emoji: "🦐",
+    category: "Fullstack",
+    site: "https://krevetkasakhalina.com",
   },
   {
     id: 8,
@@ -131,17 +136,6 @@ export const projects: Project[] = [
     site: "https://jbrus.ru/",
   },
   {
-    id: 9,
-    title: "Креветка Shop",
-    desc: "Сайт компании поставщика морепродуктов",
-    image:
-      "https://images.unsplash.com/photo-1758184665571-6c64f6d19db6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzZWFmb29kJTIwc2hyaW1wJTIwbWFya2V0JTIwZnJlc2h8ZW58MXx8fHwxNzcyNTM5MzIyfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    tags: ["Vue 3", "Pinia", "Nest.js", "Postgres", "Админка"],
-    emoji: "🦐",
-    category: "Fullstack",
-    site: "https://krevetkasakhalina.com",
-  },
-  {
     id: 10,
     title: "Makromat",
     desc: "Современная финтех платформа для инвестиций",
@@ -151,5 +145,16 @@ export const projects: Project[] = [
     emoji: "💰",
     category: "Fullstack",
     site: "https://makromat.pro",
+  },
+  {
+    id: 4,
+    title: "Telegram Presale Bot",
+    desc: "Телеграм мини апп сайт компании",
+    image:
+      "https://images.unsplash.com/photo-1654764450215-c37782b66dd3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWxlZ3JhbSUyMGJvdCUyMG1vYmlsZSUyMGFwcHxlbnwxfHx8fDE3NzI1MzkzMjB8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    tags: ["React 19", "Redux", "Tanstack"],
+    emoji: "📲",
+    category: "Frontend",
+    site: "https://t.me/axiora_presale_bot",
   },
 ];

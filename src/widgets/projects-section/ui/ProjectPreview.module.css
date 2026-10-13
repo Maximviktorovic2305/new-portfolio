@@ -1,9 +1,6 @@
 .projectPreview {
   position: relative;
 }
-.projectPreview .desktopPreview {
-  aspect-ratio: 8 / 5;
-}
 .projectPreview .desktopPreview img,
 .projectPreview .desktopPreview:hover img,
 .projectPreview .desktopPreview:focus-visible img {

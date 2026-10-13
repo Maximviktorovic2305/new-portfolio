@@ -715,7 +715,7 @@
   isolation: isolate;
   display: block;
   height: auto;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 8 / 5;
   overflow: hidden;
   background: #b8b5ae;
   box-shadow: 0 1rem 2.5rem rgba(17, 17, 15, 0);
