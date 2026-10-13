@@ -1,3 +1,5 @@
+import { LEGAL_ROUTES } from "@/shared/config";
+import legalStyles from "@/shared/ui/legal/Legal.module.css";
 import { useEffect, useState, type SyntheticEvent } from "react";
 import { sendMessage } from "../lib/emailjs";
 import { CONTACT_LIMITS, validateContactForm, type ContactFormValues } from "../model/validation";
@@ -7,6 +9,7 @@ type SubmissionStatus = "idle" | "sending" | "sent" | "error";
 
 export function ContactForm() {
   const [values, setValues] = useState<ContactFormValues>(initialValues);
+  const [consent, setConsent] = useState(false);
   const [website, setWebsite] = useState("");
   const [status, setStatus] = useState<SubmissionStatus>("idle");
   const [feedback, setFeedback] = useState("");
@@ -39,6 +42,11 @@ export function ContactForm() {
       return;
     }
 
+    if (!consent) {
+      setStatus("error");
+      setFeedback("Подтвердите согласие на обработку данных перед отправкой.");
+      return;
+    }
     const validation = validateContactForm(values);
     if (!validation.success) {
       setStatus("error");
@@ -50,6 +58,7 @@ export function ContactForm() {
     setFeedback("");
     try {
       await sendMessage(validation.data);
+      setConsent(false);
       setStatus("sent");
       setFeedback("Сообщение отправлено. Спасибо!");
       setValues(initialValues);
@@ -126,7 +135,29 @@ export function ContactForm() {
         {values.message.length}/{CONTACT_LIMITS.message}
       </p>
 
-      <button disabled={isSending} type="submit">
+      <div className={legalStyles.consentChecks}>
+        <label>
+          <input
+            type="checkbox"
+            checked={consent}
+            disabled={isSending}
+            onChange={(event) => setConsent(event.target.checked)}
+            required
+          />
+          <span>
+            Даю{" "}
+            <a href={LEGAL_ROUTES.consent} target="_blank" rel="noopener noreferrer">
+              согласие на обработку персональных данных
+            </a>
+            .{" "}
+            <a href={LEGAL_ROUTES.privacy} target="_blank" rel="noopener noreferrer">
+              Политика конфиденциальности
+            </a>
+            .
+          </span>
+        </label>
+      </div>
+      <button disabled={isSending || !consent} type="submit">
         <span>{isSending ? "Отправляется…" : status === "sent" ? "Отправлено" : "Отправить сообщение"}</span>
         <i aria-hidden="true">↗</i>
       </button>

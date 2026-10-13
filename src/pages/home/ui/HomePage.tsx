@@ -1,3 +1,4 @@
+import { LegalLinks } from "@/shared/ui/legal";
 import { AmbientScrollbar } from "@/shared/ui";
 import { AboutSection } from "@/widgets/about-section";
 import { ContactSection } from "@/widgets/contact-section";
@@ -23,6 +24,7 @@ export function HomePage() {
         <ContactSection />
       </main>
       <Footer />
+      <LegalLinks />
     </div>
   );
 }

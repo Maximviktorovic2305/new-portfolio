@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "audit": "npm audit --audit-level=low",
-    "build": "npm run typecheck && vite build",
+    "build": "npm run typecheck && vite build && node scripts/prerender.mjs",
     "check": "npm run format:check && npm run lint && npm run lint:fsd && npm run test && npm run audit && npm run build",
     "dev": "vite",
     "format": "prettier --write .",

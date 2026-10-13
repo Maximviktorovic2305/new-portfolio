@@ -65,13 +65,16 @@ describe("SEO metadata", () => {
 describe("static server security policy", () => {
   it("keeps production configuration out of tracked environment files", () => {
     expect(envExample).toMatch(/^VITE_YANDEX_METRIKA_ID=$/mu);
-    expect(html).toContain("https://mc.yandex.ru/watch/%VITE_YANDEX_METRIKA_ID%");
+    expect(html).not.toContain("https://mc.yandex.ru/watch/");
     expect(deployWorkflow).toContain("VITE_YANDEX_METRIKA_ID: ${{ secrets.VITE_YANDEX_METRIKA_ID }}");
   });
 
   it("disables directory and symlink traversal", () => {
     expect(serveConfig.directoryListing).toBe(false);
-    expect(serveConfig.rewrites).toContainEqual({ source: "**", destination: "/index.html" });
+    expect(serveConfig.rewrites.some(({ source }) => source === "**")).toBe(false);
+    for (const route of ["/private-policy", "/cookie-policy", "/data-consent", "/user-agreement"]) {
+      expect(serveConfig.rewrites).toContainEqual({ source: route, destination: `${route}/index.html` });
+    }
     expect(serveConfig.symlinks).toBe(false);
   });
 

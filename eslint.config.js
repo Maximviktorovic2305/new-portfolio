@@ -45,7 +45,7 @@ export default defineConfig(
     },
   },
   {
-    files: ["scripts/**/*.mjs", "*.config.{js,ts}"],
+    files: ["scripts/**/*.mjs", "public/**/*.js", "*.config.{js,ts}"],
     extends: [tseslint.configs.disableTypeChecked],
   },
   {

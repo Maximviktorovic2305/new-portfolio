@@ -1,0 +1,31 @@
+.projectPreview {
+  position: relative;
+}
+.projectPreview .desktopPreview {
+  aspect-ratio: 8 / 5;
+}
+.projectPreview .desktopPreview img,
+.projectPreview .desktopPreview:hover img,
+.projectPreview .desktopPreview:focus-visible img {
+  object-fit: contain;
+  filter: none;
+  transform: none;
+}
+.previewControl {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 0.75rem;
+  z-index: 2;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 0.7rem;
+  background: var(--card);
+  color: var(--foreground);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.previewControl:focus-visible {
+  outline: 2px solid var(--brand-teal);
+  outline-offset: 3px;
+}

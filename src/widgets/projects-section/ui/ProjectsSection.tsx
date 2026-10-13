@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from "motion/react";
 import { projects } from "@/entities/project";
-import { ImageWithFallback } from "@/shared/ui";
+import { ProjectPreview } from "./ProjectPreview";
 
 export function ProjectsSection() {
   const reduceMotion = useReducedMotion();
@@ -24,18 +24,7 @@ export function ProjectsSection() {
             viewport={{ once: true, amount: 0.12 }}
             whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
           >
-            <a
-              aria-label={`Открыть проект ${project.title}`}
-              className="immersive-project__media"
-              href={project.site}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <ImageWithFallback alt={`Превью проекта ${project.title}`} src={project.image} />
-              <span className="immersive-project__open" aria-hidden="true">
-                Открыть ↗
-              </span>
-            </a>
+            <ProjectPreview project={project} />
 
             <div className="immersive-project__meta">
               <p className="immersive-project__number">{String(index + 1).padStart(2, "0")}</p>

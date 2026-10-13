@@ -1,0 +1,5 @@
+#root [style*="opacity:0"],
+#root [style*="opacity: 0"] {
+  opacity: 1 !important;
+  transform: none !important;
+}

@@ -20,6 +20,7 @@ export const projects: Project[] = [
     title: "Python Lab",
     desc: "Бесплатная образовательная платформа по Python: теория, интерактивные уроки, практические задачи с проверкой кода, проекты и личный прогресс. Реалистичная анимированная змея, светлая и тёмная темы.",
     image: "https://itmyportfolio.site/python-learning.png",
+    preview: { animation: "/previews/python-learning.gif", poster: "/previews/python-learning.webp" },
     tags: ["Next.js 16", "TypeScript", "TanStack Query", "FastAPI", "PostgreSQL", "Docker", "CI/CD"],
     emoji: "🐍",
     category: "Fullstack",
@@ -29,6 +30,7 @@ export const projects: Project[] = [
   {
     id: 1,
     title: "MaxMusic",
+    preview: { animation: "/previews/maxmusic.gif", poster: "/previews/maxmusic.webp" },
     desc: "Мой действующий сайт, где каждый может выложить свой уникальный трек, слушать треки других, обсуждать композиции и тд. На сайте указана моя музыка",
     image:
       "https://images.unsplash.com/photo-1511138743687-5c14e8cfcf47?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtdXNpYyUyMHN0cmVhbWluZyUyMHBsYXRmb3JtJTIwZGFya3xlbnwxfHx8fDE3NzI1MzkzMTl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
@@ -41,6 +43,7 @@ export const projects: Project[] = [
   {
     id: 2,
     title: "Ai Chat",
+    preview: { animation: "/previews/ai-contact.gif", poster: "/previews/ai-contact.webp" },
     desc: "Мой действующий сайт с нейросетью Mistral AI без VPN на русском языке",
     image:
       "https://images.unsplash.com/photo-1684493735679-359868df0e18?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxBSSUyMGNoYXRib3QlMjBhcnRpZmljaWFsJTIwaW50ZWxsaWdlbmNlfGVufDF8fHx8MTc3MjUzOTMxOXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
@@ -53,6 +56,7 @@ export const projects: Project[] = [
   {
     id: 11,
     title: "Banya Digital",
+    preview: { animation: "/previews/banya-digital.gif", poster: "/previews/banya-digital.webp" },
     desc: "CRM и сервис онлайн-бронирования для банных комплексов",
     image: "https://banya.digital/og.png",
     tags: ["Next.js", "TypeScript", "CRM", "Онлайн-запись"],

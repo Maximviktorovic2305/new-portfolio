@@ -1,3 +1,4 @@
+import { usePrivacyChoice } from "@/shared/lib/privacy-choice";
 import { useEffect } from "react";
 
 type YandexMetrikaFunction = ((...args: unknown[]) => void) & {
@@ -28,7 +29,9 @@ function createQueue(): YandexMetrikaFunction {
 }
 
 export function YandexMetrika() {
+  const choice = usePrivacyChoice();
   useEffect(() => {
+    if (choice !== "analytics") return;
     const counterId = readCounterId();
     if (counterId === null || initializedCounters.has(counterId)) return;
 
@@ -46,15 +49,15 @@ export function YandexMetrika() {
 
     window.ym(counterId, "init", {
       accurateTrackBounce: true,
-      clickmap: true,
+      clickmap: false,
       ecommerce: "dataLayer",
       referrer: document.referrer,
       ssr: true,
-      trackLinks: true,
+      trackLinks: false,
       url: window.location.href,
-      webvisor: true,
+      webvisor: false,
     });
-  }, []);
+  }, [choice]);
 
   return null;
 }

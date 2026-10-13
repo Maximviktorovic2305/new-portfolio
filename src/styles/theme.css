@@ -358,3 +358,11 @@ html *:not([class*="motion"]):not(canvas) {
     line-height: 1.5;
   }
 }
+
+:root {
+  --legal-bg: var(--card);
+  --legal-text: var(--foreground);
+  --legal-border: var(--border);
+  --legal-accent: var(--brand-teal);
+  --legal-ink: #102422;
+}
