@@ -8,6 +8,15 @@
   filter: none;
   transform: none;
 }
+.projectPreview .desktopPreview .animationImage {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.projectPreview .desktopPreview .animationImageReady {
+  opacity: 1;
+}
 .previewControl {
   position: absolute;
   bottom: 0.75rem;
