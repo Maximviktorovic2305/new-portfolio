@@ -34,7 +34,7 @@ export const projects: Project[] = [
     desc: "Мой действующий сайт, где каждый может выложить свой уникальный трек, слушать треки других, обсуждать композиции и тд. На сайте указана моя музыка",
     image:
       "https://images.unsplash.com/photo-1511138743687-5c14e8cfcf47?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtdXNpYyUyMHN0cmVhbWluZyUyMHBsYXRmb3JtJTIwZGFya3xlbnwxfHx8fDE3NzI1MzkzMTl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    tags: ["Next 15", "Tanstack", "Redux", "Nest.js", "Postgres", "CI/CD"],
+    tags: ["Next.js 16", "TanStack Query", "Redux", "NestJS", "PostgreSQL", "CI/CD"],
     emoji: "🎵",
     category: "Fullstack",
     site: "https://maxmusic.site/music",
@@ -42,12 +42,12 @@ export const projects: Project[] = [
   },
   {
     id: 2,
-    title: "Ai Chat",
+    title: "AI Contact",
     preview: { animation: "/previews/ai-contact.gif", poster: "/previews/ai-contact.webp" },
     desc: "Мой действующий сайт с нейросетью Mistral AI без VPN на русском языке",
     image:
       "https://images.unsplash.com/photo-1684493735679-359868df0e18?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxBSSUyMGNoYXRib3QlMjBhcnRpZmljaWFsJTIwaW50ZWxsaWdlbmNlfGVufDF8fHx8MTc3MjUzOTMxOXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    tags: ["Next 15", "Tailwind", "Shadcn", "Nest.js", "CI/CD"],
+    tags: ["Next.js 16", "Tailwind", "shadcn/ui", "NestJS", "CI/CD"],
     emoji: "🤖",
     category: "Fullstack",
     site: "https://ai-contact.site",
