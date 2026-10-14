@@ -26,7 +26,7 @@ export const stats: StatItem[] = [
   { value: "5+", label: "Лет опыта", emoji: "🎯", color: colors.pink },
   { value: "40+", label: "Проектов", emoji: "📦", color: colors.teal },
   { value: "JS/TS", label: "Основной стек", emoji: "💻", color: colors.orange },
-  { value: "Go", label: "Рабочий стек", emoji: "🚀", color: colors.lime },
+  { value: "Python / Go", label: "Рабочий стек", emoji: "🚀", color: colors.lime },
 ];
 
 export const highlights: HighlightItem[] = [
@@ -39,19 +39,19 @@ export const highlights: HighlightItem[] = [
   {
     icon: Server,
     title: "Backend",
-    desc: "Node.js, NestJS, Express, Golang, REST API, GraphQL, Socket.io",
+    desc: "Python, FastAPI, Pydantic, Node.js, NestJS, Express, Golang, REST API, GraphQL, Socket.io",
     color: colors.teal,
   },
   {
     icon: Database,
     title: "Базы данных & ORM",
-    desc: "PostgreSQL, MongoDB, Redis, Prisma, Sequelize, TypeORM",
+    desc: "PostgreSQL, MongoDB, Redis, SQLAlchemy, Alembic, Prisma, Sequelize, TypeORM",
     color: colors.orange,
   },
   {
     icon: Code2,
     title: "DevOps & Тулинг",
-    desc: "Docker, CI/CD, Nginx, RabbitMQ, Git, Jest, Vitest, Webpack, Vite",
+    desc: "Docker, CI/CD, Nginx, RabbitMQ, Git, pytest, Ruff, mypy, Jest, Vitest, Webpack, Vite",
     color: colors.lavender,
   },
 ];
