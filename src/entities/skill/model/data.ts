@@ -97,6 +97,37 @@ export const skills: Skill[] = [
     website: "https://vite.dev/",
   },
   {
+    name: "Python",
+    category: "Backend",
+    emoji: "🐍",
+    description:
+      "Серверная разработка и автоматизация. Асинхронный Python, типизация, REST API и изолированное исполнение кода.",
+    website: "https://www.python.org/",
+  },
+  {
+    name: "FastAPI / Pydantic",
+    category: "Backend",
+    emoji: "⚡",
+    description: "Асинхронные API на Python. Валидация данных, зависимости, OpenAPI-контракты и авторизация.",
+    website: "https://fastapi.tiangolo.com/",
+  },
+  {
+    name: "SQLAlchemy / Alembic",
+    category: "Backend",
+    emoji: "🗄️",
+    description:
+      "Работа с PostgreSQL из Python: модели, асинхронные запросы, транзакции и версионирование схемы базы данных.",
+    website: "https://www.sqlalchemy.org/",
+  },
+  {
+    name: "pytest / Ruff / mypy",
+    category: "Backend",
+    emoji: "🧪",
+    description:
+      "Проверка Python-проектов: интеграционные тесты API, линтинг, форматирование и строгая статическая типизация.",
+    website: "https://docs.pytest.org/",
+  },
+  {
     name: "Node.js",
     category: "Backend",
     emoji: "🟢",
