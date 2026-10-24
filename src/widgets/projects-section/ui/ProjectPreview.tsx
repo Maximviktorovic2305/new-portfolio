@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "motion/react";
+import { Pause, Play, RotateCcw } from "lucide-react";
 import type { Project } from "@/entities/project";
 import { ImageWithFallback } from "@/shared/ui";
 import styles from "./ProjectPreview.module.css";
@@ -88,6 +89,7 @@ export function ProjectPreview({ project }: { project: Project }) {
           className={styles.previewControl}
           type="button"
           aria-label={`${action} анимацию проекта ${project.title}`}
+          title={`${action} анимацию проекта ${project.title}`}
           aria-pressed={animationFailed ? undefined : paused}
           onClick={() => {
             if (animationFailed) {
@@ -96,7 +98,13 @@ export function ProjectPreview({ project }: { project: Project }) {
             } else setPaused((value) => !value);
           }}
         >
-          {animationFailed ? "↻ Повторить" : paused ? "▶ Включить" : "Ⅱ Пауза"}
+          {animationFailed ? (
+            <RotateCcw size={16} aria-hidden="true" />
+          ) : paused ? (
+            <Play size={16} aria-hidden="true" />
+          ) : (
+            <Pause size={16} aria-hidden="true" />
+          )}
         </button>
       )}
     </div>

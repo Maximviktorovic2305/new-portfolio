@@ -18,7 +18,7 @@ export const projects: Project[] = [
   {
     id: 13,
     title: "JSlab",
-    desc: "Бесплатная платформа для изучения JavaScript и TypeScript с отдельными направлениями Express и NestJS. Подробная теория, практика с изолированной проверкой кода, тесты и личный прогресс. Живой первый экран с анимацией поднятых рук.",
+    desc: "Мой действующий сайт для бесплатного изучения JavaScript и TypeScript с отдельными направлениями Express и NestJS. Подробная теория, практика с изолированной проверкой кода, тесты и личный прогресс. Живой первый экран с анимацией поднятых рук.",
     image: "https://itmyportfolio.site/previews/jslab.webp",
     preview: { animation: "/previews/jslab.gif", poster: "/previews/jslab.webp" },
     tags: ["Nuxt 4", "Vue 3", "TypeScript", "NestJS", "Prisma", "PostgreSQL 18", "NsJail"],
@@ -30,7 +30,7 @@ export const projects: Project[] = [
   {
     id: 12,
     title: "Python Lab",
-    desc: "Бесплатная образовательная платформа по Python: теория, интерактивные уроки, практические задачи с проверкой кода, проекты и личный прогресс. Реалистичная анимированная змея, светлая и тёмная темы.",
+    desc: "Мой действующий сайт для бесплатного изучения Python: теория, интерактивные уроки, практические задачи с проверкой кода, проекты и личный прогресс. Реалистичная анимированная змея, светлая и тёмная темы.",
     image: "https://itmyportfolio.site/python-learning.png",
     preview: { animation: "/previews/python-learning.gif", poster: "/previews/python-learning.webp" },
     tags: [
