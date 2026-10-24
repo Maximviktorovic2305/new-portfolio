@@ -12,6 +12,15 @@ runtime="/srv/native-sites/portfolio/releases/$sha"
 mkdir -p /home/max/build-sites/portfolio
 exec 9>/home/max/build-sites/portfolio/deploy.lock
 flock 9
+finish_deploy() {
+  sudo -n /usr/local/sbin/sites-admin portfolio activate "$sha"
+  sudo -n /usr/local/sbin/sites-admin portfolio retain
+}
+if [[ -f "$runtime/ready" ]]; then
+  if [[ "${NATIVE_BUILD_ONLY:-0}" != 1 ]]; then finish_deploy; fi
+  exit 0
+fi
+test ! -L "$runtime"
 git -C "$repo" fetch origin "$sha"
 if [[ ! -d "$build" ]]; then git -C "$repo" worktree add --detach "$build" "$sha"; fi
 test "$(git -C "$build" rev-parse HEAD)" = "$sha"
@@ -25,4 +34,4 @@ cp -a dist serve.json package.json package-lock.json "$runtime/web/"
 npm --prefix "$runtime/web" ci --omit=dev --ignore-scripts --no-audit --no-fund
 touch "$runtime/ready"
 if [[ "${NATIVE_BUILD_ONLY:-0}" == 1 ]]; then printf 'Built isolated portfolio %s\n' "$sha"; exit 0; fi
-sudo -n /usr/local/sbin/sites-admin portfolio activate "$sha"
+finish_deploy
