@@ -16,6 +16,18 @@ export const projectColors = [
 
 export const projects: Project[] = [
   {
+    id: 13,
+    title: "JSlab",
+    desc: "Бесплатная платформа для изучения JavaScript и TypeScript с отдельными направлениями Express и NestJS. Подробная теория, практика с изолированной проверкой кода, тесты и личный прогресс. Живой первый экран с анимацией поднятых рук.",
+    image: "https://itmyportfolio.site/previews/jslab.webp",
+    preview: { animation: "/previews/jslab.gif", poster: "/previews/jslab.webp" },
+    tags: ["Nuxt 4", "Vue 3", "TypeScript", "NestJS", "Prisma", "PostgreSQL 18", "NsJail"],
+    emoji: "✋",
+    category: "Fullstack",
+    site: "https://js-lab.site",
+    github: "https://github.com/Maximviktorovic2305/Javascript-learning-platform",
+  },
+  {
     id: 12,
     title: "Python Lab",
     desc: "Бесплатная образовательная платформа по Python: теория, интерактивные уроки, практические задачи с проверкой кода, проекты и личный прогресс. Реалистичная анимированная змея, светлая и тёмная темы.",
@@ -32,7 +44,7 @@ export const projects: Project[] = [
       "Alembic",
       "PostgreSQL",
       "Pyodide",
-      "Docker",
+      "NsJail",
       "CI/CD",
     ],
     emoji: "🐍",

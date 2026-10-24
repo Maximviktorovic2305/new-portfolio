@@ -3,7 +3,7 @@ name: Deploy portfolio
 on:
   workflow_dispatch:
   push:
-    branches: [main, master]
+    branches: [main, master, native-isolation]
 
 permissions:
   contents: read
@@ -36,151 +36,27 @@ jobs:
         run: npm run check
 
   deploy:
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     needs: validate
     runs-on: ubuntu-latest
     environment: Production
     timeout-minutes: 30
 
     steps:
-      - name: Prepare repository key for protected transport
+      - uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2 # v1.2.5
         env:
-          REPO_DEPLOY_KEY: ${{ secrets.REPO_DEPLOY_KEY }}
-        run: |
-          set -eu
-          test -n "$REPO_DEPLOY_KEY"
-          KEY_BASE64="$(printf '%s' "$REPO_DEPLOY_KEY" | base64 -w 0)"
-          printf '::add-mask::%s\n' "$KEY_BASE64"
-          printf 'REPO_DEPLOY_KEY_BASE64=%s\n' "$KEY_BASE64" >> "$GITHUB_ENV"
-
-      - name: Deploy to server
-        uses: appleboy/ssh-action@2ead5e36573f08b82fbfce1504f1a4b05a647c6f
-        env:
-          DEPLOY_BRANCH: ${{ github.ref_name }}
-          DEPLOY_COMMIT: ${{ github.sha }}
-          VITE_EMAILJS_PUBLIC_KEY: ${{ secrets.VITE_EMAILJS_PUBLIC_KEY }}
-          VITE_EMAILJS_SERVICE_ID: ${{ secrets.VITE_EMAILJS_SERVICE_ID }}
-          VITE_EMAILJS_TEMPLATE_ID: ${{ secrets.VITE_EMAILJS_TEMPLATE_ID }}
-          VITE_YANDEX_METRIKA_ID: ${{ secrets.VITE_YANDEX_METRIKA_ID }}
+          DEPLOY_SHA: ${{ github.sha }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           command_timeout: 25m
-          envs: DEPLOY_BRANCH,DEPLOY_COMMIT,REPO_DEPLOY_KEY_BASE64,VITE_EMAILJS_PUBLIC_KEY,VITE_EMAILJS_SERVICE_ID,VITE_EMAILJS_TEMPLATE_ID,VITE_YANDEX_METRIKA_ID
+          envs: DEPLOY_SHA
           script: |
-            set -eu
-
-            APP_DIR="/home/max/portfolio"
-            RELEASE_ROOT="/home/max/releases/new-portfolio"
-            REPO_SSH="git@github.com:Maximviktorovic2305/new-portfolio.git"
-            BRANCH="$DEPLOY_BRANCH"
-            case "$BRANCH" in main|master) ;; *) exit 1 ;; esac
-            case "$DEPLOY_COMMIT" in ''|*[!0-9a-f]*) exit 1 ;; esac
-            test "${#DEPLOY_COMMIT}" -eq 40
-
-            case "$VITE_YANDEX_METRIKA_ID" in
-              ''|*[!0-9]*) echo "VITE_YANDEX_METRIKA_ID must be configured as a numeric GitHub Actions secret" >&2; exit 1 ;;
-            esac
-
-            export NVM_DIR="$HOME/.nvm"
-            test -s "$NVM_DIR/nvm.sh"
-            . "$NVM_DIR/nvm.sh"
-            nvm install 24.21.0
-            nvm use 24.21.0
-            node -v
-            npm -v
-            command -v git >/dev/null
-            command -v curl >/dev/null
-            command -v pm2 >/dev/null 2>&1 || npm install --global pm2@7.0.3 --no-audit --no-fund
-
-            mkdir -p ~/.ssh
-            chmod 700 ~/.ssh
-            if ! ssh-keygen -F github.com >/dev/null; then
-              ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-            fi
-            chmod 600 ~/.ssh/known_hosts
-
-            DEPLOY_KEY="$(mktemp "$HOME/.ssh/portfolio-deploy.XXXXXX")"
-            SWITCHED=0
-            PREVIOUS_DIR=""
-            cleanup() {
-              RESULT=$?
-              rm -f "$DEPLOY_KEY"
-              if [ "$RESULT" -ne 0 ] && [ "$SWITCHED" -eq 1 ]; then
-                echo "Restoring the previous portfolio release" >&2
-                pm2 delete portfolio >/dev/null 2>&1 || true
-                if [ -n "$PREVIOUS_DIR" ]; then
-                  pm2 start npm --name portfolio --cwd "$PREVIOUS_DIR" -- start
-                  pm2 save
-                fi
-              fi
-              exit "$RESULT"
-            }
-            trap cleanup EXIT
-            printf '%s' "$REPO_DEPLOY_KEY_BASE64" | base64 --decode > "$DEPLOY_KEY"
-            printf '\n' >> "$DEPLOY_KEY"
-            chmod 600 "$DEPLOY_KEY"
-            export GIT_SSH_COMMAND="ssh -i $DEPLOY_KEY -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes"
-
-            if [ -d "$APP_DIR/.git" ]; then
-              cd "$APP_DIR"
-              git config core.autocrlf false
-              git fetch --prune origin "$BRANCH"
-            else
-              test ! -e "$APP_DIR" || rmdir "$APP_DIR"
-              git -c core.autocrlf=false clone -b "$BRANCH" "$REPO_SSH" "$APP_DIR"
-              cd "$APP_DIR"
-              git config core.autocrlf false
-            fi
-
-            git cat-file -e "$DEPLOY_COMMIT^{commit}"
-            mkdir -p "$RELEASE_ROOT"
-            RELEASE_DIR="$(mktemp -d "$RELEASE_ROOT/$DEPLOY_COMMIT.XXXXXX")"
-            git worktree add --detach "$RELEASE_DIR" "$DEPLOY_COMMIT"
-            rm -f "$DEPLOY_KEY"
-            unset REPO_DEPLOY_KEY_BASE64 GIT_SSH_COMMAND
-            cd "$RELEASE_DIR"
-
-            umask 077
-            {
-              printf 'VITE_EMAILJS_SERVICE_ID=%s\n' "$VITE_EMAILJS_SERVICE_ID"
-              printf 'VITE_EMAILJS_TEMPLATE_ID=%s\n' "$VITE_EMAILJS_TEMPLATE_ID"
-              printf 'VITE_EMAILJS_PUBLIC_KEY=%s\n' "$VITE_EMAILJS_PUBLIC_KEY"
-              printf 'VITE_YANDEX_METRIKA_ID=%s\n' "$VITE_YANDEX_METRIKA_ID"
-            } > .env
-
-            npm ci
-            npm run check
-            npm prune --omit=dev
-
-            PREVIOUS_DIR="$(pm2 jlist | node -e 'let text="";process.stdin.on("data",part=>text+=part);process.stdin.on("end",()=>{const app=JSON.parse(text).find(app=>app.name==="portfolio");if(app)process.stdout.write(app.pm2_env.pm_cwd);});')"
-            case "$PREVIOUS_DIR" in "$APP_DIR"|"$RELEASE_ROOT"/*|'') ;; *) echo "Unexpected portfolio process directory" >&2; exit 1 ;; esac
-            SWITCHED=1
-            pm2 delete portfolio || true
-            pm2 start npm --name portfolio --cwd "$RELEASE_DIR" -- start
-
-            HEALTHY=0
-            for attempt in 1 2 3 4 5 6; do
-              if curl --fail --silent --show-error http://127.0.0.1:3015/ >/dev/null; then
-                HEALTHY=1
-                break
-              fi
-              sleep 2
-            done
-            if [ "$HEALTHY" -ne 1 ]; then
-              echo "Portfolio health check failed" >&2
-              exit 1
-            fi
-
-            curl --fail --silent http://127.0.0.1:3015/robots.txt | grep -q 'Sitemap:'
-            curl --fail --silent --head http://127.0.0.1:3015/ | grep -qi '^Content-Security-Policy:'
-            for route in private-policy cookie-policy data-consent user-agreement; do
-              curl --fail --silent --show-error "http://127.0.0.1:3015/$route" >/dev/null
-            done
-            for preview in python-learning maxmusic ai-contact banya-digital bitomo deco pohodniki museum krevetka; do
-              curl --fail --silent --show-error --head "http://127.0.0.1:3015/previews/$preview.gif" >/dev/null
-              curl --fail --silent --show-error --head "http://127.0.0.1:3015/previews/$preview.webp" >/dev/null
-            done
-            pm2 save
-            SWITCHED=0
-            pm2 status portfolio
+            set -Eeuo pipefail
+            [[ "$DEPLOY_SHA" =~ ^[0-9a-f]{40}$ ]] || exit 1
+            script_file="$(mktemp)"
+            trap 'rm -f "$script_file"' EXIT
+            git -C /home/max/portfolio fetch origin "$DEPLOY_SHA"
+            git -C /home/max/portfolio show "$DEPLOY_SHA:scripts/deploy.sh" > "$script_file"
+            bash "$script_file"
